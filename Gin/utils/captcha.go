@@ -31,6 +31,17 @@ func Session(keyPairs string) gin.HandlerFunc {
 }
 
 // 生成图片
+
+/*
+w: 使用http写操作
+r: 使用http读操作
+id: 从session中获取的验证码的ID
+ext: 过期时间
+lang: 语言
+download: 是否下载
+width: 验证码图片的宽度
+height: 验证码图片的高度
+*/
 func Serve(w http.ResponseWriter, r *http.Request, id, ext, lang string, download bool, width, height int) error {
 	// 响应头
 	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
@@ -82,6 +93,7 @@ func Captcha(c *gin.Context, length ...int) {
 func CaptchaVerify(c *gin.Context, code string) bool {
 	session := sessions.Default(c)      // 获取到上下文的session
 	captchaId := session.Get("captcha") // 获取到验证码ID
+	// 这里出现了bug，无法从session中获取captcha，但是上面明明已经设置了，而且上面可以获取得到
 	if captchaId != nil {
 		log.Printf("有captchaId")
 		session.Delete("captcha")                             // 如果有验证码，那就将session中的captcha去除
