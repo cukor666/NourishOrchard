@@ -163,8 +163,8 @@ function showInfo() {
             userStore.userGridData[0].address = user.address
             userStore.userGridData[0].promise = user.promise
 
-            console.log(userStore.userGridData[0]);
-            console.log(response.data);
+            // console.log(userStore.userGridData[0]);
+            // console.log(response.data);
 
             router.push('/user-info')
         }).catch(err => {
@@ -207,8 +207,10 @@ function exitLogin() {
 
 }
 
+// 侧边栏宽度
 const asideWidth = ref(200)
 
+// 展开与折叠侧边栏
 const isCollapse = ref(false)
 
 // 切换菜单的收缩状态

@@ -12,6 +12,7 @@ func init() {
 	db.AutoMigrate(&moudels.User{})
 }
 
+// 插入用户数据
 func (ud UserDao) Insert(user moudels.User) (newId uint, affect int64) {
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
@@ -38,11 +39,15 @@ func (ud UserDao) SelectAllUser() (result []moudels.User, err error) {
 	return
 }
 
+// 根据用户ID查询用户
 func (ud UserDao) SelectById(id uint) (user moudels.User, err error) {
-	err = db.Where("id = ?", id).Take(&user).Error
+	err = db.Select("id", "name", "gender", "birthday", "phone", "address", "CreatedAt", "UpdatedAt").
+		Where("id = ?", id).
+		Take(&user).Error
 	return
 }
 
+// 通过用户名和密码查询用户
 func (ud UserDao) SelectUserByNameAndPwd(name, password string) (user moudels.User, ok bool) {
 	ok = true
 	err := db.Select("name", "password").
@@ -71,6 +76,22 @@ func (ud UserDao) SelectByName(name string) (user moudels.User, ok bool) {
 	return
 }
 
+// 根据指定字段查询用户
+func (ud UserDao) SelectByStruct(user moudels.User) (users []moudels.User, err error) {
+	err = db.Select("id", "name", "gender", "birthday", "phone", "address").
+		Where(&user).Take(&users).Error
+	return
+}
+
+// 根据指定字段查询用户，携带有生日
+func (ud UserDao) SelectByStructWithBirthday(user moudels.User, birthday []string) (users []moudels.User, err error) {
+	err = db.Select("id", "name", "gender", "birthday", "phone", "address").
+		Where(&user).Where("birthday between ? and ?", birthday[0], birthday[1]).
+		Take(&users).Error
+	return
+}
+
+// 更新用户信息
 func (ud UserDao) UpdateUserInfo(user moudels.User) (ok bool) {
 	ok = true
 	err := db.Model(&user).Select("gender", "birthday", "phone", "address").Where("name = ?", user.Name).Updates(user).Error
@@ -82,6 +103,7 @@ func (ud UserDao) UpdateUserInfo(user moudels.User) (ok bool) {
 	return
 }
 
+// 通过ID删除用户
 func (ud UserDao) DeleteById(id uint) (ok bool) {
 	ok = true
 	err := db.Delete(&moudels.User{}, id).Error

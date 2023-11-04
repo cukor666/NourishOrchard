@@ -13,7 +13,7 @@
                 <div style="margin-top: 10px;">
                     <span class="demonstration">生日：</span>
                     <el-date-picker v-model="userForm.birthday" type="daterange" range-separator="To"
-                        start-placeholder="Start date" end-placeholder="End date"  />
+                        start-placeholder="Start date" end-placeholder="End date" />
                 </div>
 
             </div>
@@ -30,6 +30,12 @@
                         <Refresh />
                     </el-icon>
                     清空
+                </el-button>
+                <el-button>
+                    <el-icon>
+                        <Refresh />
+                    </el-icon>
+                    使用说明
                 </el-button>
             </div>
         </div>
@@ -64,24 +70,26 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import request from '../../request';
 import router from '../../router';
 import { useUserStore } from '../../stores/stores'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
-
+// 用户状态
 const userStore = useUserStore()
 
+// 表格数据
 const tableData = ref([])
 
-const userForm = ref({
-    ID: 1,
+// 用户表单
+const userForm = reactive({
+    ID: -1,
     name: '',
     phone: '',
     address: '',
     gender: '',
-    birthday: ''
+    birthday: ''    // 它是一个数组， 0 表示开始的时间，1 表示结束的时间
 })
 
 const genders = ref([
@@ -100,14 +108,44 @@ const genders = ref([
 ])
 
 // 查询所有用户
+// 优化搜索，todo
 function searchUser() {
-    try {
-        request.get('/user-list').then(response => {
-            // console.log(response.data);
-            tableData.value = response.data
+    // 先获取一下前端填写的表单
+    console.log(userForm);
+    // 获取到表单信息之后，将表单封装成json发送给后端，让后端进行查询操作
+    if (userForm.ID < 0) {  // 如果userForm.ID < 0 则查询所有用户
+        try {
+            request.get('/user-list').then(response => {
+                // console.log(response.data);
+                tableData.value = response.data
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    } else if (userForm.ID == 0) {   // 如果userForm.ID == 0 则表示不使用ID这个字段
+        console.log(userForm);
+        request.get('/user-struct', {
+            params: {
+                name: userForm.name,
+                phone: userForm.phone,
+                address: userForm.address,
+                gender: userForm.gender,
+                birthday: userForm.birthday
+            }
+        }).then(response => {
+            console.log(response);
+        }).catch(err => {
+            console.log(err);
         })
-    } catch (error) {
-        console.log(error);
+    } else {    // 如果userForm.ID > 0 则表示使用ID这个字段
+        //因为ID是唯一的，所以。当使用了ID这个字段，那就直接忽略掉其他字段，否则没有任何意义
+        request.get('/user/' + userForm.ID).then(response => {
+            tableData.value = []
+            console.log(response.data);
+            tableData.value.push(response.data)
+        }).catch(err => {
+            console.log(err);
+        })
     }
 }
 

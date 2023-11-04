@@ -47,12 +47,44 @@ func FindUser(c *gin.Context) {
 		log.Printf("SelectById failed, err: %v\n", err)
 		response.Failed("查询用户失败", c)
 	} else {
-		u.Password = "*"
 		response.Success("查询用户成功", u, c)
 	}
 }
 
-// 用户登录，旧版的，自从使用了token之后就没有地方再调用这个函数了
+// 通过表单的json转换为结构体对象，查询匹配的用户
+func FindUserByStruct(c *gin.Context) {
+	var (
+		userDao dao.UserDao
+		user    moudels.User
+		users   []moudels.User
+		err     error
+	)
+	user.Promise = 1 // 只查普通用户
+	user.Name = c.Query("name")
+	user.Gender = c.Query("gender")
+	user.Address = c.Query("address")
+	user.Phone = c.Query("phone")
+	birthday := c.QueryArray("birthday")
+	// log.Printf("前端传过来的表单：%v", user)
+	log.Printf("前端传过来的数据")
+	user.Show()
+
+	if len(birthday) == 2 {
+		log.Printf("带有生日")
+		users, err = userDao.SelectByStructWithBirthday(user, birthday)
+	} else {
+		log.Printf("不带有生日")
+		users, err = userDao.SelectByStruct(user)
+	}
+	if err != nil {
+		log.Printf("select by struct failed, err: %v\n", err)
+		response.Failed("查询用户失败", c)
+	} else {
+		response.Success("查询用户成功", users, c)
+	}
+}
+
+// 用户登录，旧版的，自从使用了token之后就没有地方再调用这个函数了，新版登录看 AuthHandler
 func UserLogin(c *gin.Context) {
 	var user moudels.User
 	var ok bool
@@ -66,7 +98,7 @@ func UserLogin(c *gin.Context) {
 	}
 }
 
-// 用户鉴权
+// 用户鉴权，用户登录时使用，新版的登录
 func AuthHandler(c *gin.Context) {
 	// 用户发送用户名和密码过来
 	var user moudels.User

@@ -27,6 +27,7 @@ func register(r *gin.Engine) {
 	r.GET("/user-list", api.UserList)                          // 展示用户列表
 	r.GET("/user/:id", api.FindUser)                           // 根据ID查找用户
 	r.GET("/user", api.SeeUserInfo)                            // 根据Name查找用户
+	r.GET("/user-struct", api.FindUserByStruct)                // 根据User结构体查询用户
 	r.GET("/home", utils.JWTAuthMiddleware(), api.AuthHandler) // 鉴权
 	r.GET("/captcha", api.Captcha)                             // 验证码
 
