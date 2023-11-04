@@ -47,10 +47,11 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 import { User, Lock } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import request from "../../request";
+import { ElMessage } from 'element-plus'
 
 // 登录用户对象
 const user = ref({
@@ -64,8 +65,6 @@ const captchaURL = ref('http://localhost:9000/captcha')
 
 // 更新验证码
 function updateCaptcha() {
-    // this.src='/captch?v=' + Math.random()
-    // alert('顶顶顶')
     captchaURL.value = 'http://localhost:9000/captcha?v=' + Math.random()
 }
 
@@ -82,8 +81,6 @@ const myForm = ref(null);
 // 路由对象
 const router = useRouter();
 
-// 验证码是否通过
-const captcha = reactive({ pass: false })
 // 跳转到注册页面
 function goRegister() {
     router.push('/register');
@@ -91,52 +88,72 @@ function goRegister() {
 
 // 进入主页面
 function goHome() {
-    // 打印一下验证码
+    // 打印一下用户输入的验证码
     // console.log(user.value.captcha);
 
     // 表单验证
     myForm.value.validate((valid) => {
         if (valid) {
-            // 表单验证通过，可以在这里执行提交操作
-            // 例如，将 formData 发送到后端进行保存
-            // console.log('表单验证通过，可以提交数据了', user.value);
+            // 表单验证通过
+            ElMessage({
+                message: '表单校验通过',
+                type: 'success',
+            })
 
             // 校验验证码
             request.post('/captcha/verify', {
-                code: user.value.captcha
+                code: user.value.captcha    // 将前端输入的验证码发送给后端
             }).then(response => {
-                console.log(response);
-                captcha.pass = true
+                // console.log(response);
+                // 如果验证码校验通过了，才往下走
+                if (response.code == 200) {
+                    ElMessage({
+                        message: '验证码正确',
+                        type: 'success',
+                    })
+                    // 登录
+                    // post的参数除了可以直接传user.value，
+                    // 还可以这样传：{"name": user.value.name, "password": user.value.password}
+                    request.post('/user-login', user.value).then(response => {
+                        // console.log(response);  // data返回的是token
+                        // 只有状态码是200才能登录系统，否则就不能登录
+                        if (response.code === 200) {
+                            // alert('登录成功')
+                            localStorage.setItem('token', response.data)    // 将Token存放到本地存储上，这样后续可以通过localStorage.GetItem获取
+                            localStorage.setItem('name', user.value.name)
+                            router.push('/home')    // 路由跳转就是通过这种类似压栈的
+                        } else {
+                            // alert('用户名或密码错误')
+                            ElMessage({
+                                message: '用户名或密码错误',
+                                type: 'error',
+                            })
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                        // alert('系统异常错误')
+                        ElMessage({
+                            message: '系统异常错误',
+                            type: 'error',
+                        })
+                    })
+                } else {
+                    // console.log('验证码不通过');
+                    ElMessage({
+                        message: '验证码不通过',
+                        type: 'error',
+                    })
+                }
             }).catch(err => {
                 console.log(err);
             })
-
-            // 如果验证码校验通过了，才往下走
-            console.log(captcha);
-            if (captcha.pass == true) {
-                // 登录
-                // post的参数除了可以直接传user.value，
-                // 还可以这样传：{"name": user.value.name, "password": user.value.password}
-                request.post('/user-login', user.value).then(response => {
-                    // console.log(response);  // data返回的是token
-                    // 只有状态码是200才能登录系统，否则就不能登录
-                    if (response.code === 200) {
-                        // alert('登录成功')
-                        localStorage.setItem('token', response.data)    // 将Token存放到本地存储上，这样后续可以通过localStorage.GetItem获取
-                        localStorage.setItem('name', user.value.name)
-                        router.push('/home')    // 路由跳转就是通过这种类似压栈的
-                    } else {
-                        alert('用户名或密码错误')
-                    }
-                }).catch(err => {
-                    console.log(err);
-                    alert('系统异常错误')
-                })
-            } else {
-                console.log('表单验证失败');
-            }
+        } else {
+            // console.log('表单验证失败');
+            ElMessage({
+                message: '表单校验失败',
+                type: 'error',
+            })
         }
-
     });
 }
 

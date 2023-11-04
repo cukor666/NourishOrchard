@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import request from "../request";
-// import { useUserStore } from "../stores/stores"
-
-// const userStore = useUserStore()
+import { ElMessage } from 'element-plus'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,10 +29,18 @@ const router = createRouter({
           .then((response) => {
             // console.log(response);
             if (response.code == 200) {
-              console.log('通过');
+              // console.log("通过");
+              ElMessage({
+                message: "欢迎光临",
+                type: "success",
+              });
               next();
             } else {
-              console.log('不通过');
+              // console.log("不通过");
+              ElMessage({
+                message: "不通过",
+                type: "error",
+              });
               next(false);
             }
           })
