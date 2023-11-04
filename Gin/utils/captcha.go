@@ -12,6 +12,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 全局定义，方便下面使用
+var captchaId string
+
 // 配置Session
 func SessionConfig() sessions.Store {
 	sessionMaxAge := 3600
@@ -80,26 +83,38 @@ func Captcha(c *gin.Context, length ...int) {
 	if len(length) == 3 {
 		h = length[2] // 如果传了三个参数，就讲默认的高度替换掉
 	}
-	captchaId := captcha.NewLen(l)
+	captchaId = captcha.NewLen(l) // 使用全局的captchaId
 	session := sessions.Default(c)
 	session.Set("captcha", captchaId)
 	captchaId2 := session.Get("captcha") // 获取到验证码ID
-	log.Printf("captchaId: %s", captchaId2)
-	_ = session.Save()                                                   // 保存更新后的session
+	log.Printf("全局captchaId: %s", captchaId)
+	log.Printf("局部captchaId2: %s", captchaId2) // 这里通过运行知道，可以从session中获取到
+	err := session.Save()                      // 保存更新后的sessions
+	if err != nil {
+		log.Printf("生成验证码 session save failed, err: %v\n", err)
+		return
+	}
 	_ = Serve(c.Writer, c.Request, captchaId, ".png", "zh", false, w, h) // 生成图片
 }
 
 // 验证，验证码
 func CaptchaVerify(c *gin.Context, code string) bool {
-	session := sessions.Default(c)      // 获取到上下文的session
-	captchaId := session.Get("captcha") // 获取到验证码ID
-	// 这里出现了bug，无法从session中获取captcha，但是上面明明已经设置了，而且上面可以获取得到
-	if captchaId != nil {
-		log.Printf("有captchaId")
-		session.Delete("captcha")                             // 如果有验证码，那就将session中的captcha去除
-		_ = session.Save()                                    // 保存当前session状态
-		return captcha.VerifyString(captchaId.(string), code) // 比较系统生成的验证码和用户的验证码是否相同
+	session := sessions.Default(c)       // 获取到上下文的session
+	captchaId2 := session.Get("captcha") // 获取到验证码ID
+	if captchaId2 == nil {
+		log.Printf("无法从session中获取captchaId2")
 	}
-	log.Printf("没有captchaId")
-	return false // 如果没有从session中获取验证码ID就直接返回false
+	// if captchaId != nil {
+	// 	log.Printf("有captchaId")
+	// 	session.Delete("captcha") // 如果有验证码，那就将session中的captcha去除
+	// 	err := session.Save()     // 保存当前session状态
+	// 	if err != nil {
+	// 		log.Printf("验证验证码 session save failed, err: %v\n", err)
+	// 		return false
+	// 	}
+	// 	return captcha.VerifyString(captchaId.(string), code) // 比较系统生成的验证码和用户的验证码是否相同
+	// }
+	log.Printf("使用全局的captchaId")
+	return captcha.VerifyString(captchaId, code)
+	// return false // 如果没有从session中获取验证码ID就直接返回false
 }

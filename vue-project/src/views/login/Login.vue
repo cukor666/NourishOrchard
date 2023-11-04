@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { User, Lock } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import request from "../../request";
@@ -82,6 +82,8 @@ const myForm = ref(null);
 // 路由对象
 const router = useRouter();
 
+// 验证码是否通过
+const captcha = reactive({ pass: false })
 // 跳转到注册页面
 function goRegister() {
     router.push('/register');
@@ -89,7 +91,8 @@ function goRegister() {
 
 // 进入主页面
 function goHome() {
-    console.log(user.value.captcha);
+    // 打印一下验证码
+    // console.log(user.value.captcha);
 
     // 表单验证
     myForm.value.validate((valid) => {
@@ -103,31 +106,37 @@ function goHome() {
                 code: user.value.captcha
             }).then(response => {
                 console.log(response);
+                captcha.pass = true
             }).catch(err => {
                 console.log(err);
             })
 
-            // 登录
-            // post的参数除了可以直接传user.value，
-            // 还可以这样传：{"name": user.value.name, "password": user.value.password}
-            request.post('/user-login', user.value).then(response => {
-                // console.log(response);  // data返回的是token
-                // 只有状态码是200才能登录系统，否则就不能登录
-                if (response.code === 200) {
-                    // alert('登录成功')
-                    localStorage.setItem('token', response.data)    // 将Token存放到本地存储上，这样后续可以通过localStorage.GetItem获取
-                    localStorage.setItem('name', user.value.name)
-                    router.push('/home')    // 路由跳转就是通过这种类似压栈的
-                } else {
-                    alert('用户名或密码错误')
-                }
-            }).catch(err => {
-                console.log(err);
-                alert('系统异常错误')
-            })
-        } else {
-            console.log('表单验证失败');
+            // 如果验证码校验通过了，才往下走
+            console.log(captcha);
+            if (captcha.pass == true) {
+                // 登录
+                // post的参数除了可以直接传user.value，
+                // 还可以这样传：{"name": user.value.name, "password": user.value.password}
+                request.post('/user-login', user.value).then(response => {
+                    // console.log(response);  // data返回的是token
+                    // 只有状态码是200才能登录系统，否则就不能登录
+                    if (response.code === 200) {
+                        // alert('登录成功')
+                        localStorage.setItem('token', response.data)    // 将Token存放到本地存储上，这样后续可以通过localStorage.GetItem获取
+                        localStorage.setItem('name', user.value.name)
+                        router.push('/home')    // 路由跳转就是通过这种类似压栈的
+                    } else {
+                        alert('用户名或密码错误')
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    alert('系统异常错误')
+                })
+            } else {
+                console.log('表单验证失败');
+            }
         }
+
     });
 }
 
