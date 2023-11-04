@@ -79,7 +79,7 @@ func (ud UserDao) SelectByName(name string) (user moudels.User, ok bool) {
 // 根据指定字段查询用户
 func (ud UserDao) SelectByStruct(user moudels.User) (users []moudels.User, err error) {
 	err = db.Select("id", "name", "gender", "birthday", "phone", "address").
-		Where(&user).Take(&users).Error
+		Where(&user).Find(&users).Error
 	return
 }
 
@@ -87,7 +87,7 @@ func (ud UserDao) SelectByStruct(user moudels.User) (users []moudels.User, err e
 func (ud UserDao) SelectByStructWithBirthday(user moudels.User, birthday []string) (users []moudels.User, err error) {
 	err = db.Select("id", "name", "gender", "birthday", "phone", "address").
 		Where(&user).Where("birthday between ? and ?", birthday[0], birthday[1]).
-		Take(&users).Error
+		Find(&users).Error
 	return
 }
 
