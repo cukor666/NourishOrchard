@@ -15,6 +15,7 @@ type User struct {
 	Birthday time.Time `json:"birthday" gorm:"null"`
 	Phone    string    `json:"phone" gorm:"size:20;not null;"`
 	Address  string    `json:"address" gorm:"not null"`
+	Promise  int8      `json:"promise" gorm:"not null;default:1"`
 }
 
 func NewUser(name, password, gender, phone, address string) *User {
@@ -25,6 +26,7 @@ func NewUser(name, password, gender, phone, address string) *User {
 	user.Birthday = time.Date(2000, 8, 8, 6, 6, 6, 6, time.UTC)
 	user.Phone = phone
 	user.Address = address
+	user.Promise = 1
 	return user
 }
 

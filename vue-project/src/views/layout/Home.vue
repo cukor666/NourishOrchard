@@ -83,6 +83,7 @@
         <el-container>
             <el-header style="font-size: 12px">
                 <div class="toolbar">
+                    <!-- 收缩和展开侧边栏的按钮 -->
                     <el-button @click="toggleSidebar" style="background-color: #37A2EA;color: white;margin-right: 10px;">
                         <el-icon v-show="isCollapse">
                             <DArrowRight />
@@ -160,6 +161,7 @@ function showInfo() {
             userStore.userGridData[0].birthday = user.birthday
             userStore.userGridData[0].phone = user.phone
             userStore.userGridData[0].address = user.address
+            userStore.userGridData[0].promise = user.promise
 
             console.log(userStore.userGridData[0]);
 

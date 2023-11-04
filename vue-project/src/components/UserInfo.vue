@@ -5,6 +5,7 @@
                 <el-table-column property="ID" label="ID" width="50" />
                 <el-table-column property="name" label="用户名" width="80" />
                 <el-table-column property="gender" label="性别" width="60" />
+                <el-table-column property="promise" label="权限" width="60" />
                 <el-table-column property="birthday" label="生日" width="220" />
                 <el-table-column property="phone" label="联系方式" width="120" />
                 <el-table-column property="address" label="地址" width="200" />
@@ -28,6 +29,7 @@ function closeDialog() {
         birthday: "xxx",
         phone: "xxx",
         address: "xxx",
+        promise: "xxx"
     }]
     router.back()
 }

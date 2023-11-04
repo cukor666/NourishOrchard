@@ -13,6 +13,7 @@ export const useUserStore = defineStore("user", () => {
       birthday: "xxx",
       phone: "xxx",
       address: "xxx",
+      promise: "xxx"
     },
   ]);
   const userRow = ref({
@@ -24,6 +25,7 @@ export const useUserStore = defineStore("user", () => {
     address: "",
     CreatedAt: "",
     UpdatedAt: "",
+    promise: "xxx"
   });
   return { loginUserName, UserInfoVisible, userGridData, userRow, token };
 });

@@ -13,7 +13,7 @@
                 <div style="margin-top: 10px;">
                     <span class="demonstration">生日：</span>
                     <el-date-picker v-model="userForm.birthday" type="daterange" range-separator="To"
-                        start-placeholder="Start date" end-placeholder="End date" :size="size" />
+                        start-placeholder="Start date" end-placeholder="End date"  />
                 </div>
 
             </div>
@@ -55,7 +55,8 @@
                 </el-table>
             </el-scrollbar>
             <div>
-                <el-config-provider :locale="locale">
+                <!-- :locale="locale" -->
+                <el-config-provider>
                     <el-pagination :total="20" />
                 </el-config-provider>
             </div>
