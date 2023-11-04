@@ -28,12 +28,7 @@ func UserAdd(c *gin.Context) {
 // 查询所有用户信息
 func UserList(c *gin.Context) {
 	var userDao dao.UserDao
-	result, err := userDao.SelectAll()
-	n := len(result)
-	// 防止密码泄露，只能使用普通的for，不能使用for range
-	for i := 0; i < n; i++ {
-		result[i].Password = "*"
-	}
+	result, err := userDao.SelectAllUser() // 新版
 	if err != nil {
 		log.Printf("selectAll failed, err: %v\n", err)
 		response.Failed("后端查询数据失败", c)
@@ -57,7 +52,7 @@ func FindUser(c *gin.Context) {
 	}
 }
 
-// 用户登录
+// 用户登录，旧版的，自从使用了token之后就没有地方再调用这个函数了
 func UserLogin(c *gin.Context) {
 	var user moudels.User
 	var ok bool
@@ -67,8 +62,7 @@ func UserLogin(c *gin.Context) {
 	if !ok {
 		response.Failed("后端发送数据，用户名或密码错误", c)
 	} else {
-		user.Password = "*"
-		response.Success("登录成功", user, c)
+		response.Success("登录成功", user.Name, c)
 	}
 }
 
@@ -108,7 +102,6 @@ func SeeUserInfo(c *gin.Context) {
 	if !ok {
 		response.Failed("无此用户: "+name, c)
 	} else {
-		user.Password = "*"
 		response.Success("查询用户成功", user, c)
 	}
 }

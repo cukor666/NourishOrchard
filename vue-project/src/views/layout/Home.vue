@@ -153,7 +153,7 @@ function showInfo() {
             // 希望出现一个模态对话框，而不是打印到控制台上
             userStore.UserInfoVisible = true
             var user = response.data
-            console.log(userStore.userGridData[0]);
+            // console.log(userStore.userGridData[0]);
 
             userStore.userGridData[0].ID = user.ID
             userStore.userGridData[0].name = user.name
@@ -164,6 +164,7 @@ function showInfo() {
             userStore.userGridData[0].promise = user.promise
 
             console.log(userStore.userGridData[0]);
+            console.log(response.data);
 
             router.push('/user-info')
         }).catch(err => {

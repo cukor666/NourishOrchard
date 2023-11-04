@@ -23,8 +23,18 @@ func (ud UserDao) Insert(user moudels.User) (newId uint, affect int64) {
 	return user.ID, d.RowsAffected
 }
 
+// 查询所有用户，包括普通用户、管理员、超级管理员
 func (ud UserDao) SelectAll() (result []moudels.User, err error) {
 	err = db.Find(&result).Error
+	return
+}
+
+// 查询所有用户，权限为1的
+func (ud UserDao) SelectAllUser() (result []moudels.User, err error) {
+	// 不把密码查出来给前端，防止密码泄露
+	err = db.Select("id", "name", "gender", "birthday", "phone", "address", "CreatedAt", "UpdatedAt").
+		Where("promise = 1").
+		Find(&result).Error
 	return
 }
 
@@ -35,7 +45,9 @@ func (ud UserDao) SelectById(id uint) (user moudels.User, err error) {
 
 func (ud UserDao) SelectUserByNameAndPwd(name, password string) (user moudels.User, ok bool) {
 	ok = true
-	err := db.Where("name = ? AND password = ?", name, password).Take(&user).Error
+	err := db.Select("name", "password").
+		Where("name = ? AND password = ?", name, password).
+		Take(&user).Error
 	if err != nil {
 		log.Printf("select failed, err: %v\n", err)
 		ok = false
@@ -44,9 +56,13 @@ func (ud UserDao) SelectUserByNameAndPwd(name, password string) (user moudels.Us
 	return
 }
 
+// 根据用户名查询个人信息
 func (ud UserDao) SelectByName(name string) (user moudels.User, ok bool) {
 	ok = true
-	err := db.Where("name = ?", name).Take(&user).Error
+	// 指定前端要看到的字段，包含隐私信息
+	err := db.Select("id", "name", "gender", "promise", "birthday", "phone", "address").
+		Where("name = ?", name).
+		Take(&user).Error
 	if err != nil {
 		log.Printf("select failed, err: %v\n", err)
 		ok = false
