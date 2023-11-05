@@ -81,6 +81,11 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: '/see-use-info',
+      name: "/SeeUseInfo",
+      component: () => import("../components/SeeUseInfo.vue")
+    }
   ],
 });
 

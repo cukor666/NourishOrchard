@@ -1,12 +1,34 @@
 <template>
     <div>
+        <div style="float: right;">
+            <el-button type="info" text @click="drawer = true">
+                <p style="color: rgb(167, 35, 199);">使用说明</p>
+            </el-button>
+            <el-drawer v-model="drawer" title="I am the title" :with-header="false">
+                <h3>使用说明</h3>
+                <br>
+                <h4>ID</h4>
+                <p>ID &lt; 0：表示查询所有用户</p>
+                <p>ID = 0：表示不使用ID字段</p>
+                <p>ID &gt; 0：表示使用ID字段，此时无论其他字段是否填写都只使用ID字段</p>
+                <br>
+                <h4>其他字段</h4>
+                <p>仅在ID为0时才有效，且字段不填写则不使用该字段查询，填写了就表示使用该字段查询</p>
+                <br>
+                <h4>搜索与清空</h4>
+                <p>选择好使用的字段之后，点击右边的搜索按钮即可开始查询，点击清空按钮即可将输入框还原。</p>
+                <br>
+                <router-link to="/see-use-info">查看教程</router-link>
+            </el-drawer>
+        </div>
+
         <div style="display: flex; justify-content: center; align-items: center; height: 100px;">
             <div style="flex: 6; margin-left: 10px;">
                 ID：<el-input type="number" style="width: 80px;" v-model="userForm.ID"></el-input>
                 用户名：<el-input placeholder="Cukor" style="width: 80px;" v-model="userForm.name"></el-input>
                 电话：<el-input placeholder="12345678910" style="width: 120px;" v-model="userForm.phone"></el-input>
                 地址：<el-input placeholder="地址" style="width: 200px;" v-model="userForm.address"></el-input>
-                性别：<el-select v-model="userForm.gender" style="width: 80px;" placeholder="其他">
+                性别：<el-select v-model="userForm.gender" style="width: 80px;" placeholder="不填">
                     <el-option v-for="item in genders" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
 
@@ -19,23 +41,15 @@
             </div>
 
             <div style="flex: 1;">
-                <el-button type="primary" @click="searchUser">
+                <el-button type="primary" circle title="搜索" @click="searchUser">
                     <el-icon>
                         <Search />
                     </el-icon>
-                    搜索
                 </el-button>
-                <el-button type="warning">
+                <el-button type="warning" circle title="清空" @click="clearUserForm">
                     <el-icon>
                         <Refresh />
                     </el-icon>
-                    清空
-                </el-button>
-                <el-button>
-                    <el-icon>
-                        <Refresh />
-                    </el-icon>
-                    使用说明
                 </el-button>
             </div>
         </div>
@@ -100,12 +114,10 @@ const genders = ref([
     {
         value: "女",
         label: "女"
-    },
-    {
-        value: "其他",
-        label: "其他"
     }
 ])
+
+const drawer = ref(false)
 
 // 查询所有用户
 // 优化搜索，todo
@@ -148,6 +160,20 @@ function searchUser() {
             console.log(err);
         })
     }
+}
+
+// 清空搜索输入
+function clearUserForm() {
+    userForm.ID = -1
+    userForm.name = ''
+    userForm.phone = ''
+    userForm.address = ''
+    userForm.gender = ''
+    userForm.birthday = ''
+    ElMessage({
+        message: '清空输入框成功',
+        type: 'success',
+    })
 }
 
 // 编辑用户信息
