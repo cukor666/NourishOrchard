@@ -41,7 +41,7 @@ const router = createRouter({
                 message: "不通过",
                 type: "error",
               });
-              next(false);
+              next('/');  // 跳转到登录页面
             }
           })
           .catch((err) => {
