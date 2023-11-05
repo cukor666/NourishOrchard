@@ -64,17 +64,16 @@ func FindUserByStruct(c *gin.Context) {
 	user.Gender = c.Query("gender")
 	user.Address = c.Query("address")
 	user.Phone = c.Query("phone")
-	birthday := c.QueryArray("birthday") // todo 	前端传过来的是数组，但是这里拿不到
-	// log.Printf("前端传过来的表单：%v", user)
+	birthday := c.QueryArray("birthday[]") // 前端传过来的是数组，要这样拿
 	log.Printf("前端传过来的数据")
 	user.Show()
-	log.Printf("birthday数组：%v", birthday)
+	log.Printf("birthday数组的长度：%v", len(birthday))
 
-	if len(birthday) != 0 {
-		log.Printf("带有生日")
+	if len(birthday) == 2 {
+		log.Printf("len(birthday) == 2")
 		users, err = userDao.SelectByStructWithBirthday(user, birthday)
 	} else {
-		log.Printf("不带有生日")
+		log.Printf("len(birthday) != 2")
 		users, err = userDao.SelectByStruct(user)
 	}
 	if err != nil {
