@@ -34,7 +34,7 @@ func (ud UserDao) SelectAll() (result []moudels.User, err error) {
 func (ud UserDao) SelectAllUser() (result []moudels.User, err error) {
 	// 不把密码查出来给前端，防止密码泄露
 	err = db.Select("id", "name", "gender", "birthday", "phone", "address", "CreatedAt", "UpdatedAt").
-		Where("promise = 1").
+		Where("promise = ?", 1).
 		Find(&result).Error
 	return
 }
@@ -78,15 +78,27 @@ func (ud UserDao) SelectByName(name string) (user moudels.User, ok bool) {
 
 // 根据指定字段查询用户
 func (ud UserDao) SelectByStruct(user moudels.User) (users []moudels.User, err error) {
-	err = db.Select("id", "name", "gender", "birthday", "phone", "address").
-		Where(&user).Find(&users).Error
+	// phone、address等字段需要模糊查询才能有意义，所以得单独提取出来
+	phone := user.Phone
+	user.Phone = "" // 提取完之后清空user中的属性，防止下面的Where使用phone = 'xxx'，下address同
+	address := user.Address
+	user.Address = ""
+	err = db.Select("id", "name", "gender", "birthday", "phone", "address", "CreatedAt", "UpdatedAt").
+		Where(&user).Where("phone LIKE ? AND address LIKE ?", "%"+phone+"%", "%"+address+"%").
+		Find(&users).Error
 	return
 }
 
 // 根据指定字段查询用户，携带有生日
 func (ud UserDao) SelectByStructWithBirthday(user moudels.User, birthday []string) (users []moudels.User, err error) {
-	err = db.Select("id", "name", "gender", "birthday", "phone", "address").
+	// phone、address等字段需要模糊查询才能有意义，所以得单独提取出来
+	phone := user.Phone
+	user.Phone = "" // 提取完之后清空user中的属性，防止下面的Where使用phone = 'xxx'，下address同
+	address := user.Address
+	user.Address = ""
+	err = db.Select("id", "name", "gender", "birthday", "phone", "address", "CreatedAt", "UpdatedAt").
 		Where(&user).Where("birthday between ? and ?", birthday[0], birthday[1]).
+		Where("phone LIKE ? AND address LIKE ?", "%"+phone+"%", "%"+address+"%").
 		Find(&users).Error
 	return
 }
