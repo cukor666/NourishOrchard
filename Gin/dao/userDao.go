@@ -65,7 +65,7 @@ func (ud UserDao) SelectUserByNameAndPwd(name, password string) (user moudels.Us
 func (ud UserDao) SelectByName(name string) (user moudels.User, ok bool) {
 	ok = true
 	// 指定前端要看到的字段，包含隐私信息
-	err := db.Select("id", "name", "gender", "promise", "birthday", "phone", "address").
+	err := db.Select("id", "name", "nick_name", "gender", "promise", "birthday", "phone", "address").
 		Where("name = ?", name).
 		Take(&user).Error
 	if err != nil {
@@ -73,6 +73,7 @@ func (ud UserDao) SelectByName(name string) (user moudels.User, ok bool) {
 		ok = false
 		return
 	}
+	user.Show()
 	return
 }
 

@@ -150,23 +150,30 @@ function showInfo() {
     // alert('按下了个人信息' + userStore.loginUserName)
     try {
         request.get('/user?name=' + userStore.loginUserName).then(response => {
-            // 希望出现一个模态对话框，而不是打印到控制台上
-            userStore.UserInfoVisible = true
-            var user = response.data
-            // console.log(userStore.userGridData[0]);
+            if (response.code == 200) {
+                console.log(response.data);
 
-            userStore.userGridData[0].ID = user.ID
-            userStore.userGridData[0].name = user.name
-            userStore.userGridData[0].gender = user.gender
-            userStore.userGridData[0].birthday = user.birthday
-            userStore.userGridData[0].phone = user.phone
-            userStore.userGridData[0].address = user.address
-            userStore.userGridData[0].promise = user.promise
+                // 希望出现一个模态对话框，而不是打印到控制台上
+                userStore.UserInfoVisible = true
+                var user = response.data
+                // console.log(userStore.userGridData[0]);
 
-            // console.log(userStore.userGridData[0]);
-            // console.log(response.data);
+                userStore.userGridData[0].ID = user.ID
+                userStore.userGridData[0].name = user.name
+                userStore.userGridData[0].nickname = user.nickname
+                userStore.userGridData[0].gender = user.gender
+                userStore.userGridData[0].birthday = user.birthday
+                userStore.userGridData[0].phone = user.phone
+                userStore.userGridData[0].address = user.address
+                userStore.userGridData[0].promise = user.promise
 
-            router.push('/user-info')
+                // console.log(userStore.userGridData[0]);
+
+                router.push('/user-info')
+            } else {
+                alert('无此用户')
+            }
+
         }).catch(err => {
             console.error(err);
         })

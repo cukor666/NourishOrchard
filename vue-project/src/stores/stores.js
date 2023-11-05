@@ -9,6 +9,7 @@ export const useUserStore = defineStore("user", () => {
     {
       ID: 0,
       name: "xxx",
+      nickname: "xxx",
       gender: "xxx",
       birthday: "xxx",
       phone: "xxx",
@@ -19,6 +20,7 @@ export const useUserStore = defineStore("user", () => {
   const userRow = ref({
     ID: 0,
     name: "",
+    nickname: "xxx",
     gender: "",
     birthday: "",
     phone: "",

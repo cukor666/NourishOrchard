@@ -4,6 +4,7 @@
             <el-table :data="userStore.userGridData">
                 <el-table-column property="ID" label="ID" width="50" />
                 <el-table-column property="name" label="用户名" width="80" />
+                <el-table-column property="nickname" label="昵称" width="80" />
                 <el-table-column property="gender" label="性别" width="60" />
                 <el-table-column property="promise" label="权限" width="60" />
                 <el-table-column property="birthday" label="生日" width="220" />
@@ -25,6 +26,7 @@ function closeDialog() {
     userStore.userGridData = [{
         ID: 0,
         name: "xxx",
+        nickname: "xxx",
         gender: "xxx",
         birthday: "xxx",
         phone: "xxx",
