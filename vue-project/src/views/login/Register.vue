@@ -6,7 +6,11 @@
                 <p class="register-title gradient-text">注册</p>
                 <el-form :model="user" :rules="rules" ref="ruleFormRef">
                     <el-form-item prop="name">
-                        <el-input :prefix-icon="User" clearable placeholder="账号" v-model="user.name" />
+                        <el-input :prefix-icon="User" clearable placeholder="用户名" v-model="user.name" />
+                    </el-form-item>
+
+                    <el-form-item prop="nickname">
+                        <el-input :prefix-icon="Sugar" clearable placeholder="昵称" v-model="user.nickname" />
                     </el-form-item>
 
                     <el-form-item prop="password">
@@ -37,8 +41,33 @@
                         </el-radio-group>
                     </el-form-item>
 
-                    <el-form-item>
-                        <el-button type="primary" plain @click="joinOur" style="width: 100px;margin: 0 25%;">加入我们</el-button>
+                    <el-form-item style="display: flex; justify-content: center; margin-left: 10px; margin-right: 10px;">
+                        <el-button type="primary" plain round @click="joinOur" style="flex: 1;">
+                            加入我们
+                        </el-button>
+                        <el-button style="flex: 1;" round @click="drawer = true">
+                            帮助
+                        </el-button>
+                        <el-drawer v-model="drawer" title="I am the title" :with-header="false" style="text-align: left;">
+                            <h2>注册表单帮助</h2>
+                            <p>表单上的所有输入框都是<span>必填</span>的。</p>
+                            <h3>用户名</h3>
+                            <ol>
+                                <li>用户名<span>不可以重复</span>。</li>
+                                <li>用户名的格式必须是<span>数字、字母、下划线</span>组成。</li>
+                                <li>必须以<span>字母开头</span>。</li>
+                            </ol>
+                            <h3>密码</h3>
+                            <p>密码至少<span>6</span>位。</p>
+                            <h3>联系电话</h3>
+                            <p>必须是<span>数字</span>，并且在<span>6~20</span>位之间。</p>
+                            <h3>家庭地址</h3>
+                            <p><span>不能为空</span>，越详细我们更容易找到您。</p>
+                            <h3>性别</h3>
+                            <p><span>默认是男</span></p>
+                            <h3>完成</h3>
+                            <p>信息都填写完毕后就可以点击“加入我们”按钮完成注册。</p>
+                        </el-drawer>
                     </el-form-item>
                 </el-form>
             </div>
@@ -51,17 +80,22 @@
 </template>
 
 <script setup>
-import { User, Lock, Location, Phone } from '@element-plus/icons-vue'
+import { User, Lock, Location, Phone, Sugar } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import request from "../../request";
+import { ElMessage } from 'element-plus'
 
 // 路由
 const router = useRouter();
 
+// 注册帮助
+const drawer = ref(false)
+
 // 表单模型
 const user = ref({
     name: '',
+    nickname: '',
     password: '',
     gender: '男',
     birthday: '',
@@ -74,36 +108,54 @@ const ruleFormRef = ref(null);
 
 // 校验规则
 const rules = ref({
-    name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-    password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+    name: [{ required: true, message: '请输入用户名', trigger: 'blur' },
+    { pattern: /^[a-zA-Z]\w{1,19}$/, message: '用户名格式错误', trigger: 'blur' }],
+    nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
+    password: [{ required: true, message: '请输入密码', trigger: 'blur' },
+    { min: 6, max: 20, message: '密码格式不正确', trigger: 'blur' }],
     birthday: [{ required: true, message: "请选择出生日期", trigger: 'blur' }],
-    phone: [{ required: true, message: '请输入联系方式', trigger: 'blur' }],
-    address: [{ required: true, message: '请输入地址', trigger: 'blur' }],
+    phone: [{ required: true, message: '请输入联系方式', trigger: 'blur' },
+    { pattern: /^\d{6,20}$/, message: '联系电话格式不正确', trigger: 'blur' }],
+    address: [{ required: true, message: '请输入地址', trigger: 'blur' }]
 })
 
+// 加入我们，注册成功
 function joinOur() {
     // 表单验证
-    // 当填完页面上的表单数据后，myForm就已经有值了
-    myForm.value.validate((valid) => {
-        console.log(valid);
+    // 当填完页面上的表单数据后，ruleFormRef就已经有值了
+    ruleFormRef.value.validate((valid) => {
+        // console.log(valid);
         if (valid) {
             // 表单验证通过，可以在这里执行提交操作
-            // console.log('表单验证通过，可以提交数据了', user.value);
-
+            ElMessage({
+                message: '表单校验通过',
+                type: 'success',
+            })
             request.post('/addUser', user.value).then(response => {
-                console.log(response.data);
-                if (response.data.code === 200) {
-                    alert('欢迎加入我们！！！')
+                if (response.code === 200) {
+                    ElMessage({
+                        message: '欢迎加入我们！！！',
+                        type: 'success',
+                    })
                     router.push('/')
                 } else {
-                    alert('数据未填写完整，请检查')
+                    ElMessage({
+                        message: '数据未填写完整，请检查',
+                        type: 'error',
+                    })
                 }
             }).catch(err => {
                 console.log(err);
-                alert('系统异常错误')
+                ElMessage({
+                    message: '系统异常错误',
+                    type: 'error',
+                })
             })
         } else {
-            console.log('表单验证失败');
+            ElMessage({
+                message: '表单验证失败',
+                type: 'error',
+            })
         }
     })
 }
@@ -123,8 +175,8 @@ function joinOur() {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 400px;
-    width: 600px;
+    height: 450px;
+    width: 650px;
     border-radius: 15px;
     background-color: rgba(79, 195, 208, 0.7);
     box-shadow: 66px 66px 100px 0px #e5aebc
@@ -163,7 +215,7 @@ function joinOur() {
     padding: 0 10px;
 }
 
-/* .el-radio {
-    margin: 0 3px;
-} */
+span {
+    color: red;
+}
 </style>

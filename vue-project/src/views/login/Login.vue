@@ -27,7 +27,7 @@
 
                     <!-- 验证码图片 -->
                     <el-form-item prop="captcha">
-                        <div style="display: flex; justify-content: center;">
+                        <div style="display: flex; justify-content: center; margin-right: 10px;">
                             <el-input placeholder="验证码" v-model="user.captcha" style="flex: 1;" />
                             <img :src="captchaURL" @click="updateCaptcha" style="flex: 1;">
                         </div>
@@ -35,8 +35,8 @@
 
                     <el-form-item>
                         <div class="btn">
-                            <el-button type="success" @click="goHome">登录</el-button>
-                            <el-button @click="goRegister">注册</el-button>
+                            <el-button type="success" round style="flex: 1;" @click="goHome">登录</el-button>
+                            <el-button round style="flex: 1;" @click="goRegister">注册</el-button>
                         </div>
                     </el-form-item>
 
@@ -172,7 +172,7 @@ function goHome() {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 300px;
+    height: 320px;
     width: 600px;
     border-radius: 15px;
     background-color: rgba(54, 231, 69, 0.4);
@@ -212,7 +212,12 @@ function goHome() {
 }
 
 .btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     margin-top: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 </style>

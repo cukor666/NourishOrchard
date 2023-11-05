@@ -10,6 +10,7 @@ import (
 type User struct {
 	gorm.Model
 	Name     string    `json:"name" gorm:"size:20;unique;not null"`
+	NickName string    `json:"nickname" gorm:"size:20;not null"`
 	Password string    `json:"password" gorm:"size:20;default:123456"`
 	Gender   string    `json:"gender" gorm:"size:4;default:男"`
 	Birthday time.Time `json:"birthday" gorm:"null"`
@@ -18,9 +19,10 @@ type User struct {
 	Promise  int8      `json:"promise" gorm:"not null;default:1"`
 }
 
-func NewUser(name, password, gender, phone, address string) *User {
+func NewUser(name, nickname, password, gender, phone, address string) *User {
 	user := new(User)
 	user.Name = name
+	user.NickName = nickname
 	user.Password = password
 	user.Gender = gender
 	user.Birthday = time.Date(2000, 8, 8, 6, 6, 6, 6, time.UTC)
@@ -32,6 +34,7 @@ func NewUser(name, password, gender, phone, address string) *User {
 
 func (u *User) Show() {
 	log.Println("name: ", u.Name)
+	log.Println("nickname: ", u.NickName)
 	log.Println("password: ", u.Password)
 	log.Println("gender: ", u.Gender)
 	log.Println("birthday: ", u.Birthday)

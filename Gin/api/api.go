@@ -15,6 +15,7 @@ import (
 func UserAdd(c *gin.Context) {
 	var user moudels.User
 	c.ShouldBind(&user)
+	// user.Show()
 	var userDao dao.UserDao
 	_, affect := userDao.Insert(user)
 	user.Password = "*" // 防止密码泄露
