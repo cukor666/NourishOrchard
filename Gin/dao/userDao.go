@@ -140,3 +140,17 @@ func (ud UserDao) DeleteById(id uint) (ok bool) {
 	}
 	return
 }
+
+// 通过用户名获取用户权限
+func (ud UserDao) SelectPromiseByName(name string) (promise int8, ok bool) {
+	ok = true
+	var user moudels.User
+	err := db.Select("promise").Where("name = ?", name).Take(&user).Error
+	promise = user.Promise
+	if err != nil {
+		log.Printf("select promise failed, err: %v\n", err)
+		ok = false
+		return
+	}
+	return
+}

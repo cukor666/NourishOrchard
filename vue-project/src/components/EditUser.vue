@@ -7,6 +7,11 @@
                         <el-input v-model="form.ID" disabled />
                     </el-form-item>
 
+                    <!-- 
+                        1：普通用户
+                        2：管理员
+                        3；超级管理员
+                     -->
                     <el-form-item label="权限">
                         <el-input v-model="userPromise" disabled />
                     </el-form-item>
@@ -16,7 +21,7 @@
                     </el-form-item>
 
                     <el-form-item label="昵称">
-                        <el-input v-model="form.nickname" :disabled="isDisable" />
+                        <el-input v-model="form.nickname" :disabled="isDisabled" />
                     </el-form-item>
 
                     <el-form-item label="性别">
@@ -42,7 +47,7 @@
                     </el-form-item>
                 </el-form>
 
-                <el-button type="primary" :plain="true" :disabled="isDisable" @click="submitDialog">
+                <el-button type="primary" :plain="true" :disabled="isDisabled" @click="submitDialog">
                     确认更改
                 </el-button>
             </template>
@@ -77,6 +82,10 @@ const form = reactive({
     promise: userStore.userRow.promise
 })
 
+
+// 默认提交按钮不可点击
+const isDisabled = ref(true)
+
 // 用户权限
 const userPromise = computed(() => {
     switch (form.promise) {
@@ -89,13 +98,12 @@ const userPromise = computed(() => {
     }
 })
 
-// 默认提交按钮不可点击
-const isDisable = ref(true)
 
 // 表单校验规则
 const formRules = ref({
     birthday: [{ required: true, message: '出生日期必填', trigger: 'blur' }],
-    phone: [{ required: true, message: '联系电话必填', trigger: 'blur' }],
+    phone: [{ required: true, message: '联系电话必填', trigger: 'blur' },
+    { pattern: /^\d{6,20}$/, message: '联系电话格式不正确', trigger: 'blur' }],
     address: [{ required: true, message: '家庭地址必填', trigger: 'blur' }],
 })
 

@@ -185,3 +185,17 @@ func Verify(c *gin.Context) {
 		response.Failed("验证码校验失败", c)
 	}
 }
+
+// 获取登录用户权限
+func GetUserPromise(c *gin.Context) {
+	name := c.Param("name")
+	// log.Printf("name = %s", name)	// 能够获取到用户名
+	var userDao dao.UserDao
+	promise, ok := userDao.SelectPromiseByName(name)
+	log.Printf("promise = %d", promise)
+	if !ok {
+		response.Failed("获取用户权限失败", c)
+		return
+	}
+	response.Success("获取用户权限成功", promise, c)
+}

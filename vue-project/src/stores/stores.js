@@ -2,9 +2,10 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 
 export const useUserStore = defineStore("user", () => {
-  const loginUserName = ref('xxx');
+  const loginUserName = ref("xxx");
+  const loginUserPromise = ref(1);
   const UserInfoVisible = ref(false);
-  const token = ref('')
+  const token = ref("");
   const userGridData = ref([
     {
       ID: 0,
@@ -14,7 +15,7 @@ export const useUserStore = defineStore("user", () => {
       birthday: "xxx",
       phone: "xxx",
       address: "xxx",
-      promise: "xxx"
+      promise: "xxx",
     },
   ]);
   const userRow = ref({
@@ -27,7 +28,14 @@ export const useUserStore = defineStore("user", () => {
     address: "",
     CreatedAt: "",
     UpdatedAt: "",
-    promise: "xxx"
+    promise: "xxx",
   });
-  return { loginUserName, UserInfoVisible, userGridData, userRow, token };
+  return {
+    loginUserName,
+    loginUserPromise,
+    UserInfoVisible,
+    userGridData,
+    userRow,
+    token,
+  };
 });

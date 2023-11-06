@@ -30,6 +30,7 @@ func register(r *gin.Engine) {
 	r.GET("/user-struct", api.FindUserByStruct)                // 根据User结构体查询用户
 	r.GET("/home", utils.JWTAuthMiddleware(), api.AuthHandler) // 鉴权
 	r.GET("/captcha", api.Captcha)                             // 验证码
+	r.GET("/user-promise/:name", api.GetUserPromise)
 
 	// POST
 	r.POST("/addUser", api.UserAdd) // 添加用户，前端注册的时候使用到这个
