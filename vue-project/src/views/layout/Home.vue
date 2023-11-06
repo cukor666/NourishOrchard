@@ -169,6 +169,7 @@ function showInfo() {
                 var user = response.data
                 // console.log(userStore.userGridData[0]);
 
+                // 这个地方待优化
                 userStore.userGridData[0].ID = user.ID
                 userStore.userGridData[0].name = user.name
                 userStore.userGridData[0].nickname = user.nickname

@@ -8,6 +8,7 @@
                     </el-form-item>
 
                     <!-- 
+                        使用计算属性
                         1：普通用户
                         2：管理员
                         3；超级管理员
@@ -84,7 +85,15 @@ const form = reactive({
 
 
 // 默认提交按钮不可点击
-const isDisabled = ref(true)
+const isDisabled = computed(() => {
+    switch (userStore.loginUserPromise) {   // 判断当前登录的用户的权限
+        case 1: // 普通用户
+            return !(form.name === userStore.loginUserName)
+        case 2: // 管理员
+        case 3: // 超级管理员
+            return false
+    }
+})
 
 // 用户权限
 const userPromise = computed(() => {
