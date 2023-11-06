@@ -6,7 +6,7 @@ export const useUserStore = defineStore("user", () => {
   const loginUserPromise = ref(1);
   const UserInfoVisible = ref(false);
   const token = ref("");
-  const userGridData = ref([
+  const userGridData = ref(
     {
       ID: 0,
       name: "xxx",
@@ -15,9 +15,9 @@ export const useUserStore = defineStore("user", () => {
       birthday: "xxx",
       phone: "xxx",
       address: "xxx",
-      promise: "xxx",
+      promise: 0,
     },
-  ]);
+  );
   const userRow = ref({
     ID: 0,
     name: "",
@@ -28,7 +28,7 @@ export const useUserStore = defineStore("user", () => {
     address: "",
     CreatedAt: "",
     UpdatedAt: "",
-    promise: "xxx",
+    promise: 0,
   });
   return {
     loginUserName,

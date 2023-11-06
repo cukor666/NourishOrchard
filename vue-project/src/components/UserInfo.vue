@@ -1,27 +1,43 @@
 <template>
     <div>
-        <el-dialog v-model="userStore.UserInfoVisible" title="个人信息" @close="closeDialog">
-            <el-table :data="userStore.userGridData">
-                <el-table-column property="ID" label="ID" width="50" />
-                <el-table-column property="name" label="用户名" width="80" />
-                <el-table-column property="nickname" label="昵称" width="80" />
-                <el-table-column property="gender" label="性别" width="60" />
-                <el-table-column property="promise" label="权限" width="60" />
-                <el-table-column property="birthday" label="生日" width="220" />
-                <el-table-column property="phone" label="联系方式" width="120" />
-                <el-table-column property="address" label="地址" width="200" />
-            </el-table>
-        </el-dialog>
+        <el-drawer v-model="userStore.UserInfoVisible" title="用户个人信息" :before-close="handleClose">
+            <h4>ID：{{ form.ID }}</h4>
+            <h4>用户名：{{ form.name }}</h4>
+            <h4>昵称：{{ form.nickname }}</h4>
+            <h4>性别：{{ form.gender }}</h4>
+            <h4>权限：{{ promise }}</h4>
+            <h4>生日：{{ form.birthday }}</h4>
+            <h4>联系方式：{{ form.phone }}</h4>
+            <h4>家庭地址：{{ form.address }}</h4>
+        </el-drawer>
     </div>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useUserStore } from '../stores/stores'
 import router from '../router';
 
+// 状态
 const userStore = useUserStore()
 
-function closeDialog() {
+// 数据
+const form = userStore.userGridData
+
+// 权限转换文字
+const promise = computed(() => {
+    switch (form.promise) {
+        case 1:
+            return '普通用户'
+        case 2:
+            return '管理员'
+        case 3:
+            return '超级管理员'
+    }
+})
+
+// 关闭时触发
+function handleClose() {
     userStore.UserInfoVisible = false
     userStore.userGridData = [{
         ID: 0,
@@ -31,26 +47,19 @@ function closeDialog() {
         birthday: "xxx",
         phone: "xxx",
         address: "xxx",
-        promise: "xxx"
+        promise: 0
     }]
     router.back()
 }
 
 </script>
 <style scoped>
-.el-button--text {
-    margin-right: 15px;
+
+h4 {
+    margin-bottom: 10px;
 }
 
-.el-select {
+.el-drawer {
     width: 300px;
-}
-
-.el-input {
-    width: 300px;
-}
-
-.dialog-footer button:first-child {
-    margin-right: 10px;
 }
 </style>

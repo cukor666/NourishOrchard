@@ -162,24 +162,24 @@ function showInfo() {
     try {
         request.get('/user?name=' + userStore.loginUserName).then(response => {
             if (response.code == 200) {
-                console.log(response.data);
+                // console.log(response.data);
 
                 // 希望出现一个模态对话框，而不是打印到控制台上
                 userStore.UserInfoVisible = true
                 var user = response.data
-                // console.log(userStore.userGridData[0]);
+                // console.log(userStore.userGridData);
 
                 // 这个地方待优化
-                userStore.userGridData[0].ID = user.ID
-                userStore.userGridData[0].name = user.name
-                userStore.userGridData[0].nickname = user.nickname
-                userStore.userGridData[0].gender = user.gender
-                userStore.userGridData[0].birthday = user.birthday
-                userStore.userGridData[0].phone = user.phone
-                userStore.userGridData[0].address = user.address
-                userStore.userGridData[0].promise = user.promise
+                userStore.userGridData.ID = user.ID
+                userStore.userGridData.name = user.name
+                userStore.userGridData.nickname = user.nickname
+                userStore.userGridData.gender = user.gender
+                userStore.userGridData.birthday = user.birthday
+                userStore.userGridData.phone = user.phone
+                userStore.userGridData.address = user.address
+                userStore.userGridData.promise = user.promise
 
-                // console.log(userStore.userGridData[0]);
+                // console.log(userStore.userGridData);
 
                 router.push('/user-info')
             } else {
