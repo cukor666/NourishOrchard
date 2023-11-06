@@ -33,7 +33,7 @@ func (ud UserDao) SelectAll() (result []moudels.User, err error) {
 // 查询所有用户，权限为1的
 func (ud UserDao) SelectAllUser() (result []moudels.User, err error) {
 	// 不把密码查出来给前端，防止密码泄露
-	err = db.Select("id", "name", "gender", "birthday", "phone", "address", "CreatedAt", "UpdatedAt").
+	err = db.Omit("password", "DeletedAt").
 		Where("promise = ?", 1).
 		Find(&result).Error
 	return
@@ -41,7 +41,7 @@ func (ud UserDao) SelectAllUser() (result []moudels.User, err error) {
 
 // 根据用户ID查询用户
 func (ud UserDao) SelectById(id uint) (user moudels.User, err error) {
-	err = db.Select("id", "name", "gender", "birthday", "phone", "address", "CreatedAt", "UpdatedAt").
+	err = db.Omit("password", "DeletedAt").
 		Where("id = ?", id).
 		Take(&user).Error
 	return
@@ -65,7 +65,7 @@ func (ud UserDao) SelectUserByNameAndPwd(name, password string) (user moudels.Us
 func (ud UserDao) SelectByName(name string) (user moudels.User, ok bool) {
 	ok = true
 	// 指定前端要看到的字段，包含隐私信息
-	err := db.Select("id", "name", "nick_name", "gender", "promise", "birthday", "phone", "address").
+	err := db.Omit("password", "DeletedAt").
 		Where("name = ?", name).
 		Take(&user).Error
 	if err != nil {
@@ -84,7 +84,7 @@ func (ud UserDao) SelectByStruct(user moudels.User) (users []moudels.User, err e
 	user.Phone = "" // 提取完之后清空user中的属性，防止下面的Where使用phone = 'xxx'，下address同
 	address := user.Address
 	user.Address = ""
-	err = db.Select("id", "name", "gender", "birthday", "phone", "address", "CreatedAt", "UpdatedAt").
+	err = db.Omit("password", "DeletedAt").
 		Where(&user).Where("phone LIKE ? AND address LIKE ?", "%"+phone+"%", "%"+address+"%").
 		Find(&users).Error
 	return

@@ -1,10 +1,11 @@
 <template>
     <div>
+        <!-- 使用说明 -->
         <div style="float: right;">
             <el-button type="info" text @click="drawer = true">
                 <p style="color: rgb(167, 35, 199);">使用说明</p>
             </el-button>
-            <el-drawer v-model="drawer" title="I am the title" :with-header="false">
+            <el-drawer v-model="drawer" title="查询用户帮助教程" :with-header="false">
                 <h3>使用说明</h3>
                 <br>
                 <h4>ID</h4>
@@ -22,10 +23,13 @@
             </el-drawer>
         </div>
 
+        <!-- 主体部分 -->
         <div style="display: flex; justify-content: center; align-items: center; height: 100px;">
-            <div style="flex: 6; margin-left: 10px;">
+            <!-- 搜索选项 -->
+            <div style="flex: 12; margin-left: 10px;">
                 ID：<el-input type="number" style="width: 80px;" v-model="userForm.ID"></el-input>
                 用户名：<el-input placeholder="Cukor" style="width: 80px;" v-model="userForm.name"></el-input>
+                昵称：<el-input placeholder="Sugar" style="width: 80px;" v-model="userForm.nickname"></el-input>
                 电话：<el-input placeholder="12345678910" style="width: 120px;" v-model="userForm.phone"></el-input>
                 地址：<el-input placeholder="地址" style="width: 200px;" v-model="userForm.address"></el-input>
                 性别：<el-select v-model="userForm.gender" style="width: 80px;" placeholder="不填">
@@ -40,6 +44,7 @@
 
             </div>
 
+            <!-- 按钮组 -->
             <div style="flex: 1;">
                 <el-button type="primary" circle title="搜索" @click="searchUser">
                     <el-icon>
@@ -53,33 +58,51 @@
                 </el-button>
             </div>
         </div>
+
+        <!-- 表格部分 -->
         <div>
-            <el-scrollbar>
-                <el-table :data="tableData">
+            <el-row style="display: flex;">
+                <el-table :data="tableData" style="flex: 4; margin-right: 10px;">
                     <el-table-column prop="ID" label="ID" width="50" />
                     <el-table-column prop="name" label="用户名" width="100" />
+                    <el-table-column prop="nickname" label="昵称" width="100" />
                     <el-table-column prop="gender" label="性别" width="80" />
                     <el-table-column prop="phone" label="联系电话" width="120" />
                     <el-table-column prop="address" label="家庭地址" width="120" />
-                    <el-table-column prop="birthday" label="生日" width="200" />
-                    <el-table-column prop="CreatedAt" label="创建时间" width="200" />
-                    <el-table-column prop="UpdatedAt" label="更新时间" width="200" />
+                    <!-- <el-table-column prop="birthday" label="生日" width="200" /> -->
+                    <!-- <el-table-column prop="CreatedAt" label="创建时间" width="200" /> -->
+                    <!-- <el-table-column prop="UpdatedAt" label="更新时间" width="200" /> -->
+
                     <el-table-column label="操作" width="150">
                         <template #default="scope">
                             <!-- 下标index从0开始 -->
-                            <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                            <el-button size="small" @click="handleEdit(scope.$index, scope.row)">详细</el-button>
                             <el-button size="small" type="danger"
                                 @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
-            </el-scrollbar>
-            <div>
-                <!-- :locale="locale" -->
-                <el-config-provider>
+
+                <!-- 卡片部分 -->
+                <el-space wrap style="flex: 3;">
+                    <el-card v-for="i in 4" :key="i" class="box-card" style="width: 100%">
+                        <template #header>
+                            <div class="card-header">
+                                <span>Card name</span>
+                                <el-button class="button" text>Operation button</el-button>
+                            </div>
+                        </template>
+                        <div v-for="o in 4" :key="o" class="text item">
+                            {{ 'List item ' + o }}
+                        </div>
+                    </el-card>
+                </el-space>
+            </el-row>
+            <!-- <div>
+                <el-config-provider :locale="locale">
                     <el-pagination :total="20" />
                 </el-config-provider>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -100,12 +123,14 @@ const tableData = ref([])
 const userForm = reactive({
     ID: -1,
     name: '',
+    nickname: '',
     phone: '',
     address: '',
     gender: '',
     birthday: ''    // 它是一个数组， 0 表示开始的时间，1 表示结束的时间
 })
 
+// 性别选项
 const genders = ref([
     {
         value: "男",
@@ -123,7 +148,7 @@ const drawer = ref(false)
 // 查询所有用户
 function searchUser() {
     // 先获取一下前端填写的表单
-    console.log(userForm);
+    // console.log(userForm);
     // 获取到表单信息之后，将表单封装成json发送给后端，让后端进行查询操作
     if (userForm.ID < 0) {  // 如果userForm.ID < 0 则查询所有用户
         try {
@@ -139,6 +164,7 @@ function searchUser() {
         request.get('/user-struct', {
             params: {
                 name: userForm.name,
+                nickname: userForm.nickname,
                 phone: userForm.phone,
                 address: userForm.address,
                 gender: userForm.gender,
@@ -178,11 +204,8 @@ function clearUserForm() {
 
 // 编辑用户信息
 function handleEdit(index, row) {
-    // console.log(index);
-    // console.log(row);
     userStore.userRow = row
-    // console.log("UserView: userStore.userRow ");
-    // console.log(userStore.userRow);
+    console.log(row);
     router.push('/edit-user-info')
 }
 

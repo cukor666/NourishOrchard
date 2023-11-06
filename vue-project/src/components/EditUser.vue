@@ -1,14 +1,22 @@
 <template>
     <div>
-        <el-dialog v-model="dialogVisible" title="编辑信息" width="45%" draggable @close="closeDialog">
+        <el-dialog v-model="dialogVisible" title="用户详细信息与编辑" width="45%" draggable @close="closeDialog">
             <template #footer>
                 <el-form :model="form" label-width="100px" :rules="formRules" ref="myForm">
                     <el-form-item label="ID">
                         <el-input v-model="form.ID" disabled />
                     </el-form-item>
 
+                    <el-form-item label="权限">
+                        <el-input v-model="userPromise" disabled />
+                    </el-form-item>
+
                     <el-form-item label="用户名">
                         <el-input v-model="form.name" disabled />
+                    </el-form-item>
+
+                    <el-form-item label="昵称">
+                        <el-input v-model="form.nickname" :disabled="isDisable" />
                     </el-form-item>
 
                     <el-form-item label="性别">
@@ -34,8 +42,8 @@
                     </el-form-item>
                 </el-form>
 
-                <el-button type="primary" :plain="true" @click="submitDialog">
-                    确认提交
+                <el-button type="primary" :plain="true" :disabled="isDisable" @click="submitDialog">
+                    确认更改
                 </el-button>
             </template>
         </el-dialog>
@@ -43,41 +51,64 @@
 </template>
   
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import router from '../router'
 import { useUserStore } from '../stores/stores'
 import request from '../request';
 
+// 状态
 const userStore = useUserStore()
 
+// 对话框显示
 const dialogVisible = ref(true)
 
 // 表单赋值，内容从pinia状态中获取
 const form = reactive({
     ID: userStore.userRow.ID,
     name: userStore.userRow.name,
+    nickname: userStore.userRow.nickname,
     gender: userStore.userRow.gender,
     birthday: userStore.userRow.birthday,
     phone: userStore.userRow.phone,
     address: userStore.userRow.address,
     CreatedAt: userStore.userRow.CreatedAt,
-    UpdatedAt: userStore.userRow.UpdatedAt
+    UpdatedAt: userStore.userRow.UpdatedAt,
+    promise: userStore.userRow.promise
 })
 
+// 用户权限
+const userPromise = computed(() => {
+    switch (form.promise) {
+        case 1:
+            return '普通用户'
+        case 2:
+            return '管理员'
+        case 3:
+            return '超级管理员'
+    }
+})
+
+// 默认提交按钮不可点击
+const isDisable = ref(true)
+
+// 表单校验规则
 const formRules = ref({
     birthday: [{ required: true, message: '出生日期必填', trigger: 'blur' }],
     phone: [{ required: true, message: '联系电话必填', trigger: 'blur' }],
     address: [{ required: true, message: '家庭地址必填', trigger: 'blur' }],
 })
 
+// 表单填写完成后会将数据保存在这里
 const myForm = ref(null);
 
+// 对话框关闭的时候会自动调用
 function closeDialog() {
     dialogVisible.value = false
     router.back()
 }
 
+// 当提交表单时触发
 function submitDialog() {
     // 提交表单
     // console.log(form);
