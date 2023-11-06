@@ -148,7 +148,7 @@ func UpdateUserInfo(c *gin.Context) {
 	if !ok {
 		response.Failed("更新失败，参数错误 ", c)
 	} else {
-		user.Password = "*"
+		// user.Password = "*"
 		response.Success("更新用户信息成功", user, c)
 	}
 }

@@ -107,7 +107,20 @@ func (ud UserDao) SelectByStructWithBirthday(user moudels.User, birthday []strin
 // 更新用户信息
 func (ud UserDao) UpdateUserInfo(user moudels.User) (ok bool) {
 	ok = true
-	err := db.Model(&user).Select("gender", "birthday", "phone", "address").Where("name = ?", user.Name).Updates(user).Error
+	var err error
+	if len(user.NickName) != 0 { // 如果外部传了nickname后端才修改,否则不做修改
+		err = db.Model(&user).
+			Select("*").
+			Omit("ID", "name", "password", "promise", "CreatedAt", "DeletedAt").
+			Where("name = ?", user.Name).
+			Updates(user).Error
+	} else {
+		err = db.Model(&user).
+			Select("*").
+			Omit("ID", "name", "password", "promise", "CreatedAt", "DeletedAt", "nick_name").
+			Where("name = ?", user.Name).
+			Updates(user).Error
+	}
 	if err != nil {
 		log.Printf("update failed, err: %v\n", err)
 		ok = false
