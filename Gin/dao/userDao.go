@@ -84,8 +84,13 @@ func (ud UserDao) SelectByStruct(user moudels.User) (users []moudels.User, err e
 	user.Phone = "" // 提取完之后清空user中的属性，防止下面的Where使用phone = 'xxx'，下address同
 	address := user.Address
 	user.Address = ""
+	nickname := user.NickName
+	user.NickName = ""
 	err = db.Omit("password", "DeletedAt").
-		Where(&user).Where("phone LIKE ? AND address LIKE ?", "%"+phone+"%", "%"+address+"%").
+		Where(&user).
+		Where("phone LIKE ?", "%"+phone+"%").
+		Where("address LIKE ?", "%"+address+"%").
+		Where("nick_name LIKE ?", "%"+nickname+"%").
 		Find(&users).Error
 	return
 }
@@ -97,9 +102,14 @@ func (ud UserDao) SelectByStructWithBirthday(user moudels.User, birthday []strin
 	user.Phone = "" // 提取完之后清空user中的属性，防止下面的Where使用phone = 'xxx'，下address同
 	address := user.Address
 	user.Address = ""
-	err = db.Select("id", "name", "gender", "birthday", "phone", "address", "CreatedAt", "UpdatedAt").
-		Where(&user).Where("birthday between ? and ?", birthday[0], birthday[1]).
-		Where("phone LIKE ? AND address LIKE ?", "%"+phone+"%", "%"+address+"%").
+	nickname := user.NickName
+	user.NickName = ""
+	err = db.Omit("password", "DeletedAt").
+		Where(&user).
+		Where("phone LIKE ?", "%"+phone+"%").
+		Where("address LIKE ?", "%"+address+"%").
+		Where("nick_name LIKE ?", "%"+nickname+"%").
+		Where("birthday between ? and ?", birthday[0], birthday[1]).
 		Find(&users).Error
 	return
 }

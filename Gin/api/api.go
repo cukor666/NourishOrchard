@@ -62,6 +62,7 @@ func FindUserByStruct(c *gin.Context) {
 	)
 	user.Promise = 1 // 只查普通用户
 	user.Name = c.Query("name")
+	user.NickName = c.Query("nickname")
 	user.Gender = c.Query("gender")
 	user.Address = c.Query("address")
 	user.Phone = c.Query("phone")

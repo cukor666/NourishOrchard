@@ -192,6 +192,7 @@ function searchUser() {
 function clearUserForm() {
     userForm.ID = -1
     userForm.name = ''
+    userForm.nickname = ''
     userForm.phone = ''
     userForm.address = ''
     userForm.gender = ''
