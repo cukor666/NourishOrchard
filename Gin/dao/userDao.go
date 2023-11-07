@@ -2,6 +2,7 @@ package dao
 
 import (
 	"Gin/moudels"
+	"Gin/utils"
 	"log"
 	"time"
 )
@@ -40,11 +41,11 @@ func (ud UserDao) SelectAllUser() (result []moudels.User, err error) {
 }
 
 // 查询所有普通用户，分页查询
-func (ud UserDao) SelectAllUserByLimt(pageSize, currentPage int) (result []moudels.User, err error) {
+func (ud UserDao) SelectAllUserByLimt(pageSize, currentPage int) (users []moudels.User, result utils.Result) {
 	// 不把密码查出来给前端，防止密码泄露
-	err = db.Omit("password", "DeletedAt").
-		Where("promise = ?", 1).Limit(pageSize).Offset((currentPage - 1) * pageSize).
-		Find(&result).Error
+	tx := db.Omit("password", "DeletedAt").Where("promise = ?", 1)
+	result.Rows = tx.Find(&[]moudels.User{}).RowsAffected
+	result.Error = tx.Limit(pageSize).Offset((currentPage - 1) * pageSize).Find(&users).Error
 	return
 }
 
@@ -87,7 +88,7 @@ func (ud UserDao) SelectByName(name string) (user moudels.User, ok bool) {
 }
 
 // 根据指定字段查询用户
-func (ud UserDao) SelectByStruct(user moudels.User, currentPage, pageSize int) (users []moudels.User, err error) {
+func (ud UserDao) SelectByStruct(user moudels.User, currentPage, pageSize int) (users []moudels.User, rows int64, err error) {
 	// phone、address等字段需要模糊查询才能有意义，所以得单独提取出来
 	phone := user.Phone
 	user.Phone = "" // 提取完之后清空user中的属性，防止下面的Where使用phone = 'xxx'，下address同
@@ -95,18 +96,19 @@ func (ud UserDao) SelectByStruct(user moudels.User, currentPage, pageSize int) (
 	user.Address = ""
 	nickname := user.NickName
 	user.NickName = ""
-	err = db.Omit("password", "DeletedAt").
+	tx := db.Omit("password", "DeletedAt").
 		Where(&user).
 		Where("phone LIKE ?", "%"+phone+"%").
 		Where("address LIKE ?", "%"+address+"%").
-		Where("nick_name LIKE ?", "%"+nickname+"%").
-		Limit(pageSize).Offset((currentPage - 1) * pageSize).
+		Where("nick_name LIKE ?", "%"+nickname+"%")
+	rows = tx.Find(&[]moudels.User{}).RowsAffected
+	err = tx.Limit(pageSize).Offset((currentPage - 1) * pageSize).
 		Find(&users).Error
 	return
 }
 
 // 根据指定字段查询用户，携带有生日
-func (ud UserDao) SelectByStructWithBirthday(user moudels.User, currentPage, pageSize int, birthday []string) (users []moudels.User, err error) {
+func (ud UserDao) SelectByStructWithBirthday(user moudels.User, currentPage, pageSize int, birthday []string) (users []moudels.User, rows int64, err error) {
 	// phone、address等字段需要模糊查询才能有意义，所以得单独提取出来
 	phone := user.Phone
 	user.Phone = "" // 提取完之后清空user中的属性，防止下面的Where使用phone = 'xxx'，下address同
@@ -114,13 +116,14 @@ func (ud UserDao) SelectByStructWithBirthday(user moudels.User, currentPage, pag
 	user.Address = ""
 	nickname := user.NickName
 	user.NickName = ""
-	err = db.Omit("password", "DeletedAt").
+	tx := db.Omit("password", "DeletedAt").
 		Where(&user).
 		Where("phone LIKE ?", "%"+phone+"%").
 		Where("address LIKE ?", "%"+address+"%").
 		Where("nick_name LIKE ?", "%"+nickname+"%").
-		Where("birthday between ? and ?", birthday[0], birthday[1]).
-		Limit(pageSize).Offset((currentPage - 1) * pageSize).
+		Where("birthday between ? and ?", birthday[0], birthday[1])
+	rows = tx.Find(&[]moudels.User{}).RowsAffected
+	err = tx.Limit(pageSize).Offset((currentPage - 1) * pageSize).
 		Find(&users).Error
 	return
 }

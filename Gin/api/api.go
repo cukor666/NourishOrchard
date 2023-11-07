@@ -29,21 +29,19 @@ func UserAdd(c *gin.Context) {
 // 查询所有用户信息，分页
 func UserList(c *gin.Context) {
 	var userDao dao.UserDao
-	s := c.Query("pageSize")
-	// log.Printf("s = %v", s)
-	pageSize, _ := strconv.Atoi(s)
-	s = c.Query("currentPage")
-	// log.Printf("s = %v", s)
-	currentPage, _ := strconv.Atoi(s)
+	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
+	currentPage, _ := strconv.Atoi(c.Query("currentPage"))
 	log.Printf("pageSize = %v", pageSize)
 	log.Printf("currentPage = %v", currentPage)
-	// result, err := userDao.SelectAllUser() // 新版
-	result, err := userDao.SelectAllUserByLimt(pageSize, currentPage) // 新版，分页查询
-	if err != nil {
-		log.Printf("select all by limit failed, err: %v\n", err)
+	users, result := userDao.SelectAllUserByLimt(pageSize, currentPage) // 新版，分页查询
+	if result.Error != nil {
+		log.Printf("select all by limit failed, err: %v\n", result.Error)
 		response.Failed("后端查询数据失败", c)
 	} else {
-		response.Success("查询数据成功", result, c)
+		response.Success("查询数据成功", gin.H{
+			"users": users,
+			"rows":  result.Rows,
+		}, c)
 	}
 }
 
@@ -67,6 +65,7 @@ func FindUserByStruct(c *gin.Context) {
 		userDao dao.UserDao
 		user    moudels.User
 		users   []moudels.User
+		rows    int64
 		err     error
 	)
 	user.Promise = 1 // 只查普通用户
@@ -84,16 +83,19 @@ func FindUserByStruct(c *gin.Context) {
 
 	if len(birthday) == 2 {
 		log.Printf("len(birthday) == 2")
-		users, err = userDao.SelectByStructWithBirthday(user, currentPage, pageSize, birthday)
+		users, rows, err = userDao.SelectByStructWithBirthday(user, currentPage, pageSize, birthday)
 	} else {
 		log.Printf("len(birthday) != 2")
-		users, err = userDao.SelectByStruct(user, currentPage, pageSize)
+		users, rows, err = userDao.SelectByStruct(user, currentPage, pageSize)
 	}
 	if err != nil {
 		log.Printf("select by struct failed, err: %v\n", err)
 		response.Failed("查询用户失败", c)
 	} else {
-		response.Success("查询用户成功", users, c)
+		response.Success("查询用户成功", gin.H{
+			"users": users,
+			"rows":  rows,
+		}, c)
 	}
 }
 

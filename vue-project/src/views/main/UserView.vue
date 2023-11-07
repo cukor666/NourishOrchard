@@ -161,8 +161,8 @@ function searchUser() {
                     pageSize: pageSize.value
                 }
             }).then(response => {
-                // console.log(response.data);
-                tableData.value = response.data
+                tableData.value = response.data.users
+                total.value = response.data.rows
             })
         } catch (error) {
             console.log(error);
@@ -182,7 +182,8 @@ function searchUser() {
             }
         }).then(response => {
             console.log(response.data);
-            tableData.value = response.data
+            tableData.value = response.data.users
+            total.value = response.data.rows
         }).catch(err => {
             console.log(err);
         })
@@ -192,6 +193,7 @@ function searchUser() {
             tableData.value = []
             console.log(response.data);
             tableData.value.push(response.data)
+            total.value = 1
         }).catch(err => {
             console.log(err);
         })
@@ -295,6 +297,10 @@ onMounted(() => {
 // 改变每页大小 pageSize
 function handleSizeChange() {
     // alert('handleSizeChange')
+    ElMessage({
+        message: '切换成功',
+        type: 'success',
+    })
 }
 
 // 改变当前页
