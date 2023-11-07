@@ -39,6 +39,15 @@ func (ud UserDao) SelectAllUser() (result []moudels.User, err error) {
 	return
 }
 
+// 查询所有普通用户，分页查询
+func (ud UserDao) SelectAllUserByLimt(pageSize, currentPage int) (result []moudels.User, err error) {
+	// 不把密码查出来给前端，防止密码泄露
+	err = db.Omit("password", "DeletedAt").
+		Where("promise = ?", 1).Limit(pageSize).Offset((currentPage - 1) * pageSize).
+		Find(&result).Error
+	return
+}
+
 // 根据用户ID查询用户
 func (ud UserDao) SelectById(id uint) (user moudels.User, err error) {
 	err = db.Omit("password", "DeletedAt").

@@ -60,9 +60,9 @@
         </div>
 
         <!-- 表格部分 -->
-        <div>
+        <div style="margin-left: 5px;">
             <el-row style="display: flex;">
-                <el-table :data="tableData" style="flex: 4; margin-right: 10px;">
+                <el-table :data="tableData" style="flex: 4; margin-right: 5px;">
                     <el-table-column prop="ID" label="ID" width="50" />
                     <el-table-column prop="name" label="用户名" width="100" />
                     <el-table-column prop="nickname" label="昵称" width="100" />
@@ -103,6 +103,12 @@
                     <el-pagination :total="20" />
                 </el-config-provider>
             </div> -->
+            <!-- 分页 -->
+            <div style="margin-top: 10px; margin-left: 5px;">
+                <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[6, 10, 12]" small
+                    background layout="total, sizes, prev, pager, next, jumper" :total="total"
+                    @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </div>
         </div>
     </div>
 </template>
@@ -151,8 +157,15 @@ function searchUser() {
     // console.log(userForm);
     // 获取到表单信息之后，将表单封装成json发送给后端，让后端进行查询操作
     if (userForm.ID < 0) {  // 如果userForm.ID < 0 则查询所有用户
+        // console.log(pageSize.value);
+        // console.log(currentPage.value);
         try {
-            request.get('/user-list').then(response => {
+            request.get('/user-list', {
+                params: {
+                    currentPage: currentPage.value,
+                    pageSize: pageSize.value
+                }
+            }).then(response => {
                 // console.log(response.data);
                 tableData.value = response.data
             })
@@ -253,6 +266,25 @@ function handleDelete(index, row) {
     })
 }
 
+// 分页
+// 当前页
+const currentPage = ref(1)
+
+// 页面大小 
+const pageSize = ref(6)
+
+// 总条数
+const total = ref(20)
+
+// 改变每页大小 pageSize
+function handleSizeChange() {
+    // alert('handleSizeChange')
+}
+
+// 改变当前页
+function handleCurrentChange() {
+
+}
 </script>
 
 <style scoped>

@@ -26,12 +26,21 @@ func UserAdd(c *gin.Context) {
 	}
 }
 
-// 查询所有用户信息
+// 查询所有用户信息，分页
 func UserList(c *gin.Context) {
 	var userDao dao.UserDao
-	result, err := userDao.SelectAllUser() // 新版
+	s := c.Query("pageSize")
+	// log.Printf("s = %v", s)
+	pageSize, _ := strconv.Atoi(s)
+	s = c.Query("currentPage")
+	// log.Printf("s = %v", s)
+	currentPage, _ := strconv.Atoi(s)
+	log.Printf("pageSize = %v", pageSize)
+	log.Printf("currentPage = %v", currentPage)
+	// result, err := userDao.SelectAllUser() // 新版
+	result, err := userDao.SelectAllUserByLimt(pageSize, currentPage) // 新版，分页查询
 	if err != nil {
-		log.Printf("selectAll failed, err: %v\n", err)
+		log.Printf("select all by limit failed, err: %v\n", err)
 		response.Failed("后端查询数据失败", c)
 	} else {
 		response.Success("查询数据成功", result, c)
