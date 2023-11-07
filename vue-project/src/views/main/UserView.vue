@@ -176,7 +176,9 @@ function searchUser() {
                 phone: userForm.phone,
                 address: userForm.address,
                 gender: userForm.gender,
-                birthday: userForm.birthday     // 这里传的是数组
+                birthday: userForm.birthday,     // 这里传的是数组
+                currentPage: currentPage.value,
+                pageSize: pageSize.value
             }
         }).then(response => {
             console.log(response.data);

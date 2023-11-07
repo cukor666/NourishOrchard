@@ -76,16 +76,18 @@ func FindUserByStruct(c *gin.Context) {
 	user.Address = c.Query("address")
 	user.Phone = c.Query("phone")
 	birthday := c.QueryArray("birthday[]") // 前端传过来的是数组，要这样拿
-	log.Printf("前端传过来的数据")
-	user.Show()
-	log.Printf("birthday数组的长度：%v", len(birthday))
+	currentPage, _ := strconv.Atoi(c.Query("currentPage"))
+	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
+	// log.Printf("前端传过来的数据")
+	// user.Show()
+	// log.Printf("birthday数组的长度：%v", len(birthday))
 
 	if len(birthday) == 2 {
 		log.Printf("len(birthday) == 2")
-		users, err = userDao.SelectByStructWithBirthday(user, birthday)
+		users, err = userDao.SelectByStructWithBirthday(user, currentPage, pageSize, birthday)
 	} else {
 		log.Printf("len(birthday) != 2")
-		users, err = userDao.SelectByStruct(user)
+		users, err = userDao.SelectByStruct(user, currentPage, pageSize)
 	}
 	if err != nil {
 		log.Printf("select by struct failed, err: %v\n", err)
