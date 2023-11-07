@@ -173,3 +173,11 @@ func (ud UserDao) SelectPromiseByName(name string) (promise int8, ok bool) {
 	}
 	return
 }
+
+// 获取用户个数
+func (ud UserDao) SelectUserCount(promise int8) (userCount int64, err error) {
+	err = db.Model(&moudels.User{}).
+		Where("promise = ?", promise).
+		Count(&userCount).Error
+	return
+}

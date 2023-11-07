@@ -209,3 +209,17 @@ func GetUserPromise(c *gin.Context) {
 	}
 	response.Success("获取用户权限成功", promise, c)
 }
+
+// 获取用户个数
+func GetUserCounnt(c *gin.Context) {
+	s := c.Query("promise")
+	promise, _ := strconv.Atoi(s)
+	var userDao dao.UserDao
+	userCount, err := userDao.SelectUserCount(int8(promise))
+	if err != nil {
+		log.Printf("get user count failed, err: %v\n", err)
+		response.Failed("获取用户总条数失败", c)
+		return
+	}
+	response.Success("获取用户总条数成功", userCount, c)
+}

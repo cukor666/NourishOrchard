@@ -98,22 +98,17 @@
                     </el-card>
                 </el-space>
             </el-row>
-            <!-- <div>
-                <el-config-provider :locale="locale">
-                    <el-pagination :total="20" />
-                </el-config-provider>
-            </div> -->
             <!-- 分页 -->
             <div style="margin-top: 10px; margin-left: 5px;">
-                <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[6, 10, 12]" small
-                    background layout="total, sizes, prev, pager, next, jumper" :total="total"
+                <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[6, 10, 12]"
+                    small background layout="total, sizes, prev, pager, next, jumper" :total="total"
                     @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </div>
         </div>
     </div>
 </template>
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import request from '../../request';
 import router from '../../router';
 import { useUserStore } from '../../stores/stores'
@@ -274,7 +269,26 @@ const currentPage = ref(1)
 const pageSize = ref(6)
 
 // 总条数
-const total = ref(20)
+const total = ref(10)
+
+// 给total做初始化赋值
+const fetchData = async () => {
+    try {
+        const response = await request.get('/user-count?promise=1');
+        if (response.code == 200) {
+            total.value = response.data
+        } else {
+            total.value = -1
+        }
+    } catch (error) {
+        console.log(err);
+        total.value = -1
+    }
+}
+
+onMounted(() => {
+    fetchData();
+});
 
 // 改变每页大小 pageSize
 function handleSizeChange() {
@@ -283,7 +297,7 @@ function handleSizeChange() {
 
 // 改变当前页
 function handleCurrentChange() {
-
+    searchUser()
 }
 </script>
 
