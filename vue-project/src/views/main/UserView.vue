@@ -60,54 +60,45 @@
         </div>
 
         <!-- 表格部分 -->
-        <div style="margin-left: 5px;">
+        <div style="margin-left: 10px;">
             <el-row style="display: flex;">
-                <el-table :data="tableData" style="flex: 4; margin-right: 5px;">
-                    <el-table-column prop="ID" label="ID" width="50" />
-                    <el-table-column prop="name" label="用户名" width="100" />
-                    <el-table-column prop="nickname" label="昵称" width="100" />
-                    <el-table-column prop="gender" label="性别" width="80" />
-                    <el-table-column prop="phone" label="联系电话" width="120" />
-                    <el-table-column prop="address" label="家庭地址" width="120" />
+                <div style="flex: 5; margin-right: 10px;">
+                    <el-table :data="tableData">
+                        <el-table-column prop="ID" label="ID" width="50" />
+                        <el-table-column prop="name" label="用户名" width="100" />
+                        <el-table-column prop="nickname" label="昵称" width="100" />
+                        <el-table-column prop="gender" label="性别" width="80" />
+                        <el-table-column prop="phone" label="联系电话" width="120" />
+                        <el-table-column prop="address" label="家庭地址" width="190" />
 
-                    <el-table-column label="操作" width="150">
-                        <template #default="scope">
-                            <!-- 下标index从0开始 -->
-                            <el-button size="small" title="详情与编辑" @click="handleEdit(scope.$index, scope.row)">
-                                <el-icon>
-                                    <Edit />
-                                </el-icon>
-                            </el-button>
-                            <el-button size="small" type="danger" title="删除" @click="handleDelete(scope.$index, scope.row)">
-                                <el-icon>
-                                    <Delete />
-                                </el-icon>
-                            </el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-
+                        <el-table-column label="操作" width="150">
+                            <template #default="scope">
+                                <!-- 下标index从0开始 -->
+                                <el-button size="small" title="详情与编辑" @click="handleEdit(scope.$index, scope.row)">
+                                    <el-icon>
+                                        <Edit />
+                                    </el-icon>
+                                </el-button>
+                                <el-button size="small" type="danger" title="删除"
+                                    @click="handleDelete(scope.$index, scope.row)">
+                                    <el-icon>
+                                        <Delete />
+                                    </el-icon>
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <!-- 分页 -->
+                    <div style="margin-top: 10px; margin-left: 5px;">
+                        <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
+                            :page-sizes="[8, 16, 32]" small background layout="total, sizes, prev, pager, next, jumper"
+                            :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    </div>
+                </div>
                 <!-- 卡片部分 -->
-                <el-space wrap style="flex: 3;">
-                    <el-card v-for="i in 4" :key="i" class="box-card" style="width: 100%">
-                        <template #header>
-                            <div class="card-header">
-                                <span>Card name</span>
-                                <el-button class="button" text>Operation button</el-button>
-                            </div>
-                        </template>
-                        <div v-for="o in 4" :key="o" class="text item">
-                            {{ 'List item ' + o }}
-                        </div>
-                    </el-card>
-                </el-space>
+                <user-card style="flex: 3;" />
             </el-row>
-            <!-- 分页 -->
-            <div style="margin-top: 10px; margin-left: 5px;">
-                <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[8, 16, 32]"
-                    small background layout="total, sizes, prev, pager, next, jumper" :total="total"
-                    @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-            </div>
+
         </div>
     </div>
 </template>
@@ -117,6 +108,7 @@ import request from '../../request';
 import router from '../../router';
 import { useUserStore } from '../../stores/stores'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import UserCard from '../../components/user/UserCard.vue';
 
 // 用户状态
 const userStore = useUserStore()
