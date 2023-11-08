@@ -288,4 +288,9 @@ function handleCurrentChange() {
     /* margin: 0; */
     padding: 0 4px;
 }
+
+.el-table {
+    border-radius: 15px;
+}
+
 </style>

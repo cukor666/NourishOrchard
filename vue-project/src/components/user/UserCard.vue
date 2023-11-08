@@ -1,7 +1,6 @@
 <template>
     <div>
         <el-space wrap>
-
             <el-card>
                 <template #header>
                     <div class="card-header">
@@ -39,6 +38,10 @@
 .card-header {
     text-align: center;
     width: auto;
+}
+
+.el-card {
+    border-radius: 15px;
 }
 
 .newMenber {

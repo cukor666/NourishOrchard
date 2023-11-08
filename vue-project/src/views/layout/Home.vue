@@ -4,7 +4,7 @@
         <aside-component />
 
         <el-container class="header-main">
-            <HeaderComponent />
+            <header-component />
             <el-main>
                 <router-view />
             </el-main>
@@ -56,6 +56,7 @@ onMounted(() => {
 }
 
 .el-main {
-    background: linear-gradient(60deg, rgb(73, 185, 213), rgb(216, 64, 181));
+    /* background: linear-gradient(60deg, rgb(73, 185, 213), rgb(216, 64, 181)); */
+    background: linear-gradient(60deg, rgb(158, 194, 203), rgb(225, 230, 172), rgb(192, 125, 125));
 }
 </style>

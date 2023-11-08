@@ -2,7 +2,7 @@
     <el-header style="font-size: 12px">
         <div class="toolbar">
             <!-- 收缩和展开侧边栏的按钮 -->
-            <el-button @click="toggleSidebar" style="background-color: #37A2EA;color: white;margin-right: 10px;">
+            <el-button @click="toggleSidebar" style="background-color: #B3CFDA;color: black;margin-right: 10px;">
                 <el-icon v-show="asideStore.isCollapse">
                     <DArrowRight />
                 </el-icon>
@@ -18,7 +18,7 @@
             </div>
             <div class="element2" style="flex: 1;text-align: right;">
                 <el-dropdown>
-                    <el-icon style="margin-right: 8px; margin-top: 1px">
+                    <el-icon size="large" color="black" style="margin-right: 8px; margin-top: 3px">
                         <setting />
                     </el-icon>
                     <template #dropdown>
@@ -30,7 +30,7 @@
                     </template>
                 </el-dropdown>
                 <!-- 从pinia状态中获取 -->
-                <span>{{ userStore.loginUserName }}</span>
+                <span style="font-size: large;">欢迎 {{ userStore.loginUserName }}</span>
             </div>
         </div>
     </el-header>
@@ -132,7 +132,8 @@ function exitLogin() {
     position: relative;
     /* background-color: var(--el-color-primary-light-7); */
     color: var(--el-text-color-primary);
-    background: linear-gradient(150deg, rgb(49, 164, 235), rgb(229, 93, 211));
+    /* background: linear-gradient(150deg, rgb(49, 164, 235), rgb(229, 93, 211)); */
+    background: linear-gradient(150deg, rgb(200, 211, 218), rgb(14, 175, 219), rgb(184, 44, 161));
 
 }
 
