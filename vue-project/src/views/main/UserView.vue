@@ -73,9 +73,16 @@
                     <el-table-column label="操作" width="150">
                         <template #default="scope">
                             <!-- 下标index从0开始 -->
-                            <el-button size="small" @click="handleEdit(scope.$index, scope.row)">详细</el-button>
-                            <el-button size="small" type="danger"
-                                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            <el-button size="small" title="详情与编辑" @click="handleEdit(scope.$index, scope.row)">
+                                <el-icon>
+                                    <Edit />
+                                </el-icon>
+                            </el-button>
+                            <el-button size="small" type="danger" title="删除" @click="handleDelete(scope.$index, scope.row)">
+                                <el-icon>
+                                    <Delete />
+                                </el-icon>
+                            </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -97,8 +104,8 @@
             </el-row>
             <!-- 分页 -->
             <div style="margin-top: 10px; margin-left: 5px;">
-                <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[8, 16, 32]" small
-                    background layout="total, sizes, prev, pager, next, jumper" :total="total"
+                <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[8, 16, 32]"
+                    small background layout="total, sizes, prev, pager, next, jumper" :total="total"
                     @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </div>
         </div>
