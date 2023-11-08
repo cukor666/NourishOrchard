@@ -15,8 +15,8 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useUserStore } from '../stores/stores'
-import router from '../router';
+import { useUserStore } from '../../stores/stores'
+import router from '../../router';
 
 // 状态
 const userStore = useUserStore()

@@ -69,9 +69,6 @@
                     <el-table-column prop="gender" label="性别" width="80" />
                     <el-table-column prop="phone" label="联系电话" width="120" />
                     <el-table-column prop="address" label="家庭地址" width="120" />
-                    <!-- <el-table-column prop="birthday" label="生日" width="200" /> -->
-                    <!-- <el-table-column prop="CreatedAt" label="创建时间" width="200" /> -->
-                    <!-- <el-table-column prop="UpdatedAt" label="更新时间" width="200" /> -->
 
                     <el-table-column label="操作" width="150">
                         <template #default="scope">
@@ -100,8 +97,8 @@
             </el-row>
             <!-- 分页 -->
             <div style="margin-top: 10px; margin-left: 5px;">
-                <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[6, 10, 12]"
-                    small background layout="total, sizes, prev, pager, next, jumper" :total="total"
+                <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[8, 16, 32]" small
+                    background layout="total, sizes, prev, pager, next, jumper" :total="total"
                     @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </div>
         </div>
@@ -270,7 +267,7 @@ function handleDelete(index, row) {
 const currentPage = ref(1)
 
 // 页面大小 
-const pageSize = ref(6)
+const pageSize = ref(8)
 
 // 总条数
 const total = ref(10)

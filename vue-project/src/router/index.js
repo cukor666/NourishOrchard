@@ -62,12 +62,12 @@ const router = createRouter({
         {
           path: "/user-info",
           name: "UserInfo",
-          component: () => import("../components/UserInfo.vue"),
+          component: () => import("../components/user/UserInfo.vue"),
         },
         {
           path: "/update-user-info",
           name: "UpdateUserInfo",
-          component: () => import("../components/UpdateUserInfo.vue"),
+          component: () => import("../components/user/UpdateUserInfo.vue"),
         },
         {
           path: "/user-list",
@@ -77,14 +77,14 @@ const router = createRouter({
         {
           path: "/edit-user-info",
           name: "/EditUserInfo",
-          component: () => import("../components/EditUser.vue"),
+          component: () => import("../components/user/EditUser.vue"),
         },
       ],
     },
     {
       path: '/see-use-info',
       name: "/SeeUseInfo",
-      component: () => import("../components/SeeUseInfo.vue")
+      component: () => import("../components/user/SeeUseInfo.vue")
     }
   ],
 });
