@@ -1,7 +1,7 @@
 <template>
     <el-aside :style="{ width: asideStore.asideWidth + 'px' }"
-        style="background: linear-gradient(150deg, rgb(51, 137, 194), rgb(72, 209, 129));" @open="handleOpen"
-        @close="handleClose">
+    style="background: #A1C4C9;"
+    @open="handleOpen" @close="handleClose">
         <el-scrollbar>
             <el-menu style="width: auto;" :collapse="asideStore.isCollapse" unique-opened>
                 <el-sub-menu index="1">
@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
+import { ref } from 'vue'
 import { useAsideStore } from '../../stores/aside'
 import { useRouter } from 'vue-router'
 
@@ -105,6 +105,10 @@ function userList() {
 </script>
 
 <style>
+/* .el-aside {
+    background: linear-gradient(150deg, rgb(51, 137, 194), rgb(72, 209, 129));
+} */
+
 .layout-container-demo .el-aside {
     color: var(--el-text-color-primary);
     background: var(--el-color-primary-light-8);

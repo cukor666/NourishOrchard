@@ -1,6 +1,6 @@
 <template>
         <div>
-            <el-button type="info" text @click="drawer = true">
+            <el-button type="info" text style="background-color: #c3898200;" @click="drawer = true">
                 <p style="color: rgb(167, 35, 199);">使用说明</p>
             </el-button>
             <el-drawer v-model="drawer" title="查询用户帮助教程" :with-header="false">

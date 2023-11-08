@@ -1,10 +1,10 @@
 <template>
     <div>
         <!-- 使用说明 -->
-        <user-helper style="float: right;"/>
+        <user-helper style="float: right;" />
 
         <!-- 主体部分 -->
-        <div style="display: flex; justify-content: center; align-items: center; height: 100px;">
+        <div class="main">
             <!-- 搜索选项 -->
             <div style="flex: 12; margin-left: 10px;">
                 ID：<el-input type="number" style="width: 80px;" v-model="userForm.ID"></el-input>
@@ -46,7 +46,7 @@
                     <el-table :data="tableData">
                         <el-table-column prop="ID" label="ID" width="50" />
                         <el-table-column prop="name" label="用户名" width="100" />
-                        <el-table-column prop="nickname" label="昵称" width="100" />
+                        <el-table-column prop="nickname" label="昵称" width="180" />
                         <el-table-column prop="gender" label="性别" width="80" />
                         <el-table-column prop="phone" label="联系电话" width="120" />
                         <el-table-column prop="address" label="家庭地址" width="190" />
@@ -83,7 +83,7 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref } from 'vue'
 import request from '../../request';
 import router from '../../router';
 import { useUserStore } from '../../stores/stores'
@@ -247,26 +247,7 @@ const currentPage = ref(1)
 const pageSize = ref(8)
 
 // 总条数
-const total = ref(10)
-
-// 给total做初始化赋值
-const fetchData = async () => {
-    try {
-        const response = await request.get('/user-count?promise=1');
-        if (response.code == 200) {
-            total.value = response.data
-        } else {
-            total.value = -1
-        }
-    } catch (error) {
-        console.log(err);
-        total.value = -1
-    }
-}
-
-onMounted(() => {
-    fetchData();
-});
+const total = ref(0)
 
 // 改变每页大小 pageSize
 function handleSizeChange() {
@@ -293,4 +274,12 @@ function handleCurrentChange() {
     border-radius: 15px;
 }
 
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 </style>
