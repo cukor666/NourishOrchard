@@ -61,7 +61,7 @@ import { ref, reactive, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '../../stores/stores'
 import router from '../../router';
-import request from '../request';
+import request from '../../request';
 
 // 状态
 const userStore = useUserStore()

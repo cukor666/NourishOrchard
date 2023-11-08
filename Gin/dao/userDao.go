@@ -89,7 +89,9 @@ func (ud UserDao) SelectByName(name string) (user moudels.User, ok bool) {
 
 // 根据指定字段查询用户
 func (ud UserDao) SelectByStruct(user moudels.User, currentPage, pageSize int) (users []moudels.User, rows int64, err error) {
-	// phone、address等字段需要模糊查询才能有意义，所以得单独提取出来
+	// name、nick_name、phone、address等字段需要模糊查询才能有意义，所以得单独提取出来
+	name := user.Name
+	user.Name = ""
 	phone := user.Phone
 	user.Phone = "" // 提取完之后清空user中的属性，防止下面的Where使用phone = 'xxx'，下address同
 	address := user.Address
@@ -98,6 +100,7 @@ func (ud UserDao) SelectByStruct(user moudels.User, currentPage, pageSize int) (
 	user.NickName = ""
 	tx := db.Omit("password", "DeletedAt").
 		Where(&user).
+		Where("name LIKE ?", "%"+name+"%").
 		Where("phone LIKE ?", "%"+phone+"%").
 		Where("address LIKE ?", "%"+address+"%").
 		Where("nick_name LIKE ?", "%"+nickname+"%")
@@ -110,6 +113,8 @@ func (ud UserDao) SelectByStruct(user moudels.User, currentPage, pageSize int) (
 // 根据指定字段查询用户，携带有生日
 func (ud UserDao) SelectByStructWithBirthday(user moudels.User, currentPage, pageSize int, birthday []string) (users []moudels.User, rows int64, err error) {
 	// phone、address等字段需要模糊查询才能有意义，所以得单独提取出来
+	name := user.Name
+	user.Name = ""
 	phone := user.Phone
 	user.Phone = "" // 提取完之后清空user中的属性，防止下面的Where使用phone = 'xxx'，下address同
 	address := user.Address
@@ -118,6 +123,7 @@ func (ud UserDao) SelectByStructWithBirthday(user moudels.User, currentPage, pag
 	user.NickName = ""
 	tx := db.Omit("password", "DeletedAt").
 		Where(&user).
+		Where("name LIKE ?", "%"+name+"%").
 		Where("phone LIKE ?", "%"+phone+"%").
 		Where("address LIKE ?", "%"+address+"%").
 		Where("nick_name LIKE ?", "%"+nickname+"%").
