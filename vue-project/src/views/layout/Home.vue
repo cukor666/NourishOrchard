@@ -1,94 +1,17 @@
 <template>
     <el-container class="layout-container-demo" style="height: 100vh">
-        <el-aside :style="{ width: asideWidth + 'px' }"
-            style="background: linear-gradient(150deg, rgb(51, 137, 194), rgb(72, 209, 129));" @open="handleOpen"
-            @close="handleClose">
-            <el-scrollbar>
-                <el-menu style="width: auto;" :collapse="isCollapse" unique-opened>
-                    <el-sub-menu index="1">
-                        <template #title>
-                            <el-icon>
-                                <Cpu />
-                            </el-icon>
-                            <span v-show="!isCollapse">系统管理</span>
-
-                        </template>
-                        <el-menu-item-group>
-                            <!-- <template #title>Group 1</template> -->
-                            <el-menu-item index="1-1">Option 1</el-menu-item>
-                            <el-menu-item index="1-2">Option 2</el-menu-item>
-                            <div style="height: 20px;"></div>
-                        </el-menu-item-group>
-                    </el-sub-menu>
-                    <el-sub-menu index="2">
-                        <template #title>
-                            <el-icon>
-                                <User />
-                            </el-icon>
-                            <span v-show="!isCollapse">人员管理</span>
-                        </template>
-                        <el-menu-item-group>
-                            <!-- <template #title>Group 1</template> -->
-                            <el-menu-item index="2-1" @click="userList">
-                                <el-icon>
-                                    <UserFilled />
-                                </el-icon>
-                                用户列表
-                            </el-menu-item>
-                            <el-menu-item index="2-2"><el-icon>
-                                    <Avatar />
-                                </el-icon>
-                                管理员列表
-                            </el-menu-item>
-                            <div style="height: 20px;"></div>
-                        </el-menu-item-group>
-                    </el-sub-menu>
-                    <el-sub-menu index="3">
-                        <template #title>
-                            <el-icon>
-                                <ShoppingCartFull />
-                            </el-icon>
-                            <span v-show="!isCollapse">订单管理</span>
-
-                        </template>
-                        <el-menu-item-group>
-                            <!-- <template #title>Group 1</template> -->
-                            <el-menu-item index="3-1">Option 1</el-menu-item>
-                            <el-menu-item index="3-2">Option 2</el-menu-item>
-                            <el-menu-item index="3-3">Option 3</el-menu-item>
-                            <div style="height: 20px;"></div>
-
-                        </el-menu-item-group>
-                    </el-sub-menu>
-                    <el-sub-menu index="4">
-                        <template #title>
-                            <el-icon>
-                                <Grape />
-                            </el-icon>
-                            <span v-show="!isCollapse">水果管理</span>
-
-                        </template>
-                        <el-menu-item-group>
-                            <el-menu-item index="4-1">Option 1</el-menu-item>
-                            <el-menu-item index="4-2">Option 2</el-menu-item>
-                            <div style="height: 20px;"></div>
-
-                        </el-menu-item-group>
-
-                    </el-sub-menu>
-                </el-menu>
-            </el-scrollbar>
-        </el-aside>
+        <!-- 侧边栏 -->
+        <AsideComponent/>
 
         <el-container>
             <el-header style="font-size: 12px">
                 <div class="toolbar">
                     <!-- 收缩和展开侧边栏的按钮 -->
                     <el-button @click="toggleSidebar" style="background-color: #37A2EA;color: white;margin-right: 10px;">
-                        <el-icon v-show="isCollapse">
+                        <el-icon v-show="asideStore.isCollapse">
                             <DArrowRight />
                         </el-icon>
-                        <el-icon v-show="!isCollapse">
+                        <el-icon v-show="!asideStore.isCollapse">
                             <DArrowLeft />
                         </el-icon>
                     </el-button>
@@ -124,22 +47,19 @@
 </template>
   
 <script setup>
-import { ref, onMounted } from 'vue'
-// import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
+import { onMounted } from 'vue'
 import { useUserStore } from '../../stores/stores'
+import { useAsideStore } from '../../stores/aside';
 import { useRouter } from 'vue-router'
 import request from '../../request';
 import { ElMessage, ElMessageBox } from 'element-plus'
-
+import AsideComponent from './AsideComponent.vue';
 
 // 获取状态
 const userStore = useUserStore()
-
+const asideStore = useAsideStore()
 // 路由
 const router = useRouter();
-
-// token
-// const token = ref('')
 
 // 在当前组件被挂载的时候自动执行
 onMounted(() => {
@@ -223,30 +143,13 @@ function exitLogin() {
             message: '取消退出登录',
         })
     })
-
 }
 
-// 侧边栏宽度
-const asideWidth = ref(200)
-
-// 展开与折叠侧边栏
-const isCollapse = ref(false)
 
 // 切换菜单的收缩状态
 function toggleSidebar() {
-    isCollapse.value = !isCollapse.value;
-    asideWidth.value = isCollapse.value ? 64 : 200
-}
-
-const handleOpen = (key, keyPath) => {
-    console.log(key, keyPath)
-}
-const handleClose = (key, keyPath) => {
-    console.log(key, keyPath)
-}
-
-function userList() {
-    router.push('/user-list')
+    asideStore.isCollapse = !asideStore.isCollapse;
+    asideStore.asideWidth = asideStore.isCollapse ? 64 : 200
 }
 
 </script>
@@ -258,15 +161,6 @@ function userList() {
     color: var(--el-text-color-primary);
     background: linear-gradient(150deg, rgb(49, 164, 235), rgb(229, 93, 211));
 
-}
-
-.layout-container-demo .el-aside {
-    color: var(--el-text-color-primary);
-    background: var(--el-color-primary-light-8);
-}
-
-.layout-container-demo .el-menu {
-    border-right: none;
 }
 
 .layout-container-demo .el-main {
@@ -289,49 +183,5 @@ function userList() {
 
 .el-main {
     background: linear-gradient(60deg, rgb(73, 185, 213), rgb(216, 64, 181));
-}
-
-/* 未激活的菜单项文本颜色 */
-.el-menu-item {
-    /* color: gray; */
-    border-radius: 20px;
-    background-color: #808AC9;
-    /* margin: 2px 6px; */
-    margin: 4px 10px 0 10px;
-
-}
-
-/* 悬停的菜单项文本颜色 */
-.el-menu-item:hover {
-    color: #FFF;
-    background-color: #5BA9D1;
-    border-radius: 20px;
-
-    /* margin: 2px 6px; */
-    margin: 4px 10px 0 10px;
-
-}
-
-/* 激活的菜单项文本颜色 */
-.el-menu-item.is-active {
-    /* color: rgb(191, 15, 194); */
-    color: white;
-
-    /* background-color: #5BA9D1; */
-    background-color: #FC803A;
-
-    border-radius: 20px;
-
-    /* margin: 2px 6px; */
-    margin: 4px 10px 0 10px;
-}
-
-.el-menu-item-group {
-    background-color: #190625;
-    color: #808AC9;
-}
-
-.el-sub-menu {
-    background: linear-gradient(150deg, rgb(51, 137, 194), rgb(72, 209, 129));
 }
 </style>
