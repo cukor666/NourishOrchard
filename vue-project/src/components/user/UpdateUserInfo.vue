@@ -112,7 +112,7 @@ function submitDialog() {
             }
             dialogVisible.value = false
             // router.back()
-            router.push('/home')
+            router.push('/')
         } else {
             console.log('表单验证失败');
         }

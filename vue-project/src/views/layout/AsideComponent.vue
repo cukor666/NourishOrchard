@@ -97,7 +97,7 @@ const handleClose = (key, keyPath) => {
 const router = useRouter();
 
 function userList() {
-    router.push('/user-list')
+    router.push('/user/list')
 }
 
 </script>

@@ -6,7 +6,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
+      path: "/login",
       name: "Login",
       component: () => import("../views/login/Login.vue"),
     },
@@ -16,12 +16,12 @@ const router = createRouter({
       component: () => import("../views/login/Register.vue"),
     },
     {
-      path: "/home",
+      path: "/",
       name: "Home",
       component: () => import("../views/layout/Home.vue"),
       beforeEnter(to, from, next) {
         request
-          .get("/home", {
+          .get("/", {
             headers: {
               Authorization: "Bearer " + localStorage.getItem("token"),
             },
@@ -41,7 +41,7 @@ const router = createRouter({
                 message: "不通过",
                 type: "error",
               });
-              next('/');  // 跳转到登录页面
+              next('/login');  // 跳转到登录页面
             }
           })
           .catch((err) => {
@@ -54,22 +54,22 @@ const router = createRouter({
           name: "User",
           children: [
             {
-              path: "/user-info",
+              path: "/user/info",
               name: "UserInfo",
               component: () => import("../components/user/UserInfo.vue"),
             },
             {
-              path: "/update-user-info",
+              path: "/user/update",
               name: "UpdateUserInfo",
               component: () => import("../components/user/UpdateUserInfo.vue"),
             },
             {
-              path: "/user-list",
+              path: "/user/list",
               name: "/UserList",
               component: () => import("../views/main/UserView.vue"),
             },
             {
-              path: "/edit-user-info",
+              path: "/user/edit-info",
               name: "/EditUserInfo",
               component: () => import("../components/user/EditUser.vue"),
             }

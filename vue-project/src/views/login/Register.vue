@@ -137,7 +137,7 @@ function joinOur() {
                         message: '欢迎加入我们！！！',
                         type: 'success',
                     })
-                    router.push('/')
+                    router.push('/login')
                 } else {
                     ElMessage({
                         message: '数据未填写完整，请检查',

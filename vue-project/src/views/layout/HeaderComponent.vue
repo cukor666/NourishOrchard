@@ -80,7 +80,7 @@ function showInfo() {
 
                 // console.log(userStore.userGridData);
 
-                router.push('/user-info')
+                router.push('/user/info')
             } else {
                 alert('无此用户')
             }
@@ -94,7 +94,7 @@ function showInfo() {
 
 function updateInfo() {
     // alert('修改个人信息')
-    router.push('/update-user-info')
+    router.push('/user/update')
 }
 
 // 退出登录，如果成功退出则注销用户，把对应的token删除
@@ -110,7 +110,7 @@ function exitLogin() {
     ).then(response => {
         localStorage.removeItem('name')
         localStorage.removeItem('token')
-        router.push('/')
+        router.push('/login')
         ElMessage({
             type: 'success',
             message: '退出登录成功，用户已注销'

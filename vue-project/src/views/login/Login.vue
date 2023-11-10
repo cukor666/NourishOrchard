@@ -121,7 +121,7 @@ function goHome() {
                             // alert('登录成功')
                             localStorage.setItem('token', response.data)    // 将Token存放到本地存储上，这样后续可以通过localStorage.GetItem获取
                             localStorage.setItem('name', user.value.name)
-                            router.push('/home')    // 路由跳转就是通过这种类似压栈的
+                            router.push('/')    // 路由跳转就是通过这种类似压栈的
                         } else {
                             // alert('用户名或密码错误')
                             ElMessage({

@@ -24,29 +24,30 @@ func middleWare(r *gin.Engine) {
 // 注册路由
 func register(r *gin.Engine) {
 
-	r.GET("/home", utils.JWTAuthMiddleware(), api.AuthHandler) // 鉴权
-	r.GET("/captcha", api.Captcha)                             // 验证码
-	r.POST("/user-login", api.AuthHandler)                     // 登录时使用，新版，带鉴权
-	r.POST("/captcha/verify", api.Verify)                      // 验证码校验
-	r.GET("/promise/:name", api.GetUserPromise)                // 获取用户权限
+	r.GET("/", utils.JWTAuthMiddleware(), api.AuthHandler) // 鉴权
+	r.GET("/captcha", api.Captcha)                         // 验证码
+	r.POST("/user-login", api.AuthHandler)                 // 登录时使用，新版，带鉴权
+	r.POST("/captcha/verify", api.Verify)                  // 验证码校验
+	r.GET("/promise/:name", api.GetUserPromise)            // 获取用户权限
 
 	// 路由组
-	// /user
+	// 普通用户
 	userGroup := r.Group("/user")
+	{
+		// GET
+		userGroup.GET("/list", api.UserList)           // 展示用户列表
+		userGroup.GET("/:id", api.FindUser)            // 根据ID查找用户
+		userGroup.GET("/", api.SeeUserInfo)            // 根据Name查找用户
+		userGroup.GET("/struct", api.FindUserByStruct) // 根据User结构体查询用户
+		userGroup.GET("/count", api.GetUserCounnt)     // 获取用户个数
 
-	// GET
-	userGroup.GET("/list", api.UserList)           // 展示用户列表
-	userGroup.GET("/:id", api.FindUser)            // 根据ID查找用户
-	userGroup.GET("/", api.SeeUserInfo)            // 根据Name查找用户
-	userGroup.GET("/struct", api.FindUserByStruct) // 根据User结构体查询用户
-	userGroup.GET("/count", api.GetUserCounnt)     // 获取用户个数
+		// POST
+		userGroup.POST("/add", api.UserAdd) // 添加用户，前端注册的时候使用到这个
 
-	// POST
-	userGroup.POST("/add", api.UserAdd) // 添加用户，前端注册的时候使用到这个
+		// PUT
+		userGroup.PUT("/update", api.UpdateUserInfo) // 更新用户信息，在用户列表的编辑按钮使用
 
-	// PUT
-	userGroup.PUT("/update", api.UpdateUserInfo) // 更新用户信息，在用户列表的编辑按钮使用
-
-	// DELETE
-	userGroup.DELETE("/delete", api.DeleteUser) // 删除用户信息，在用户列表的删除按钮使用
+		// DELETE
+		userGroup.DELETE("/delete", api.DeleteUser) // 删除用户信息，在用户列表的删除按钮使用
+	}
 }

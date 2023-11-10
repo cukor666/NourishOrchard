@@ -193,7 +193,7 @@ function clearUserForm() {
 function handleEdit(index, row) {
     userStore.userRow = row
     // console.log(row);
-    router.push('/edit-user-info')
+    router.push('/user/edit-info')
 }
 
 // 删除用户，这是一个比较危险的操作，所以要弹出一个消息框提示用户
