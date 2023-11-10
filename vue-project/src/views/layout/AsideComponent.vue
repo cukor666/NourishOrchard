@@ -1,7 +1,6 @@
 <template>
-    <el-aside :style="{ width: asideStore.asideWidth + 'px' }"
-    style="background: #A1C4C9;"
-    @open="handleOpen" @close="handleClose">
+    <el-aside :style="{ width: asideStore.asideWidth + 'px' }" style="background: #A1C4C9;" @open="handleOpen"
+        @close="handleClose">
         <el-scrollbar>
             <el-menu style="width: auto;" :collapse="asideStore.isCollapse" unique-opened>
                 <el-sub-menu index="1">
@@ -81,7 +80,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { useAsideStore } from '../../stores/aside'
 import { useRouter } from 'vue-router'
 
@@ -118,7 +116,6 @@ function userList() {
     border-right: none;
 }
 
-
 /* 未激活的菜单项文本颜色 */
 .el-menu-item {
     /* color: gray; */
@@ -134,23 +131,14 @@ function userList() {
     color: #FFF;
     background-color: #5BA9D1;
     border-radius: 20px;
-
-    /* margin: 2px 6px; */
     margin: 4px 10px 0 10px;
-
 }
 
 /* 激活的菜单项文本颜色 */
 .el-menu-item.is-active {
-    /* color: rgb(191, 15, 194); */
     color: white;
-
-    /* background-color: #5BA9D1; */
     background-color: #FC803A;
-
     border-radius: 20px;
-
-    /* margin: 2px 6px; */
     margin: 4px 10px 0 10px;
 }
 

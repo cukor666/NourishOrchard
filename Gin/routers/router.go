@@ -23,26 +23,30 @@ func middleWare(r *gin.Engine) {
 
 // 注册路由
 func register(r *gin.Engine) {
-	// GET
-	r.GET("/user-list", api.UserList)                          // 展示用户列表
-	r.GET("/user/:id", api.FindUser)                           // 根据ID查找用户
-	r.GET("/user", api.SeeUserInfo)                            // 根据Name查找用户
-	r.GET("/user-struct", api.FindUserByStruct)                // 根据User结构体查询用户
+
 	r.GET("/home", utils.JWTAuthMiddleware(), api.AuthHandler) // 鉴权
 	r.GET("/captcha", api.Captcha)                             // 验证码
-	r.GET("/user-promise/:name", api.GetUserPromise)           // 获取用户权限
-	r.GET("/user-count", api.GetUserCounnt)                    // 获取用户个数
+	r.POST("/user-login", api.AuthHandler)                     // 登录时使用，新版，带鉴权
+	r.POST("/captcha/verify", api.Verify)                      // 验证码校验
+	r.GET("/promise/:name", api.GetUserPromise)                // 获取用户权限
+
+	// 路由组
+	// /user
+	userGroup := r.Group("/user")
+
+	// GET
+	userGroup.GET("/list", api.UserList)           // 展示用户列表
+	userGroup.GET("/:id", api.FindUser)            // 根据ID查找用户
+	userGroup.GET("/", api.SeeUserInfo)            // 根据Name查找用户
+	userGroup.GET("/struct", api.FindUserByStruct) // 根据User结构体查询用户
+	userGroup.GET("/count", api.GetUserCounnt)     // 获取用户个数
 
 	// POST
-	r.POST("/addUser", api.UserAdd) // 添加用户，前端注册的时候使用到这个
-	// r.POST("/user-login", api.UserLogin) // 登录时使用，旧版，不带鉴权
-	r.POST("/user-login", api.AuthHandler) // 登录时使用，新版，带鉴权
-	// r.POST("/auth", api.AuthHandler)     // jwt鉴权
-	r.POST("/captcha/verify", api.Verify) // 验证码校验
+	userGroup.POST("/add", api.UserAdd) // 添加用户，前端注册的时候使用到这个
 
 	// PUT
-	r.PUT("/update-user-info", api.UpdateUserInfo) // 更新用户信息，在用户列表的编辑按钮使用
+	userGroup.PUT("/update", api.UpdateUserInfo) // 更新用户信息，在用户列表的编辑按钮使用
 
 	// DELETE
-	r.DELETE("/delete-user", api.DeleteUser) // 删除用户信息，在用户列表的删除按钮使用
+	userGroup.DELETE("/delete", api.DeleteUser) // 删除用户信息，在用户列表的删除按钮使用
 }

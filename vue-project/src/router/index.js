@@ -52,33 +52,37 @@ const router = createRouter({
         {
           path: "/user",
           name: "User",
-          component: () => import("../views/main/UserView.vue"),
+          children: [
+            {
+              path: "/user-info",
+              name: "UserInfo",
+              component: () => import("../components/user/UserInfo.vue"),
+            },
+            {
+              path: "/update-user-info",
+              name: "UpdateUserInfo",
+              component: () => import("../components/user/UpdateUserInfo.vue"),
+            },
+            {
+              path: "/user-list",
+              name: "/UserList",
+              component: () => import("../views/main/UserView.vue"),
+            },
+            {
+              path: "/edit-user-info",
+              name: "/EditUserInfo",
+              component: () => import("../components/user/EditUser.vue"),
+            }
+          ]
         },
         {
           path: "/admin",
           name: "Admin",
-          component: () => import("../views/main/AdminView.vue"),
-        },
-        {
-          path: "/user-info",
-          name: "UserInfo",
-          component: () => import("../components/user/UserInfo.vue"),
-        },
-        {
-          path: "/update-user-info",
-          name: "UpdateUserInfo",
-          component: () => import("../components/user/UpdateUserInfo.vue"),
-        },
-        {
-          path: "/user-list",
-          name: "/UserList",
-          component: () => import("../views/main/UserView.vue"),
-        },
-        {
-          path: "/edit-user-info",
-          name: "/EditUserInfo",
-          component: () => import("../components/user/EditUser.vue"),
-        },
+          children: [
+            
+          ]
+        }
+        
       ],
     },
     {

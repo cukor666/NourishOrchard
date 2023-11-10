@@ -131,7 +131,7 @@ function joinOur() {
                 message: '表单校验通过',
                 type: 'success',
             })
-            request.post('/addUser', user.value).then(response => {
+            request.post('/user/add', user.value).then(response => {
                 if (response.code === 200) {
                     ElMessage({
                         message: '欢迎加入我们！！！',

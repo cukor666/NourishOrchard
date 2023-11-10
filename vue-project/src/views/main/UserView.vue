@@ -129,7 +129,7 @@ function searchUser() {
         // console.log(pageSize.value);
         // console.log(currentPage.value);
         try {
-            request.get('/user-list', {
+            request.get('/user/user-list', {
                 params: {
                     currentPage: currentPage.value,
                     pageSize: pageSize.value
@@ -143,7 +143,7 @@ function searchUser() {
         }
     } else if (userForm.ID == 0) {   // 如果userForm.ID == 0 则表示不使用ID这个字段
         console.log(userForm);
-        request.get('/user-struct', {
+        request.get('/user/user-struct', {
             params: {
                 name: userForm.name,
                 nickname: userForm.nickname,
