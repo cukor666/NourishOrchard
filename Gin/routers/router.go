@@ -50,4 +50,17 @@ func register(r *gin.Engine) {
 		// DELETE
 		userGroup.DELETE("/delete", api.DeleteUser) // 删除用户信息，在用户列表的删除按钮使用
 	}
+
+	// 管理员
+	adminGroup := r.Group("/admin")
+	{
+		// GET
+		adminGroup.GET("/list", api.AdminList) // 分页查询所有管理员
+
+		// POST
+
+		// PUT
+
+		// DELETE
+	}
 }

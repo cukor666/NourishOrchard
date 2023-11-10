@@ -33,7 +33,8 @@
                             </el-icon>
                             用户列表
                         </el-menu-item>
-                        <el-menu-item index="2-2"><el-icon>
+                        <el-menu-item index="2-2" @click="adminList">
+                            <el-icon>
                                 <Avatar />
                             </el-icon>
                             管理员列表
@@ -98,6 +99,10 @@ const router = useRouter();
 
 function userList() {
     router.push('/user/list')
+}
+
+function adminList() {
+    router.push('/admin/list')
 }
 
 </script>

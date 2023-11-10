@@ -40,7 +40,7 @@
         <div style="margin-left: 10px;">
             <el-row style="display: flex;">
                 <div style="flex: 5; margin-right: 10px;">
-                    <el-table :data="tableData">
+                    <el-table :data="tableData" style="border-radius: 15px;">
                         <el-table-column prop="ID" label="ID" width="50" />
                         <el-table-column prop="name" label="用户名" width="100" />
                         <el-table-column prop="nickname" label="昵称" width="180" />
@@ -125,7 +125,7 @@ function searchUser() {
         // console.log(pageSize.value);
         // console.log(currentPage.value);
         try {
-            request.get('/user-list', {
+            request.get('/admin/list', {
                 params: {
                     currentPage: currentPage.value,
                     pageSize: pageSize.value
@@ -139,7 +139,7 @@ function searchUser() {
         }
     } else if (userForm.ID == 0) {   // 如果userForm.ID == 0 则表示不使用ID这个字段
         console.log(userForm);
-        request.get('/user-struct', {
+        request.get('/user/struct', {
             params: {
                 name: userForm.name,
                 nickname: userForm.nickname,
@@ -189,7 +189,7 @@ function clearUserForm() {
 function handleEdit(index, row) {
     userStore.userRow = row
     // console.log(row);
-    router.push('/edit-user-info')
+    router.push('/user/edit-info')
 }
 
 // 删除用户，这是一个比较危险的操作，所以要弹出一个消息框提示用户
@@ -208,7 +208,7 @@ function handleDelete(index, row) {
         // console.log(userStore.userRow);
         try {
             // /delete-user?ID=userStore.userRow.ID   65,1,2,7
-            request.delete('/delete-user', {
+            request.delete('/user/delete', {
                 params: {
                     ID: userStore.userRow.ID
                 }
@@ -261,4 +261,13 @@ function handleCurrentChange() {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+</style>
