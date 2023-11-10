@@ -25,7 +25,7 @@ const userStore = useUserStore()
 // 在当前组件被挂载的时候自动执行
 onMounted(() => {
     userStore.loginUserName = localStorage.getItem('name')  // 即使页面刷新，右上角的用户名依旧是登录的用户名
-    request.get('/user-promise/' + userStore.loginUserName).then(response => {
+    request.get('/promise/' + userStore.loginUserName).then(response => {
         // console.log(response);
         if (response.code == 200) {
             userStore.loginUserPromise = response.data

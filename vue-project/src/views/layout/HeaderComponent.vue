@@ -59,7 +59,7 @@ function toggleSidebar() {
 function showInfo() {
     // alert('按下了个人信息' + userStore.loginUserName)
     try {
-        request.get('/user?name=' + userStore.loginUserName).then(response => {
+        request.get('/user/?name=' + userStore.loginUserName).then(response => {
             if (response.code == 200) {
                 // console.log(response.data);
 

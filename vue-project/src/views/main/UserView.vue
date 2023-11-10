@@ -129,7 +129,7 @@ function searchUser() {
         // console.log(pageSize.value);
         // console.log(currentPage.value);
         try {
-            request.get('/user/user-list', {
+            request.get('/user/list', {
                 params: {
                     currentPage: currentPage.value,
                     pageSize: pageSize.value
@@ -143,7 +143,7 @@ function searchUser() {
         }
     } else if (userForm.ID == 0) {   // 如果userForm.ID == 0 则表示不使用ID这个字段
         console.log(userForm);
-        request.get('/user/user-struct', {
+        request.get('/user/struct', {
             params: {
                 name: userForm.name,
                 nickname: userForm.nickname,
@@ -211,8 +211,7 @@ function handleDelete(index, row) {
         // console.log("UserView: userStore.userRow ");
         // console.log(userStore.userRow);
         try {
-            // /delete-user?ID=userStore.userRow.ID   65,1,2,7
-            request.delete('/delete-user', {
+            request.delete('/user/delete', {
                 params: {
                     ID: userStore.userRow.ID
                 }

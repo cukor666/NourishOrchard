@@ -89,7 +89,7 @@ function submitDialog() {
     myForm.value.validate((valid) => {
         if (valid) {
             try {
-                request.put('/update-user-info', form).then(response => {
+                request.put('/user/update', form).then(response => {
                     if (response.code == 200) {
                         ElMessage({
                             message: '更新用户信息成功',
