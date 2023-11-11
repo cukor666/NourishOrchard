@@ -30,7 +30,7 @@
                     </template>
                 </el-dropdown>
                 <!-- 从pinia状态中获取 -->
-                <span style="font-size: large;">欢迎 {{ userStore.loginUserName }}</span>
+                <span style="font-size: large;">欢迎 {{ userStore.loginUser.name }}</span>
             </div>
         </div>
     </el-header>
@@ -55,31 +55,15 @@ function toggleSidebar() {
     asideStore.asideWidth = asideStore.isCollapse ? 64 : 200
 }
 
-
 function showInfo() {
-    // alert('按下了个人信息' + userStore.loginUserName)
     try {
-        request.get('/user/?name=' + userStore.loginUserName).then(response => {
+        request.get('/user/?name=' + userStore.loginUser.name).then(response => {
             if (response.code == 200) {
                 // console.log(response.data);
 
                 // 希望出现一个模态对话框，而不是打印到控制台上
                 userStore.UserInfoVisible = true
-                var user = response.data
-                // console.log(userStore.userGridData);
-
-                // 这个地方待优化
-                userStore.userGridData.ID = user.ID
-                userStore.userGridData.name = user.name
-                userStore.userGridData.nickname = user.nickname
-                userStore.userGridData.gender = user.gender
-                userStore.userGridData.birthday = user.birthday
-                userStore.userGridData.phone = user.phone
-                userStore.userGridData.address = user.address
-                userStore.userGridData.promise = user.promise
-
-                // console.log(userStore.userGridData);
-
+                userStore.tempUser = response.data
                 router.push('/user/info')
             } else {
                 alert('无此用户')
@@ -127,7 +111,6 @@ function exitLogin() {
 </script>
 
 <style>
-
 .layout-container-demo .el-header {
     position: relative;
     /* background-color: var(--el-color-primary-light-7); */
@@ -150,5 +133,4 @@ function exitLogin() {
     height: 100%;
     right: 20px;
 }
-
 </style>

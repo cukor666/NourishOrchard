@@ -57,7 +57,7 @@
 </template>
   
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '../../stores/stores'
 import router from '../../router';
@@ -70,25 +70,14 @@ const userStore = useUserStore()
 const dialogVisible = ref(true)
 
 // 表单赋值，内容从pinia状态中获取
-const form = reactive({
-    ID: userStore.userRow.ID,
-    name: userStore.userRow.name,
-    nickname: userStore.userRow.nickname,
-    gender: userStore.userRow.gender,
-    birthday: userStore.userRow.birthday,
-    phone: userStore.userRow.phone,
-    address: userStore.userRow.address,
-    CreatedAt: userStore.userRow.CreatedAt,
-    UpdatedAt: userStore.userRow.UpdatedAt,
-    promise: userStore.userRow.promise
-})
+const form = userStore.tempUser
 
 
 // 默认提交按钮不可点击
 const isDisabled = computed(() => {
-    switch (userStore.loginUserPromise) {   // 判断当前登录的用户的权限
+    switch (userStore.loginUser.promise) {   // 判断当前登录的用户的权限
         case 1: // 普通用户
-            return !(form.name === userStore.loginUserName)
+            return !(form.name === userStore.loginUser.name)
         case 2: // 管理员
         case 3: // 超级管理员
             return false

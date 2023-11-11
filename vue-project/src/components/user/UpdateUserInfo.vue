@@ -50,13 +50,15 @@ import { useUserStore } from '../../stores/stores'
 import router from '../../router';
 import request from '../../request';
 
+// 状态
 const userStore = useUserStore()
 
+// 对话框是否显示
 const dialogVisible = ref(true)
 
 // 表单数据
 const form = reactive({
-    name: userStore.loginUserName,
+    name: userStore.loginUser.name,
     nickname: "",
     gender: "男",
     birthday: "",

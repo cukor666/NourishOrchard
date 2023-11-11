@@ -24,13 +24,12 @@ const userStore = useUserStore()
 
 // 在当前组件被挂载的时候自动执行
 onMounted(() => {
-    userStore.loginUserName = localStorage.getItem('name')  // 即使页面刷新，右上角的用户名依旧是登录的用户名
-    request.get('/promise/' + userStore.loginUserName).then(response => {
-        // console.log(response);
+    userStore.loginUser.name = localStorage.getItem('name')  // 即使页面刷新，右上角的用户名依旧是登录的用户名
+    request.get('/promise/' + userStore.loginUser.name).then(response => {
         if (response.code == 200) {
-            userStore.loginUserPromise = response.data
+            userStore.loginUser.promise = response.data
         } else {
-            userStore.loginUserPromise = -1
+            userStore.loginUser.promise = -1
             console.log('后端错误');
         }
     }).catch(err => {

@@ -168,8 +168,7 @@ func UpdateUserInfo(c *gin.Context) {
 
 // 删除用户，根据ID
 func DeleteUser(c *gin.Context) {
-	s := c.Query("ID")
-	id, _ := strconv.Atoi(s)
+	id, _ := strconv.Atoi(c.Query("ID"))
 	var userDao dao.UserDao
 	ok := userDao.DeleteById(uint(id))
 	if !ok {

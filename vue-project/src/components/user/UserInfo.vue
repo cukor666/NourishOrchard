@@ -22,7 +22,7 @@ import router from '../../router';
 const userStore = useUserStore()
 
 // 数据
-const form = userStore.userGridData
+const form = userStore.tempUser
 
 // 权限转换文字
 const promise = computed(() => {
@@ -39,7 +39,7 @@ const promise = computed(() => {
 // 关闭时触发
 function handleClose() {
     userStore.UserInfoVisible = false
-    userStore.userGridData = [{
+    userStore.tempUser = {
         ID: 0,
         name: "xxx",
         nickname: "xxx",
@@ -48,13 +48,12 @@ function handleClose() {
         phone: "xxx",
         address: "xxx",
         promise: 0
-    }]
+    }
     router.back()
 }
 
 </script>
 <style scoped>
-
 h4 {
     margin-bottom: 10px;
 }

@@ -191,7 +191,7 @@ function clearUserForm() {
 
 // 编辑用户信息
 function handleEdit(index, row) {
-    userStore.userRow = row
+    userStore.tempUser = row
     // console.log(row);
     router.push('/user/edit-info')
 }
@@ -207,13 +207,13 @@ function handleDelete(index, row) {
             type: 'warning',
         }
     ).then(() => {
-        userStore.userRow = row
+        userStore.tempUser = row
         // console.log("UserView: userStore.userRow ");
         // console.log(userStore.userRow);
         try {
             request.delete('/user/delete', {
                 params: {
-                    ID: userStore.userRow.ID
+                    ID: userStore.tempUser.ID
                 }
             }).then(response => {
                 ElMessage({
