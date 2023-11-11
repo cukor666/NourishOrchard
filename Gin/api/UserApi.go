@@ -169,6 +169,11 @@ func UpdateUserInfo(c *gin.Context) {
 // 删除用户，根据ID
 func DeleteUser(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Query("ID"))
+	promise, _ := strconv.Atoi(c.Query("promise")) // 删除操作比较危险，只有权限大于普通用户的才可以删除
+	if promise < 2 {
+		response.Failed("删除失败，权限不够", c)
+		return
+	}
 	var userDao dao.UserDao
 	ok := userDao.DeleteById(uint(id))
 	if !ok {

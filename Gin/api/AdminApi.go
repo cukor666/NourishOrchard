@@ -27,3 +27,20 @@ func AdminList(c *gin.Context) {
 		}, c)
 	}
 }
+
+// 删除用户，根据ID
+func DeleteAdmin(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Query("ID"))
+	promise, _ := strconv.Atoi(c.Query("promise")) // 删除操作比较危险，只有权限大于普通用户的才可以删除
+	if promise < 3 {
+		response.Failed("删除失败，权限不够", c)
+		return
+	}
+	var userDao dao.UserDao // 这个地方待优化
+	ok := userDao.DeleteById(uint(id))
+	if !ok {
+		response.Failed("删除失败，参数错误", c)
+	} else {
+		response.Success("删除成功", id, c)
+	}
+}

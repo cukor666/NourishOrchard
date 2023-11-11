@@ -62,5 +62,6 @@ func register(r *gin.Engine) {
 		// PUT
 
 		// DELETE
+		adminGroup.DELETE("/delete", api.DeleteAdmin)
 	}
 }

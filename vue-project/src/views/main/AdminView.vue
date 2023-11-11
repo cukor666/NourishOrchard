@@ -202,21 +202,26 @@ function handleDelete(index, row) {
         }
     ).then(() => {
         userStore.userRow = row
-        // console.log("UserView: userStore.userRow ");
-        // console.log(userStore.userRow);
         try {
-            // /delete-user?ID=userStore.userRow.ID   65,1,2,7
-            request.delete('/user/delete', {
+            request.delete('/admin/delete', {
                 params: {
-                    ID: userStore.userRow.ID
+                    ID: userStore.userRow.ID,
+                    promise: userStore.loginUser.promise
                 }
             }).then(response => {
-                ElMessage({
-                    message: '删除成功',
-                    type: 'success',
-                })
                 console.log(response);
-                searchUser()    // 删除成功后要刷新一下用户列表，而不是让用户在自己点击一次查询按钮
+                if (response.code === 200) {
+                    ElMessage({
+                        message: '删除成功',
+                        type: 'success',
+                    })
+                    searchUser()    // 删除成功后要刷新一下用户列表，而不是让用户在自己点击一次查询按钮
+                } else {
+                    ElMessage({
+                        message: '删除失败，权限不够',
+                        type: 'error',
+                    })
+                }
             })
         } catch (error) {
             console.log(error);
