@@ -1,9 +1,15 @@
 <template>
-    <!-- @open="handleOpen"
-        @close="handleClose" -->
     <el-aside :style="{ width: asideStore.asideWidth + 'px' }" style="background: #A1C4C9;">
         <el-scrollbar>
             <el-menu style="width: auto;" :collapse="asideStore.isCollapse" unique-opened>
+                <el-menu-item index="0"
+                    style="background-color: rgba(0, 0, 0, 0); letter-spacing: 30px; color: black; margin-top: 0; margin-left: 0;"
+                    @click="goHome">
+                    <el-icon>
+                        <HomeFilled />
+                    </el-icon>
+                    <span v-show="!asideStore.isCollapse">首页</span>
+                </el-menu-item>
                 <el-sub-menu index="1">
                     <template #title>
                         <el-icon>
@@ -40,6 +46,12 @@
                                 <Avatar />
                             </el-icon>
                             管理员列表
+                        </el-menu-item>
+                        <el-menu-item index="2-3" @click="addAdmin">
+                            <el-icon>
+                                <Avatar />
+                            </el-icon>
+                            添加管理员
                         </el-menu-item>
                         <div style="height: 20px;"></div>
                     </el-menu-item-group>
@@ -89,19 +101,12 @@ import { useRouter } from 'vue-router'
 // 侧边栏状态
 const asideStore = useAsideStore()
 
-// const handleOpen = (key, keyPath) => {
-//     console.log(key, keyPath)
-// }
-// const handleClose = (key, keyPath) => {
-//     console.log(key, keyPath)
-// }
-
 // 路由
 const router = useRouter();
 
-// function userManage() {
-//     router.push('/user')
-// }
+function goHome() {
+    router.push('/')
+}
 
 function userList() {
     router.push('/user/list')
@@ -109,6 +114,10 @@ function userList() {
 
 function adminList() {
     router.push('/admin/list')
+}
+
+function addAdmin() {
+
 }
 
 </script>
@@ -125,6 +134,11 @@ function adminList() {
 
 .layout-container-demo .el-menu {
     border-right: none;
+}
+
+.el-menu {
+    /* background-color: #A1C4C9; */
+    background: linear-gradient(150deg, rgb(51, 137, 194), rgb(72, 209, 129));
 }
 
 /* 未激活的菜单项文本颜色 */
