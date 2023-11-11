@@ -192,7 +192,6 @@ function clearUserForm() {
 // 编辑用户信息
 function handleEdit(index, row) {
     userStore.tempUser = row
-    // console.log(row);
     router.push('/user/edit-info')
 }
 

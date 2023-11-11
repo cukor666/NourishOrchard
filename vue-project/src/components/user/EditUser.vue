@@ -111,6 +111,18 @@ const myForm = ref(null);
 // 对话框关闭的时候会自动调用
 function closeDialog() {
     dialogVisible.value = false
+    userStore.tempUser = {
+        ID: 0,
+        name: "",
+        nickname: "xxx",
+        gender: "",
+        birthday: "",
+        phone: "",
+        address: "",
+        CreatedAt: "",
+        UpdatedAt: "",
+        promise: 0,
+    }
     router.back()
 }
 

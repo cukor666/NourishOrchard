@@ -84,7 +84,6 @@ import request from '../../request';
 import router from '../../router';
 import { useUserStore } from '../../stores/stores'
 import { ElMessage, ElMessageBox } from 'element-plus'
-// import UserHelper from '../../components/user/UserHelper.vue'
 import UserCard from '../../components/user/UserCard.vue';
 
 // 用户状态
@@ -187,8 +186,7 @@ function clearUserForm() {
 
 // 编辑用户信息
 function handleEdit(index, row) {
-    userStore.userRow = row
-    // console.log(row);
+    userStore.tempUser = row
     router.push('/user/edit-info')
 }
 
