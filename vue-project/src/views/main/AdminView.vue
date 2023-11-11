@@ -79,7 +79,7 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import request from '../../request';
 import router from '../../router';
 import { useUserStore } from '../../stores/stores'
@@ -88,9 +88,6 @@ import UserCard from '../../components/user/UserCard.vue';
 
 // 用户状态
 const userStore = useUserStore()
-
-// 表格数据
-const tableData = ref([])
 
 // 用户表单
 const userForm = reactive({
@@ -114,6 +111,26 @@ const genders = ref([
         label: "女"
     }
 ])
+
+// 表格数据
+const tableData = ref([])
+
+onMounted(() => {
+    try {
+        request.get('/admin/list', {
+            params: {
+                currentPage: 1,
+                pageSize: 8
+            }
+        }).then(response => {
+            tableData.value = response.data.users
+            total.value = response.data.rows
+        })
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 
 // 查询所有管理员
 function searchUser() {

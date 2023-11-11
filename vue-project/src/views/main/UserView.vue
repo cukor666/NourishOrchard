@@ -83,19 +83,22 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue';
 import request from '../../request';
 import router from '../../router';
-import { useUserStore } from '../../stores/stores'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import UserHelper from '../../components/user/UserHelper.vue'
+import { useUserStore } from '../../stores/stores';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import UserHelper from '../../components/user/UserHelper.vue';
 import UserCard from '../../components/user/UserCard.vue';
 
 // 用户状态
 const userStore = useUserStore()
 
-// 表格数据
-const tableData = ref([])
+// 性别选项
+const genders = ref([
+    { value: "男", label: "男" },
+    { value: "女", label: "女" }
+])
 
 // 用户表单
 const userForm = reactive({
@@ -108,17 +111,35 @@ const userForm = reactive({
     birthday: ''    // 它是一个数组， 0 表示开始的时间，1 表示结束的时间
 })
 
-// 性别选项
-const genders = ref([
-    {
-        value: "男",
-        label: "男"
-    },
-    {
-        value: "女",
-        label: "女"
+// 分页
+// 当前页
+const currentPage = ref(1)
+
+// 页面大小 
+const pageSize = ref(8)
+
+// 总条数
+const total = ref(0)
+
+// 表格数据
+const tableData = ref([])
+
+// 当第一次访问时就把表格初始化好
+onMounted(() => {
+    try {
+        request.get('/user/list', {
+            params: {
+                currentPage: currentPage.value,
+                pageSize: pageSize.value
+            }
+        }).then(response => {
+            tableData.value = response.data.users
+            total.value = response.data.rows
+        })
+    } catch (error) {
+        console.log(error);
     }
-])
+})
 
 // 查询所有用户
 function searchUser() {
@@ -242,16 +263,6 @@ function handleDelete(index, row) {
         })
     })
 }
-
-// 分页
-// 当前页
-const currentPage = ref(1)
-
-// 页面大小 
-const pageSize = ref(8)
-
-// 总条数
-const total = ref(0)
 
 // 改变每页大小 pageSize
 function handleSizeChange() {

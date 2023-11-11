@@ -1,6 +1,7 @@
 <template>
-    <el-aside :style="{ width: asideStore.asideWidth + 'px' }" style="background: #A1C4C9;" @open="handleOpen"
-        @close="handleClose">
+    <!-- @open="handleOpen"
+        @close="handleClose" -->
+    <el-aside :style="{ width: asideStore.asideWidth + 'px' }" style="background: #A1C4C9;">
         <el-scrollbar>
             <el-menu style="width: auto;" :collapse="asideStore.isCollapse" unique-opened>
                 <el-sub-menu index="1">
@@ -23,6 +24,7 @@
                         <el-icon>
                             <User />
                         </el-icon>
+                        <!-- @click="userManage" -->
                         <span v-show="!asideStore.isCollapse">人员管理</span>
                     </template>
                     <el-menu-item-group>
@@ -87,15 +89,19 @@ import { useRouter } from 'vue-router'
 // 侧边栏状态
 const asideStore = useAsideStore()
 
-const handleOpen = (key, keyPath) => {
-    console.log(key, keyPath)
-}
-const handleClose = (key, keyPath) => {
-    console.log(key, keyPath)
-}
+// const handleOpen = (key, keyPath) => {
+//     console.log(key, keyPath)
+// }
+// const handleClose = (key, keyPath) => {
+//     console.log(key, keyPath)
+// }
 
 // 路由
 const router = useRouter();
+
+// function userManage() {
+//     router.push('/user')
+// }
 
 function userList() {
     router.push('/user/list')
