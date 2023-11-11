@@ -2,9 +2,9 @@
     <el-aside :style="{ width: asideStore.asideWidth + 'px' }" style="background: #A1C4C9;">
         <el-scrollbar>
             <el-menu style="width: auto;" :collapse="asideStore.isCollapse" unique-opened>
-                <el-menu-item index="0"
-                    style="background-color: rgba(0, 0, 0, 0); letter-spacing: 30px; color: black; margin-top: 0; margin-left: 0;"
-                    @click="goHome">
+                <el-menu-item index="0" style="background-color: rgba(0, 0, 0, 0); 
+                    letter-spacing: 30px; color: black; margin-top: 0; 
+                    margin-left: 0;" @click="goHome">
                     <el-icon>
                         <HomeFilled />
                     </el-icon>

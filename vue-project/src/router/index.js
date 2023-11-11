@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import request from "../request";
-import { ElMessage } from 'element-plus'
+import { ElMessage } from "element-plus";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,21 +27,14 @@ const router = createRouter({
             },
           })
           .then((response) => {
-            // console.log(response);
             if (response.code == 200) {
-              // console.log("通过");
-              ElMessage({
-                message: "欢迎光临",
-                type: "success",
-              });
               next();
             } else {
-              // console.log("不通过");
               ElMessage({
-                message: "不通过",
+                message: "请先登录",
                 type: "error",
               });
-              next('/login');  // 跳转到登录页面
+              next("/login"); // 跳转到登录页面
             }
           })
           .catch((err) => {
@@ -49,6 +42,11 @@ const router = createRouter({
           });
       },
       children: [
+        {
+          path: "/",
+          name: "Welcome",
+          component: () => import("../views/main/Welcome.vue"),
+        },
         {
           path: "/user",
           name: "User",
@@ -72,28 +70,27 @@ const router = createRouter({
               path: "/user/edit-info",
               name: "/EditUserInfo",
               component: () => import("../components/user/EditUser.vue"),
-            }
-          ]
+            },
+          ],
         },
         {
           path: "/admin",
           name: "Admin",
           children: [
             {
-              path: '/admin/list',
-              name: '/AdminList',
-              component: () => import("../views/main/AdminView.vue")
-            }
-          ]
-        }
-        
+              path: "/admin/list",
+              name: "/AdminList",
+              component: () => import("../views/main/AdminView.vue"),
+            },
+          ],
+        },
       ],
     },
     {
-      path: '/see-use-info',
+      path: "/see-use-info",
       name: "/SeeUseInfo",
-      component: () => import("../components/user/SeeUseInfo.vue")
-    }
+      component: () => import("../components/user/SeeUseInfo.vue"),
+    },
   ],
 });
 
