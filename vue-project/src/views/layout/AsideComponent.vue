@@ -66,7 +66,7 @@
                     </template>
                     <el-menu-item-group>
                         <!-- <template #title>Group 1</template> -->
-                        <el-menu-item index="3-1">Option 1</el-menu-item>
+                        <el-menu-item index="3-1">订单列表</el-menu-item>
                         <el-menu-item index="3-2">Option 2</el-menu-item>
                         <el-menu-item index="3-3">Option 3</el-menu-item>
                         <div style="height: 20px;"></div>
@@ -82,8 +82,24 @@
 
                     </template>
                     <el-menu-item-group>
-                        <el-menu-item index="4-1">Option 1</el-menu-item>
-                        <el-menu-item index="4-2">Option 2</el-menu-item>
+                        <el-menu-item index="4-1">水果信息</el-menu-item>
+                        <el-menu-item index="4-2">画廊</el-menu-item>
+                        <div style="height: 20px;"></div>
+
+                    </el-menu-item-group>
+
+                </el-sub-menu>
+                <el-sub-menu index="5">
+                    <template #title>
+                        <el-icon>
+                            <Van />
+                        </el-icon>
+                        <span v-show="!asideStore.isCollapse">采购管理</span>
+
+                    </template>
+                    <el-menu-item-group>
+                        <el-menu-item index="5-1">公司列表</el-menu-item>
+                        <el-menu-item index="5-2">画廊</el-menu-item>
                         <div style="height: 20px;"></div>
 
                     </el-menu-item-group>
@@ -117,7 +133,7 @@ function adminList() {
 }
 
 function addAdmin() {
-
+    router.push('/admin/add')
 }
 
 </script>
