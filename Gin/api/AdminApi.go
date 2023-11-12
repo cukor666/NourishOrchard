@@ -2,6 +2,7 @@ package api
 
 import (
 	"Gin/dao"
+	"Gin/moudels"
 	"Gin/response"
 	"log"
 	"strconv"
@@ -43,4 +44,24 @@ func DeleteAdmin(c *gin.Context) {
 	} else {
 		response.Success("删除成功", id, c)
 	}
+}
+
+// 添加管理员，实际上只是修改用户权限
+func AddAdmin(c *gin.Context) {
+	var users []moudels.User
+	var ids []uint
+	c.ShouldBind(&users)
+	// log.Printf("%v", users)
+	for _, v := range users {
+		ids = append(ids, v.ID)
+	}
+	// log.Printf("ids = %v", ids)
+	var adminDao dao.AdminDao
+	err := adminDao.AddAdmin(ids)
+	if err != nil {
+		log.Printf("add admin failed, err: %v\n", err)
+		response.Failed("添加管理员失败", c)
+		return
+	}
+	response.Success("添加管理员成功", ids, c)
 }

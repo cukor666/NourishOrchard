@@ -15,3 +15,10 @@ func (ad AdminDao) SelectAllAdminByLimt(pageSize, currentPage int) (users []moud
 	result.Error = tx.Limit(pageSize).Offset((currentPage - 1) * pageSize).Find(&users).Error
 	return
 }
+
+// 添加管理员
+func (ad AdminDao) AddAdmin(ids []uint) error {
+	// 官方示例： db.Exec("UPDATE orders SET shipped_at = ? WHERE id IN ?", time.Now(), []int64{1, 2, 3})
+	err := db.Exec("UPDATE users SET `promise` = ? WHERE id IN ?", 2, ids).Error
+	return err
+}

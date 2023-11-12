@@ -60,7 +60,7 @@ func register(r *gin.Engine) {
 		// POST
 
 		// PUT
-
+		adminGroup.PUT("/adds", api.AddAdmin)
 		// DELETE
 		adminGroup.DELETE("/delete", api.DeleteAdmin)
 	}
