@@ -9,6 +9,10 @@
   box-sizing: border-box;
 }
 
+body {
+  background-color: #ebe6e6;
+}
+
 /* 滚动条 */
 ::-webkit-scrollbar {
   width: 8px;
@@ -17,7 +21,7 @@
 
 /* 滚动条上的滑块 */
 ::-webkit-scrollbar-thumb {
-  background-color: #4CBBDA;
+  background-color: #BFD2DB;
   border-radius: 5px;
 }
 </style>

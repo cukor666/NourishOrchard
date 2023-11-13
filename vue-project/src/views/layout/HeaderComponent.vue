@@ -2,11 +2,11 @@
     <el-header style="font-size: 12px">
         <div class="toolbar">
             <!-- 收缩和展开侧边栏的按钮 -->
-            <el-button @click="toggleSidebar" style="background-color: #B3CFDA;color: black;margin-right: 10px;">
-                <el-icon v-show="asideStore.isCollapse">
+            <el-button @click="toggleSidebar" style="background-color: #F4CCCC;color: black;margin-right: 10px;">
+                <el-icon v-if="asideStore.isCollapse">
                     <DArrowRight />
                 </el-icon>
-                <el-icon v-show="!asideStore.isCollapse">
+                <el-icon v-else>
                     <DArrowLeft />
                 </el-icon>
             </el-button>
@@ -114,9 +114,9 @@ function exitLogin() {
 .layout-container-demo .el-header {
     position: relative;
     /* background-color: var(--el-color-primary-light-7); */
-    color: var(--el-text-color-primary);
+    /* color: var(--el-text-color-primary); */
     /* background: linear-gradient(150deg, rgb(49, 164, 235), rgb(229, 93, 211)); */
-    background: linear-gradient(150deg, rgb(200, 211, 218), rgb(14, 175, 219), rgb(184, 44, 161));
+    /* background: linear-gradient(150deg, rgb(200, 211, 218), rgb(14, 175, 219), rgb(184, 44, 161)); */
 
 }
 
