@@ -1,5 +1,5 @@
 <template>
-    <el-header style="font-size: 12px">
+    <el-header style="font-size: 12px;">
         <div class="toolbar">
             <!-- 收缩和展开侧边栏的按钮 -->
             <el-button @click="toggleSidebar" style="background-color: #F4CCCC;color: black;margin-right: 10px;">

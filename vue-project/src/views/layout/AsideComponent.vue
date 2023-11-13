@@ -15,7 +15,7 @@
                         <el-icon>
                             <Cpu />
                         </el-icon>
-                        <span v-show="!asideStore.isCollapse">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;系统管理</span>
+                        <span v-show="!asideStore.isCollapse">系统管理</span>
                     </template>
                     <el-menu-item index="1-1">Option 1</el-menu-item>
                     <el-menu-item index="1-2">Option 2</el-menu-item>
@@ -25,8 +25,7 @@
                         <el-icon>
                             <User />
                         </el-icon>
-                        <!-- @click="userManage" -->
-                        <span v-show="!asideStore.isCollapse">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;人员管理</span>
+                        <span v-show="!asideStore.isCollapse">人员管理</span>
                     </template>
                     <el-menu-item index="2-1" @click="userList">
                         <el-icon>
@@ -52,18 +51,24 @@
                         <el-icon>
                             <ShoppingCartFull />
                         </el-icon>
-                        <span v-show="!asideStore.isCollapse">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单管理</span>
+                        <span v-show="!asideStore.isCollapse">订单管理</span>
                     </template>
-                    <el-menu-item index="3-1">订单列表</el-menu-item>
-                    <el-menu-item index="3-2">Option 2</el-menu-item>
-                    <el-menu-item index="3-3">Option 3</el-menu-item>
+                    <el-menu-item index="3-1">
+                        订单列表
+                    </el-menu-item>
+                    <el-menu-item index="3-2">
+                        Option 2
+                    </el-menu-item>
+                    <el-menu-item index="3-3">
+                        Option 3
+                    </el-menu-item>
                 </el-sub-menu>
                 <el-sub-menu index="4">
                     <template #title>
                         <el-icon>
                             <Grape />
                         </el-icon>
-                        <span v-show="!asideStore.isCollapse">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;水果管理</span>
+                        <span v-show="!asideStore.isCollapse">水果管理</span>
                     </template>
                     <el-menu-item index="4-1">水果信息</el-menu-item>
                     <el-menu-item index="4-2">画廊</el-menu-item>
@@ -73,7 +78,7 @@
                         <el-icon>
                             <Van />
                         </el-icon>
-                        <span v-show="!asideStore.isCollapse">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;采购管理</span>
+                        <span v-show="!asideStore.isCollapse">采购管理</span>
                     </template>
                     <el-menu-item index="5-1">公司列表</el-menu-item>
                     <el-menu-item index="5-2">画廊</el-menu-item>
@@ -113,9 +118,7 @@ function addAdmin() {
 
 <style scoped>
 .el-aside {
-    /* background: linear-gradient(150deg, rgb(51, 137, 194), rgb(72, 209, 129)); */
     margin-right: 5px;
-    /* margin-left: 5px; */
 }
 
 .layout-container-demo .el-aside {
@@ -135,39 +138,32 @@ span {
     color: #f4cccc;
 }
 
-.el-menu {
-    /* background-color: #A1C4C9; */
-    /* background: linear-gradient(150deg, rgb(51, 137, 194), rgb(72, 209, 129)); */
+/* .el-menu {
     color: red;
-}
+} */
 
 /* 未激活的菜单项文本颜色 */
 .el-menu-item {
     color: #f4cccc;
-    /* border-radius: 20px; */
     background-color: #161F2F;
-    /* margin: 2px 6px; */
-    /* margin: 4px 10px 0 10px; */
 }
 
 /* 悬停的菜单项文本颜色 */
 .el-menu-item:hover {
-    /* color: #FFF; */
     background-color: #e06666;
-    /* border-radius: 20px; */
-    /* margin: 4px 10px 0 10px; */
 }
 
 /* 激活的菜单项文本颜色 */
 .el-menu-item.is-active {
     color: #ffd966;
     background-color: #e06666;
-    /* border-radius: 20px; */
-    /* margin: 4px 10px 0 10px; */
 }
 
 .el-sub-menu {
-    /* background: linear-gradient(150deg, rgb(51, 137, 194), rgb(72, 209, 129)); */
     background: #0d0e0f;
+}
+
+.el-sub-menu:hover {
+    background-color: #E06666;
 }
 </style>
