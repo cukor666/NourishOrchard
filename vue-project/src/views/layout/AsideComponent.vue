@@ -166,4 +166,20 @@ span {
 .el-sub-menu:hover {
     background-color: #E06666;
 }
+
+/* .el-sub-menu__title {
+    background-color: red !important;
+}
+
+.el-menu .el-menu-item:hover {
+    background-color: aqua !important;
+}
+
+.el-menu .el-sub-menu {
+    background: #0d0e0f !important;
+}
+
+.el-menu .el-sub-menu:hover {
+    background: #ffd966 !important;
+} */
 </style>
