@@ -2,14 +2,14 @@
     <el-header style="font-size: 12px;">
         <div class="toolbar">
             <!-- 收缩和展开侧边栏的按钮 -->
-            <el-button @click="toggleSidebar" style="background-color: #F4CCCC;color: black;margin-right: 10px;">
+            <!-- <el-button @click="toggleSidebar" style="background-color: #F4CCCC;color: black;margin-right: 10px;">
                 <el-icon v-if="asideStore.isCollapse">
                     <DArrowRight />
                 </el-icon>
                 <el-icon v-else>
                     <DArrowLeft />
                 </el-icon>
-            </el-button>
+            </el-button> -->
             <div class="element1" style="width: 100%;flex: 1;font-size: 30px;">
                 <p class="element2">Nourish Orchard</p>
                 <el-icon class="element1">
@@ -38,22 +38,22 @@
 
 <script setup>
 import { useUserStore } from '../../stores/stores'
-import { useAsideStore } from '../../stores/aside';
+// import { useAsideStore } from '../../stores/aside';
 import { useRouter } from 'vue-router'
 import request from '../../request';
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 // 侧边栏状态
-const asideStore = useAsideStore()
+// const asideStore = useAsideStore()
 const userStore = useUserStore()
 // 路由
 const router = useRouter();
 
 // 切换菜单的收缩状态
-function toggleSidebar() {
-    asideStore.isCollapse = !asideStore.isCollapse;
-    asideStore.asideWidth = asideStore.isCollapse ? 64 : 200
-}
+// function toggleSidebar() {
+//     asideStore.isCollapse = !asideStore.isCollapse;
+//     asideStore.asideWidth = asideStore.isCollapse ? 64 : 200
+// }
 
 function showInfo() {
     try {
