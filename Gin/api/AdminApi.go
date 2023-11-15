@@ -4,7 +4,6 @@ import (
 	"Gin/dao"
 	"Gin/moudels"
 	"Gin/response"
-	"Gin/vo"
 	"log"
 	"strconv"
 
@@ -34,8 +33,12 @@ func AdminList(c *gin.Context) {
 func DeleteAdmin(c *gin.Context) {
 	// id, _ := strconv.Atoi(c.Query("ID"))
 	// promise, _ := strconv.Atoi(c.Query("promise")) // 删除操作比较危险，只有权限大于普通用户的才可以删除
+	type DelteAdminType struct {
+		ID      int `json:"ID"`
+		Promise int `json:"promise"`
+	}
 
-	var temp vo.DelteAdminType
+	var temp DelteAdminType
 	c.BindJSON(&temp)
 	log.Printf("id = %v", temp.ID)
 	log.Printf("promise = %v", temp.Promise)
