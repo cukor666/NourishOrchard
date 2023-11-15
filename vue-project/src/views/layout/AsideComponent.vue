@@ -71,7 +71,7 @@
                         <el-icon>
                             <Grape />
                         </el-icon>
-                        <span v-show="!isCollapse">水果管理</span>
+                        <span v-show="!isCollapse">产品管理</span>
                     </template>
                     <el-menu-item index="5-1">水果信息</el-menu-item>
                     <el-menu-item index="5-2">画廊</el-menu-item>
