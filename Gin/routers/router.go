@@ -60,8 +60,9 @@ func register(r *gin.Engine) {
 		// POST
 
 		// PUT
-		adminGroup.PUT("/adds", api.AddAdmin)
+		adminGroup.PUT("/adds", api.AddAdmin)      // 虽然是增加操作，但实际上只是将权限更新为管理员身份
+		adminGroup.PUT("/delete", api.DeleteAdmin) // 虽然是删除操作，但实际上只是将权限更新为普通用户权限
 		// DELETE
-		adminGroup.DELETE("/delete", api.DeleteAdmin)
+
 	}
 }

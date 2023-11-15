@@ -218,13 +218,13 @@ function handleDelete(index, row) {
             type: 'warning',
         }
     ).then(() => {
-        userStore.userRow = row
+        userStore.tempUser = row
+        console.log(userStore.tempUser);
         try {
-            request.delete('/admin/delete', {
-                params: {
-                    ID: userStore.userRow.ID,
-                    promise: userStore.loginUser.promise
-                }
+            // 后端实际上是更新操作
+            request.put('/admin/delete', {
+                ID: userStore.tempUser.ID,
+                promise: userStore.loginUser.promise
             }).then(response => {
                 console.log(response);
                 if (response.code === 200) {

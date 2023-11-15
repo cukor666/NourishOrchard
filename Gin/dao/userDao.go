@@ -2,7 +2,7 @@ package dao
 
 import (
 	"Gin/moudels"
-	"Gin/utils"
+	"Gin/vo"
 	"log"
 	"time"
 )
@@ -41,7 +41,7 @@ func (ud UserDao) SelectAllUser() (result []moudels.User, err error) {
 }
 
 // 查询所有普通用户，分页查询
-func (ud UserDao) SelectAllUserByLimt(pageSize, currentPage int) (users []moudels.User, result utils.Result) {
+func (ud UserDao) SelectAllUserByLimt(pageSize, currentPage int) (users []moudels.User, result vo.Result) {
 	// 不把密码查出来给前端，防止密码泄露
 	tx := db.Omit("password", "DeletedAt").Where("promise = ?", 1)
 	result.Rows = tx.Find(&[]moudels.User{}).RowsAffected

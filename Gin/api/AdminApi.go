@@ -4,6 +4,7 @@ import (
 	"Gin/dao"
 	"Gin/moudels"
 	"Gin/response"
+	"Gin/vo"
 	"log"
 	"strconv"
 
@@ -31,18 +32,23 @@ func AdminList(c *gin.Context) {
 
 // 删除用户，根据ID
 func DeleteAdmin(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Query("ID"))
-	promise, _ := strconv.Atoi(c.Query("promise")) // 删除操作比较危险，只有权限大于普通用户的才可以删除
-	if promise < 3 {
+	// id, _ := strconv.Atoi(c.Query("ID"))
+	// promise, _ := strconv.Atoi(c.Query("promise")) // 删除操作比较危险，只有权限大于普通用户的才可以删除
+
+	var temp vo.DelteAdminType
+	c.BindJSON(&temp)
+	log.Printf("id = %v", temp.ID)
+	log.Printf("promise = %v", temp.Promise)
+	if temp.Promise < 3 {
 		response.Failed("删除失败，权限不够", c)
 		return
 	}
-	var userDao dao.UserDao // 这个地方待优化
-	ok := userDao.DeleteById(uint(id))
+	var adminDao dao.AdminDao // 这个地方待优化
+	ok := adminDao.DeleteById(uint(temp.ID))
 	if !ok {
 		response.Failed("删除失败，参数错误", c)
 	} else {
-		response.Success("删除成功", id, c)
+		response.Success("删除成功", temp.ID, c)
 	}
 }
 
