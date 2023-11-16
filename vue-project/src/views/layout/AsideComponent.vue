@@ -62,7 +62,7 @@
                     <el-menu-item index="4-2">
                         Option 2
                     </el-menu-item>
-                    <el-menu-item index="3-3">
+                    <el-menu-item index="4-3">
                         Option 3
                     </el-menu-item>
                 </el-sub-menu>
@@ -73,7 +73,7 @@
                         </el-icon>
                         <span v-show="!isCollapse">产品管理</span>
                     </template>
-                    <el-menu-item index="5-1">水果信息</el-menu-item>
+                    <el-menu-item index="5-1" @click="fruitList">水果信息</el-menu-item>
                     <el-menu-item index="5-2">画廊</el-menu-item>
                 </el-sub-menu>
                 <el-sub-menu index="6">
@@ -126,6 +126,10 @@ function adminList() {
 
 function addAdmin() {
     router.push('/admin/add')
+}
+
+function fruitList() {
+    router.push('/fruit/list')
 }
 
 </script>

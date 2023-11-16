@@ -63,12 +63,12 @@ const router = createRouter({
             },
             {
               path: "/user/list",
-              name: "/UserList",
+              name: "UserList",
               component: () => import("../views/main/UserView.vue"),
             },
             {
               path: "/user/edit-info",
-              name: "/EditUserInfo",
+              name: "EditUserInfo",
               component: () => import("../components/user/EditUser.vue"),
             },
           ],
@@ -86,6 +86,17 @@ const router = createRouter({
               path: "/admin/add",
               name: "AddAdmin",
               component: () => import("../components/admin/AddAdmin.vue"),
+            },
+          ],
+        },
+        {
+          path: "/fruit",
+          name: "Fruit",
+          children: [
+            {
+              path: "/fruit/list",
+              name: "FruitList",
+              component: () => import("../views/main/FruitView.vue"),
             },
           ],
         },
