@@ -65,4 +65,18 @@ func register(r *gin.Engine) {
 		// DELETE
 
 	}
+
+	// 水果组
+	fruitGroup := r.Group("/fruit")
+	{
+		// GET
+		fruitGroup.GET("/list", api.SeeAllFruit)
+
+		// POST
+		fruitGroup.POST("/add", api.AddFruit)
+
+		// PUT
+
+		// DELETE
+	}
 }
