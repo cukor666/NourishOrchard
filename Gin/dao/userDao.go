@@ -9,9 +9,9 @@ import (
 
 type UserDao struct{}
 
-func init() {
-	db.AutoMigrate(&moudels.User{})
-}
+//func init() {
+//	db.AutoMigrate(&moudels.User{})
+//}
 
 // 插入用户数据
 func (ud UserDao) Insert(user moudels.User) (newId uint, affect int64) {

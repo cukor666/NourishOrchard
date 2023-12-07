@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"Gin/config"
 	"log"
 
 	"gorm.io/driver/mysql"
@@ -13,7 +14,7 @@ var db *gorm.DB
 
 // 初始化数据源，以连接数据库
 func init() {
-	dsn := "root:cukor@tcp(localhost:3306)/nourish_orchard?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := config.GetDSN()
 	var mysqlLogger = logger.Default.LogMode(logger.Info)
 	open, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: mysqlLogger, // 添加SQL日志

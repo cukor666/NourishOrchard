@@ -19,20 +19,26 @@ type User struct {
 	Promise  int8       `json:"promise" gorm:"not null;default:1"`
 }
 
-func NewUser(name, nickname, password, gender, phone, address string) *User {
-	user := new(User)
-	user.Name = name
-	user.NickName = nickname
-	user.Password = password
-	user.Gender = gender
-	user.Birthday = nil
-	user.Phone = phone
-	user.Address = address
-	user.Promise = 1
-	return user
+// TableName 设置表名
+func (u User) TableName() string {
+	return "users"
 }
 
-func (u *User) Show() {
+//func NewUser(name, nickname, password, gender, phone, address string) *User {
+//	user := new(User)
+//	user.Name = name
+//	user.NickName = nickname
+//	user.Password = password
+//	user.Gender = gender
+//	user.Birthday = nil
+//	user.Phone = phone
+//	user.Address = address
+//	user.Promise = 1
+//	return user
+//}
+
+// Show  展示用户信息
+func (u User) Show() {
 	log.Println("name: ", u.Name)
 	log.Println("nickname: ", u.NickName)
 	log.Println("password: ", u.Password)

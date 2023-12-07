@@ -8,11 +8,11 @@ import (
 
 type FruitDao struct{}
 
-func init() {
-	db.AutoMigrate(&moudels.Fruit{})
-}
+//func init() {
+//	db.AutoMigrate(&moudels.Fruit{})
+//}
 
-// 添加新水果
+// Insert 添加新水果
 func (fd FruitDao) Insert(fruit moudels.Fruit) (newId uint, affect int64) {
 	fruit.CreatedAt = time.Now()
 	fruit.UpdatedAt = time.Now()
@@ -24,7 +24,7 @@ func (fd FruitDao) Insert(fruit moudels.Fruit) (newId uint, affect int64) {
 	return fruit.ID, d.RowsAffected
 }
 
-// 查看所有水果
+// SelectAll 查看所有水果
 func (fd FruitDao) SelectAll() (fruits []moudels.Fruit, ok bool) {
 	ok = true
 	err := db.Omit("DeletedAt").

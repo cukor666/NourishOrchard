@@ -11,3 +11,8 @@ type Fruit struct {
 	Price     float64 `json:"price" gorm:"not null"`
 	SuppherID uint    `json:"suppherid"`
 }
+
+// TableName 设置表名
+func (f Fruit) TableName() string {
+	return "fruits"
+}
