@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	routers.Start("9000")
+	routers.Start()
 }

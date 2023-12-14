@@ -2,28 +2,30 @@ package routers
 
 import (
 	"Gin/api"
+	"Gin/config"
 	"Gin/utils"
-
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
-// 启动gin
-func Start(port string) {
+// Start 启动gin
+func Start() {
 	r := gin.Default()
 	middleWare(r) // 中间件
 	register(r)   // 注册路由
-	r.Run(":" + port)
+	if err := r.Run(fmt.Sprintf(":%d", config.GetConfig().SystemConfig.Port)); err != nil {
+		panic(fmt.Sprintf("启动失败,错误信息: err = %v", err))
+	}
 }
 
 // 中间件
 func middleWare(r *gin.Engine) {
-	r.Use(utils.CorssDomain())       // 解决跨域问题
-	r.Use(utils.Session("cukor.cn")) // 配置session
+	r.Use(utils.CorssDomain())                                   // 解决跨域问题
+	r.Use(utils.Session(config.GetConfig().SystemConfig.Secret)) // 配置session
 }
 
 // 注册路由
 func register(r *gin.Engine) {
-
 	r.GET("/", utils.JWTAuthMiddleware(), api.AuthHandler) // 鉴权
 	r.GET("/captcha", api.Captcha)                         // 验证码
 	r.POST("/user-login", api.AuthHandler)                 // 登录时使用，新版，带鉴权

@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 解决跨域问题
+// CorssDomain 解决跨域问题
 func CorssDomain() (mwCORS gin.HandlerFunc) {
 	mwCORS = cors.New(cors.Config{
 		// 运行跨域请求网络，多个网络使用逗号分开，限制使用*

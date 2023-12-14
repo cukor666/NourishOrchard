@@ -2,7 +2,7 @@ package api
 
 import (
 	"Gin/dao"
-	"Gin/moudels"
+	"Gin/models"
 	"Gin/response"
 	"log"
 	"strconv"
@@ -17,7 +17,7 @@ func AdminList(c *gin.Context) {
 	currentPage, _ := strconv.Atoi(c.Query("currentPage"))
 	log.Printf("pageSize = %v", pageSize)
 	log.Printf("currentPage = %v", currentPage)
-	users, result := adminDao.SelectAllAdminByLimt(pageSize, currentPage) // 新版，分页查询
+	users, result := adminDao.SelectAllAdminByLimit(pageSize, currentPage) // 新版，分页查询
 	if result.Error != nil {
 		log.Printf("select all by limit failed, err: %v\n", result.Error)
 		response.Failed("后端查询数据失败", c)
@@ -57,7 +57,7 @@ func DeleteAdmin(c *gin.Context) {
 
 // 添加管理员，实际上只是修改用户权限
 func AddAdmin(c *gin.Context) {
-	var users []moudels.User
+	var users []models.User
 	var ids []uint
 	c.ShouldBind(&users)
 	// log.Printf("%v", users)

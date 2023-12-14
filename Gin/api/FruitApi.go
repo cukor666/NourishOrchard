@@ -2,7 +2,7 @@ package api
 
 import (
 	"Gin/dao"
-	"Gin/moudels"
+	"Gin/models"
 	"Gin/response"
 	"log"
 
@@ -11,7 +11,7 @@ import (
 
 // 添加水果
 func AddFruit(c *gin.Context) {
-	var data moudels.Fruit
+	var data models.Fruit
 	c.BindJSON(&data)
 	log.Printf("data = %v", data)
 	var fruitDao dao.FruitDao

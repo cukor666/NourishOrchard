@@ -1,6 +1,9 @@
 package utils
 
 import (
+	"Gin/config"
+	"Gin/models"
+	"Gin/response"
 	"errors"
 	"log"
 	"strings"
@@ -14,23 +17,27 @@ import (
 // jwt包自带的jwt.RegisteredClaims只包含了官方字段
 type UserClaims struct {
 	// 可根据需要自行添加字段
+	ID                   uint   `json:"ID"`
 	Name                 string `json:"name"`
 	Password             string `json:"password"`
+	Promise              int8   `json:"promise"`
 	jwt.RegisteredClaims        // 内嵌标准的声明
 }
 
 // 用于签名的字符串
-var mySigningKey = []byte("cukor.cn")
+var mySigningKey = []byte(config.GetConfig().SystemConfig.Secret)
 
 // GenToken 创建jwt
-func GenToken(name, password string) (string, error) {
+func GenToken(user models.User) (string, error) {
 	// 创建 Claims
 	claims := UserClaims{
-		name,
-		password,
+		user.ID,
+		user.Name,
+		user.Password,
+		user.Promise,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)), // 设置过期时间，24小时后过期
-			Issuer:    "cukor",
+			Issuer:    config.GetConfig().SystemConfig.Issuer,
 		}, //签发人
 	}
 	// 生成token对象
@@ -64,36 +71,35 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 		// 这里将Token放到请求头上，Header的Authorization中，并使用Bearer开头
 		authHeader := c.Request.Header.Get("Authorization")
 		if authHeader == "" {
-			c.JSON(200, gin.H{
-				"code": 200,
-				"msg":  "请求头中的auth为空",
-			})
+			response.Failed("请求头的auth为空", c)
+			log.Printf("请求头中的auth为空")
 			c.Abort()
 			return
 		}
 		// 按空格分割，预期[0]是Bearer，[1]是token内容，没有其他的了
 		parts := strings.SplitN(authHeader, " ", 2)
 		if len(parts) != 2 || parts[0] != "Bearer" {
-			c.JSON(200, gin.H{
-				"code": 200,
-				"msg":  "请求头中的auth格式错误",
-			})
+			response.Failed("请求头中的auth格式错误", c)
 			c.Abort()
 			return
 		}
 		// parts[1]是token内容，解析token
 		uc, err := ParseToken(parts[1])
 		if err != nil {
-			c.JSON(200, gin.H{
-				"code": 500,
-				"msg":  "无效的Token",
-			})
+			response.FailedWithCode(500, "无效的Token", c)
 			c.Abort()
 			return
 		}
 		// 将当前请求的用户名和密码信息保存到请求的上下文c上
-		c.Set("name", uc.Name)
-		c.Set("password", uc.Password)
+		setTokenStruct(c, uc)
 		c.Next() // 后续的处理函数可以用过c.Get("name")来获取当前请求的用户信息
 	}
+}
+
+// setTokenStruct 将当前请求的用户名和密码等信息保存到请求的上下文c上
+func setTokenStruct(c *gin.Context, uc *UserClaims) {
+	c.Set("ID", uc.ID)
+	c.Set("name", uc.Name)
+	c.Set("password", uc.Password)
+	c.Set("promise", uc.Promise)
 }

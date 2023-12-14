@@ -1,4 +1,4 @@
-package moudels
+package models
 
 import "gorm.io/gorm"
 

@@ -59,7 +59,7 @@ function showInfo() {
     try {
         request.get('/user/?name=' + userStore.loginUser.name).then(response => {
             if (response.code == 200) {
-                // console.log(response.data);
+                console.log(response.data);
 
                 // 希望出现一个模态对话框，而不是打印到控制台上
                 userStore.UserInfoVisible = true

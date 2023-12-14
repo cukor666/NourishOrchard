@@ -2,7 +2,7 @@ package response
 
 import "github.com/gin-gonic/gin"
 
-// 相应对象
+// Response 响应对象
 type Response struct {
 	Code int    `json:"code"` // 状态码
 	Msg  string `json:"msg"`  // 消息
@@ -17,4 +17,9 @@ func Success(msg string, data any, c *gin.Context) {
 // Failed 请求失败返回
 func Failed(msg string, c *gin.Context) {
 	c.JSON(200, Response{400, msg, 0})
+}
+
+// FailedWithCode 请求失败返回，携带有状态码
+func FailedWithCode(code int, msg string, c *gin.Context) {
+	c.JSON(200, Response{code, msg, 0})
 }

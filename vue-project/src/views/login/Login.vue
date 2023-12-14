@@ -65,7 +65,7 @@ const captchaURL = ref('http://localhost:9000/captcha')
 
 // 更新验证码
 function updateCaptcha() {
-    captchaURL.value = 'http://localhost:9000/captcha?v=' + Math.random()
+    captchaURL.value = captchaURL.value + "?v=" + Math.random()
 }
 
 // 表单校验规则
@@ -114,7 +114,10 @@ function goHome() {
                     // 登录
                     // post的参数除了可以直接传user.value，
                     // 还可以这样传：{"name": user.value.name, "password": user.value.password}
-                    request.post('/user-login', user.value).then(response => {
+                    request.post('/user-login', {
+                        "name": user.value.name, 
+                        "password": user.value.password
+                    }).then(response => {
                         // console.log(response);  // data返回的是token
                         // 只有状态码是200才能登录系统，否则就不能登录
                         if (response.code === 200) {

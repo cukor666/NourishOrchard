@@ -2,7 +2,7 @@ package api
 
 import (
 	"Gin/dao"
-	"Gin/moudels"
+	"Gin/models"
 	"Gin/response"
 	"Gin/utils"
 	"log"
@@ -11,10 +11,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 添加用户信息
+// UserAdd 添加用户信息
 func UserAdd(c *gin.Context) {
-	var user moudels.User
-	c.ShouldBind(&user)
+	var user models.User
+	_ = c.ShouldBind(&user)
 	// user.Show()
 	var userDao dao.UserDao
 	_, affect := userDao.Insert(user)
@@ -26,14 +26,14 @@ func UserAdd(c *gin.Context) {
 	}
 }
 
-// 查询所有用户信息，分页
+// UserList 查询所有用户信息，分页
 func UserList(c *gin.Context) {
 	var userDao dao.UserDao
 	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
 	currentPage, _ := strconv.Atoi(c.Query("currentPage"))
 	log.Printf("pageSize = %v", pageSize)
 	log.Printf("currentPage = %v", currentPage)
-	users, result := userDao.SelectAllUserByLimt(pageSize, currentPage) // 新版，分页查询
+	users, result := userDao.SelectAllUserByLimit(pageSize, currentPage) // 新版，分页查询
 	if result.Error != nil {
 		log.Printf("select all by limit failed, err: %v\n", result.Error)
 		response.Failed("后端查询数据失败", c)
@@ -45,7 +45,7 @@ func UserList(c *gin.Context) {
 	}
 }
 
-// 根据ID查找用户
+// FindUser 根据ID查找用户
 func FindUser(c *gin.Context) {
 	val := c.Param("id")
 	id, _ := strconv.Atoi(val)
@@ -59,12 +59,12 @@ func FindUser(c *gin.Context) {
 	}
 }
 
-// 通过表单的json转换为结构体对象，查询匹配的用户
+// FindUserByStruct 通过表单的json转换为结构体对象，查询匹配的用户
 func FindUserByStruct(c *gin.Context) {
 	var (
 		userDao dao.UserDao
-		user    moudels.User
-		users   []moudels.User
+		user    models.User
+		users   []models.User
 		rows    int64
 		err     error
 	)
@@ -99,33 +99,32 @@ func FindUserByStruct(c *gin.Context) {
 	}
 }
 
-// 用户登录，旧版的，自从使用了token之后就没有地方再调用这个函数了，新版登录看 AuthHandler
-func UserLogin(c *gin.Context) {
-	var user moudels.User
-	var ok bool
-	c.BindJSON(&user) // 拿JSON数据要这样拿
-	var userDao dao.UserDao
-	user, ok = userDao.SelectUserByNameAndPwd(user.Name, user.Password)
-	if !ok {
-		response.Failed("后端发送数据，用户名或密码错误", c)
-	} else {
-		response.Success("登录成功", user.Name, c)
-	}
-}
+// UserLogin 用户登录，旧版的，自从使用了token之后就没有地方再调用这个函数了，新版登录看 AuthHandler
+//func UserLogin(c *gin.Context) {
+//	var user models.User
+//	var ok bool
+//	c.BindJSON(&user) // 拿JSON数据要这样拿
+//	var userDao dao.UserDao
+//	user, ok = userDao.SelectUserByNameAndPwd(user.Name, user.Password)
+//	if !ok {
+//		response.Failed("后端发送数据，用户名或密码错误", c)
+//	} else {
+//		response.Success("登录成功", user.Name, c)
+//	}
+//}
 
-// 用户鉴权，用户登录时使用，新版的登录
+// AuthHandler 用户鉴权，用户登录时使用，新版的登录
 func AuthHandler(c *gin.Context) {
 	// 用户发送用户名和密码过来
-	var user moudels.User
+	var user models.User
 	err := c.ShouldBind(&user)
-
+	// 校验用户名和密码是否正确
 	if err != nil {
 		log.Printf("should bind failed, err: %v\n", err)
 		response.Failed("无效的参数", c)
 		return
 	}
-
-	// 校验用户名和密码是否正确
+	log.Println("user: ", user)
 	// 通过查询数据库
 	var userDao dao.UserDao
 	if user.Name == "" || user.Password == "" {
@@ -137,11 +136,11 @@ func AuthHandler(c *gin.Context) {
 		response.Failed("鉴权失败", c)
 		return
 	}
-	tokenString, _ := utils.GenToken(u.Name, u.Password)
+	tokenString, _ := utils.GenToken(u)
 	response.Success("success", tokenString, c)
 }
 
-// 查看个人用户信息
+// SeeUserInfo 查看个人用户信息
 func SeeUserInfo(c *gin.Context) {
 	name := c.Query("name")
 	var userDao dao.UserDao
@@ -155,7 +154,7 @@ func SeeUserInfo(c *gin.Context) {
 
 // 更新用户信息
 func UpdateUserInfo(c *gin.Context) {
-	var user moudels.User
+	var user models.User
 	c.BindJSON(&user) // 拿JSON数据要这样拿
 	var userDao dao.UserDao
 	ok := userDao.UpdateUserInfo(user)

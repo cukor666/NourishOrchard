@@ -15,7 +15,7 @@ import (
 // 全局定义，方便下面使用
 var captchaId string
 
-// 配置Session
+// SessionConfig 配置Session
 func SessionConfig() sessions.Store {
 	sessionMaxAge := 3600
 	sessionSecret := "cukor.cn"
@@ -27,23 +27,22 @@ func SessionConfig() sessions.Store {
 	return store
 }
 
-// 中间件，处理session
+// Session 中间件，处理session
 func Session(keyPairs string) gin.HandlerFunc {
 	store := SessionConfig()
 	return sessions.Sessions(keyPairs, store)
 }
 
-// 生成图片
-
+// Serve 生成图片
 /*
-w: 使用http写操作
-r: 使用http读操作
-id: 从session中获取的验证码的ID
-ext: 过期时间
-lang: 语言
-download: 是否下载
-width: 验证码图片的宽度
-height: 验证码图片的高度
+	w: 使用http写操作
+	r: 使用http读操作
+	id: 从session中获取的验证码的ID
+	ext: 过期时间
+	lang: 语言
+	download: 是否下载
+	width: 验证码图片的宽度
+	height: 验证码图片的高度
 */
 func Serve(w http.ResponseWriter, r *http.Request, id, ext, lang string, download bool, width, height int) error {
 	// 响应头
@@ -70,7 +69,7 @@ func Serve(w http.ResponseWriter, r *http.Request, id, ext, lang string, downloa
 	return nil
 }
 
-// 生成验证码
+// Captcha 生成验证码
 func Captcha(c *gin.Context, length ...int) {
 	l := captcha.DefaultLen // 验证码的默认长度，例如：9412  ---> 4
 	w, h := 107, 36         // 验证码图片的默认宽度和高度
@@ -86,10 +85,10 @@ func Captcha(c *gin.Context, length ...int) {
 	captchaId = captcha.NewLen(l) // 使用全局的captchaId
 	session := sessions.Default(c)
 	session.Set("captcha", captchaId)
-	captchaId2 := session.Get("captcha") // 获取到验证码ID
-	log.Printf("全局captchaId: %s", captchaId)
-	log.Printf("局部captchaId2: %s", captchaId2) // 这里通过运行知道，可以从session中获取到
-	err := session.Save()                      // 保存更新后的sessions
+	//captchaId2 := session.Get("captcha") // 获取到验证码ID
+	//log.Printf("全局captchaId: %s", captchaId)
+	//log.Printf("局部captchaId2: %s", captchaId2) // 这里通过运行知道，可以从session中获取到
+	err := session.Save() // 保存更新后的sessions
 	if err != nil {
 		log.Printf("生成验证码 session save failed, err: %v\n", err)
 		return
@@ -97,7 +96,7 @@ func Captcha(c *gin.Context, length ...int) {
 	_ = Serve(c.Writer, c.Request, captchaId, ".png", "zh", false, w, h) // 生成图片
 }
 
-// 验证，验证码
+// CaptchaVerify 验证，验证码
 func CaptchaVerify(c *gin.Context, code string) bool {
 	session := sessions.Default(c)       // 获取到上下文的session
 	captchaId2 := session.Get("captcha") // 获取到验证码ID
