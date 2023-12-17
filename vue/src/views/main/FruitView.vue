@@ -141,7 +141,6 @@ function searchFruit() {
 }
 
 function clearFruitForm() {
-    // alert('清空输入表单')
     fruitForm.ID = -1
     fruitForm.name = ''
     fruitForm.water = ''
@@ -149,11 +148,7 @@ function clearFruitForm() {
     fruitForm.inventory = ''
     fruitForm.price = ''
     fruitForm.suppherid = ''
-
-    ElMessage({
-        message: '清空输入框成功',
-        type: 'success',
-    })
+    ElMessage({ message: '清空输入框成功', type: 'success' })
 }
 
 
@@ -170,29 +165,15 @@ function handleDelete(index, row) {
 }
 
 // 分页
-// 当前页
-const currentPage = ref(1)
-
-// 页面大小 
-const pageSize = ref(8)
-
-// 总条数
-const total = ref(0)
+const currentPage = ref(1)  // 当前页
+const pageSize = ref(8)     // 页面大小 
+const total = ref(0)        // 总条数
 
 // 改变每页大小 pageSize
-function handleSizeChange() {
-    // alert('handleSizeChange')
-    ElMessage({
-        message: '切换成功',
-        type: 'success',
-    })
-}
+function handleSizeChange() { ElMessage({ message: '切换成功', type: 'success' }) }
 
 // 改变当前页
-function handleCurrentChange() {
-    // searchUser()
-    alert('切换当前页')
-}
+function handleCurrentChange() { alert('切换当前页') }
 
 </script>
 

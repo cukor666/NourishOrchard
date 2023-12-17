@@ -1,82 +1,99 @@
 <template>
-    <div>
-        <!-- 主体部分 -->
-        <div class="main">
-            <!-- 搜索选项 -->
-            <div style="flex: 12; margin-left: 10px;">
-                ID：<el-input type="number" style="width: 80px;" v-model="userForm.ID"></el-input>
-                用户名：<el-input placeholder="Cukor" style="width: 80px;" v-model="userForm.name"></el-input>
-                昵称：<el-input placeholder="Sugar" style="width: 80px;" v-model="userForm.nickname"></el-input>
-                电话：<el-input placeholder="12345678910" style="width: 120px;" v-model="userForm.phone"></el-input>
-                地址：<el-input placeholder="地址" style="width: 200px;" v-model="userForm.address"></el-input>
-                性别：<el-select v-model="userForm.gender" style="width: 80px;" placeholder="不填">
-                    <el-option v-for="item in genders" :key="item.value" :label="item.label" :value="item.value" />
-                </el-select>
+    <!-- 搜索选项 -->
+    <div class="search-from">
+        <div :style="{ 'height': searchHeight + 'px' }" class="search-info" v-if="searchVisiable">
+            <el-form :model="userForm" label-width="120px">
+                <el-form-item style="display: flex;">
+                    <el-form-item label="ID：">
+                        <el-input type="number" v-model.number="userForm.ID" placeholder="请输入ID" />
+                    </el-form-item>
+                    <el-form-item label="用户名：">
+                        <el-input v-model="userForm.name" placeholder="请输入用户名" />
+                    </el-form-item>
+                    <el-form-item label="昵称：">
+                        <el-input v-model="userForm.nickname" placeholder="请输入昵称" />
+                    </el-form-item>
+                </el-form-item>
+                <el-form-item style="display: flex;">
+                    <el-form-item label="电话：">
+                        <el-input v-model="userForm.phone" placeholder="请输入电话" />
+                    </el-form-item>
+                    <el-form-item label="地址：">
+                        <el-input v-model="userForm.address" placeholder="请输入地址" />
+                    </el-form-item>
+                    <el-form-item label="性别：">
+                        <el-select v-model="userForm.gender" placeholder="不填">
+                            <el-option v-for="item in genders" :key="item.value" :label="item.label" :value="item.value" />
+                        </el-select>
+                    </el-form-item>
+                </el-form-item>
+                <el-form-item style="display: flex;">
+                    <el-form-item label="生日：">
+                        <el-date-picker v-model="userForm.birthday" type="daterange" range-separator="To"
+                            start-placeholder="Start date" end-placeholder="End date" />
+                    </el-form-item>
 
-                <div style="margin-top: 10px;">
-                    <span class="demonstration">生日：</span>
-                    <el-date-picker v-model="userForm.birthday" type="daterange" range-separator="To"
-                        start-placeholder="Start date" end-placeholder="End date" />
-                </div>
-
-            </div>
-
-            <!-- 按钮组 -->
-            <div style="flex: 1;">
-                <el-button type="primary" circle title="搜索" @click="searchUser">
-                    <el-icon>
-                        <Search />
-                    </el-icon>
-                </el-button>
-                <el-button type="warning" circle title="清空" @click="clearUserForm">
-                    <el-icon>
-                        <Refresh />
-                    </el-icon>
-                </el-button>
-            </div>
-
+                    <el-button style="margin-left: 10px;" type="primary" title="搜索" @click="searchUser">
+                        <el-icon>
+                            <Search />
+                        </el-icon>
+                        搜索
+                    </el-button>
+                    <el-button type="warning" title="清空" @click="clearUserForm">
+                        <el-icon>
+                            <Refresh />
+                        </el-icon>
+                        清空
+                    </el-button>
+                </el-form-item>
+            </el-form>
         </div>
-
-        <div style="margin-left: 10px;">
-            <el-row style="display: flex;">
-                <div style="flex: 5; margin-right: 10px;">
-                    <el-table :data="tableData" style="border-radius: 15px;">
-                        <el-table-column prop="ID" label="ID" width="50" />
-                        <el-table-column prop="name" label="用户名" width="100" />
-                        <el-table-column prop="nickname" label="昵称" width="180" />
-                        <el-table-column prop="gender" label="性别" width="80" />
-                        <el-table-column prop="phone" label="联系电话" width="120" />
-                        <el-table-column prop="address" label="家庭地址" width="190" />
-
-                        <el-table-column label="操作" width="150">
-                            <template #default="scope">
-                                <!-- 下标index从0开始 -->
-                                <el-button size="small" title="详情与编辑" @click="handleEdit(scope.$index, scope.row)">
-                                    <el-icon>
-                                        <Edit />
-                                    </el-icon>
-                                </el-button>
-                                <el-button size="small" type="danger" title="删除"
-                                    @click="handleDelete(scope.$index, scope.row)">
-                                    <el-icon>
-                                        <Delete />
-                                    </el-icon>
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <!-- 分页 -->
-                    <div style="margin-top: 10px; margin-left: 5px;">
-                        <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
-                            :page-sizes="[8, 16, 32]" small background layout="total, sizes, prev, pager, next, jumper"
-                            :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                    </div>
-                </div>
-                <!-- 卡片部分 -->
-                <user-card style="flex: 3;" />
-            </el-row>
+        <div class="search-button">
+            <el-button :title="searchVisiable ? '收起搜索' : '展开搜索'" @click="upAndDown">
+                <el-icon v-if="searchVisiable">
+                    <CaretTop />
+                </el-icon>
+                <el-icon v-else>
+                    <CaretBottom />
+                </el-icon>
+            </el-button>
         </div>
     </div>
+
+    <!-- 表格部分 -->
+    <el-row>
+        <div>
+            <el-table :data="tableData">
+                <el-table-column prop="ID" label="ID" width="50" />
+                <el-table-column prop="name" label="用户名" width="100" />
+                <el-table-column prop="nickname" label="昵称" width="180" />
+                <el-table-column prop="gender" label="性别" width="80" />
+                <el-table-column prop="phone" label="联系电话" width="120" />
+                <el-table-column prop="address" label="家庭地址" width="190" />
+
+                <el-table-column label="操作" width="150">
+                    <template #default="scope">
+                        <el-button size="small" title="详情与编辑" @click="handleEdit(scope.$index, scope.row)">
+                            <el-icon>
+                                <Edit />
+                            </el-icon>
+                        </el-button>
+                        <el-button size="small" type="danger" title="删除" @click="handleDelete(scope.$index, scope.row)">
+                            <el-icon>
+                                <Delete />
+                            </el-icon>
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <!-- 分页 -->
+            <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[8, 16, 32]" small
+                background layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange"
+                @current-change="handleCurrentChange" />
+        </div>
+        <!-- 卡片部分 -->
+        <user-card style="flex: 3;" />
+    </el-row>
 </template>
 <script setup>
 import { reactive, ref, onMounted } from 'vue'
@@ -102,59 +119,35 @@ const userForm = reactive({
 
 // 性别选项
 const genders = ref([
-    {
-        value: "男",
-        label: "男"
-    },
-    {
-        value: "女",
-        label: "女"
-    }
+    { value: "男", label: "男" },
+    { value: "女", label: "女" }
 ])
 
 // 表格数据
 const tableData = ref([])
 
 onMounted(() => {
-    try {
-        request.get('/admin/list', {
-            params: {
-                currentPage: 1,
-                pageSize: 8
-            }
-        }).then(response => {
-            tableData.value = response.data.users
-            total.value = response.data.rows
-        })
-    } catch (error) {
-        console.log(error);
-    }
+    request.get('/admin/list', { params: { currentPage: 1, pageSize: 8 } }).then(response => {
+        tableData.value = response.data.users
+        total.value = response.data.rows
+    }).catch(error => console.log(error))
 })
-
 
 // 查询所有管理员
 function searchUser() {
     // 先获取一下前端填写的表单
-    // console.log(userForm);
     // 获取到表单信息之后，将表单封装成json发送给后端，让后端进行查询操作
     if (userForm.ID < 0) {  // 如果userForm.ID < 0 则查询所有用户
-        // console.log(pageSize.value);
-        // console.log(currentPage.value);
-        try {
-            request.get('/admin/list', {
-                params: {
-                    currentPage: currentPage.value,
-                    pageSize: pageSize.value
-                }
-            }).then(response => {
-                tableData.value = response.data.users
-                total.value = response.data.rows
-            })
-        } catch (error) {
-            console.log(error);
-        }
+        request.get('/admin/list', {
+            params: {
+                currentPage: currentPage.value,
+                pageSize: pageSize.value
+            }
+        }).then(response => {
+            tableData.value = response.data.users
+            total.value = response.data.rows
+        }).catch(error => console.log(error))
     } else if (userForm.ID == 0) {   // 如果userForm.ID == 0 则表示不使用ID这个字段
-        console.log(userForm);
         request.get('/user/struct', {
             params: {
                 name: userForm.name,
@@ -170,9 +163,7 @@ function searchUser() {
             console.log(response.data);
             tableData.value = response.data.users
             total.value = response.data.rows
-        }).catch(err => {
-            console.log(err);
-        })
+        }).catch(err => { console.log(err); })
     } else {    // 如果userForm.ID > 0 则表示使用ID这个字段
         //因为ID是唯一的，所以。当使用了ID这个字段，那就直接忽略掉其他字段，否则没有任何意义
         request.get('/user/' + userForm.ID).then(response => {
@@ -180,9 +171,7 @@ function searchUser() {
             console.log(response.data);
             tableData.value.push(response.data)
             total.value = 1
-        }).catch(err => {
-            console.log(err);
-        })
+        }).catch(err => { console.log(err); })
     }
 }
 
@@ -195,10 +184,7 @@ function clearUserForm() {
     userForm.address = ''
     userForm.gender = ''
     userForm.birthday = ''
-    ElMessage({
-        message: '清空输入框成功',
-        type: 'success',
-    })
+    ElMessage({ message: '清空输入框成功', type: 'success' })
 }
 
 // 编辑用户信息
@@ -209,85 +195,93 @@ function handleEdit(index, row) {
 
 // 删除用户，这是一个比较危险的操作，所以要弹出一个消息框提示用户
 function handleDelete(index, row) {
-    ElMessageBox.confirm(
-        '您确定要删除这个数据吗?',
-        'Warning',
-        {
-            confirmButtonText: '是的',
-            cancelButtonText: '取消',
-            type: 'warning',
-        }
-    ).then(() => {
+    ElMessageBox.confirm('您确定要删除这个数据吗?', 'Warning', {
+        confirmButtonText: '是的', cancelButtonText: '取消', type: 'warning',
+    }).then(() => {
         userStore.tempUser = row
         console.log(userStore.tempUser);
-        try {
-            // 后端实际上是更新操作
-            request.put('/admin/delete', {
-                ID: userStore.tempUser.ID,
-                promise: userStore.loginUser.promise
-            }).then(response => {
-                console.log(response);
-                if (response.code === 200) {
-                    ElMessage({
-                        message: '删除成功',
-                        type: 'success',
-                    })
-                    searchUser()    // 删除成功后要刷新一下用户列表，而不是让用户在自己点击一次查询按钮
-                } else {
-                    ElMessage({
-                        message: '删除失败，权限不够',
-                        type: 'error',
-                    })
-                }
-            })
-        } catch (error) {
+        // 后端实际上是更新操作
+        request.put('/admin/delete', { ID: userStore.tempUser.ID, promise: userStore.loginUser.promise }).then(response => {
+            console.log(response);
+            if (response.code === 200) {
+                ElMessage({ message: '删除成功', type: 'success' })
+                searchUser()    // 删除成功后要刷新一下用户列表，而不是让用户在自己点击一次查询按钮
+            } else { ElMessage({ message: '删除失败，权限不够', type: 'error' }) }
+        }).catch(error => {
             console.log(error);
-            ElMessage({
-                type: 'error',
-                message: '删除失败',
-            })
-        }
-    }).catch(() => {
-        ElMessage({
-            type: 'info',
-            message: '取消删除',
+            ElMessage({ type: 'error', message: '删除失败' })
         })
-    })
+    }).catch(() => { ElMessage({ type: 'info', message: '取消删除' }) })
 }
 
 // 分页
-// 当前页
-const currentPage = ref(1)
-
-// 页面大小 
-const pageSize = ref(8)
-
-// 总条数
-const total = ref(0)
+const currentPage = ref(1)  // 当前页
+const pageSize = ref(8)     // 页面大小 
+const total = ref(0)        // 总条数
 
 // 改变每页大小 pageSize
-function handleSizeChange() {
-    // alert('handleSizeChange')
-    ElMessage({
-        message: '切换成功',
-        type: 'success',
-    })
-}
+function handleSizeChange() { ElMessage({ message: '切换成功', type: 'success' }) }
 
 // 改变当前页
-function handleCurrentChange() {
-    searchUser()
+function handleCurrentChange() { searchUser() }
+
+// 搜索下拉菜单高度
+const searchHeight = ref(0)
+const searchVisiable = ref(false)
+
+// 搜索下拉菜单
+function upAndDown() {
+    searchVisiable.value = !searchVisiable.value
+    searchHeight.value = searchVisiable.value ? 150 : 0
 }
 
 </script>
 
-<style scoped>
-.main {
+<style lang="scss" scoped>
+.el-button {
+    padding: 0 4px;
+}
+
+.el-table {
+    border-radius: 15px;
+}
+
+.el-pagination {
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.search-from {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: auto;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    flex-direction: column;
+    background-color: #F8E2DC;
+
+    .search-info {
+        margin-top: 10px;
+    }
+}
+
+.search-button {
+    display: flex;
+    margin-top: auto;
+    width: 100%;
+    background-color: #EBE6E6;
+
+    .el-button {
+        width: 50px;
+        margin-bottom: 5px;
+        margin-left: auto;
+        margin-right: 10px;
+    }
+}
+
+.el-row {
+    display: flex;
+    margin-left: 10px;
+
+    div {
+        flex: 5;
+        margin-right: 10px;
+    }
 }
 </style>
