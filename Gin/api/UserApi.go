@@ -27,6 +27,13 @@ func UserAdd(c *gin.Context) {
 }
 
 // UserList 查询所有用户信息，分页
+/**
+前端传参数：
+{
+	"pageSize": 10,
+	"currentPage": 1
+}
+*/
 func UserList(c *gin.Context) {
 	var userDao dao.UserDao
 	pageSize, _ := strconv.Atoi(c.Query("pageSize"))

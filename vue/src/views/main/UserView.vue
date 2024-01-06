@@ -2,50 +2,47 @@
     <!-- 搜索选项 -->
     <div class="search-from">
         <div :style="{ 'height': searchHeight + 'px' }" class="search-info" v-if="searchVisiable">
-            <el-form :model="userForm" label-width="120px">
-                <el-form-item style="display: flex;">
-                    <el-form-item label="ID：">
+            <el-form :model="userForm" label-width="80px">
+                <div style="display: flex;">
+                    <el-form-item label="ID：" class="item">
                         <el-input type="number" v-model.number="userForm.ID" placeholder="请输入ID" />
                     </el-form-item>
-                    <el-form-item label="用户名：">
+                    <el-form-item label="用户名：" class="item">
                         <el-input v-model="userForm.name" placeholder="请输入用户名" />
                     </el-form-item>
-                    <el-form-item label="昵称：">
+                    <el-form-item label="昵称：" class="item">
                         <el-input v-model="userForm.nickname" placeholder="请输入昵称" />
                     </el-form-item>
-                </el-form-item>
-                <el-form-item style="display: flex;">
-                    <el-form-item label="电话：">
+                    <el-form-item label="电话：" class="item">
                         <el-input v-model="userForm.phone" placeholder="请输入电话" />
                     </el-form-item>
-                    <el-form-item label="地址：">
+                    <el-form-item label="地址：" class="item">
                         <el-input v-model="userForm.address" placeholder="请输入地址" />
                     </el-form-item>
-                    <el-form-item label="性别：">
+                </div>
+                <div style="display: flex;">
+                    <el-form-item label="性别：" class="item">
                         <el-select v-model="userForm.gender" placeholder="不填">
                             <el-option v-for="item in genders" :key="item.value" :label="item.label" :value="item.value" />
                         </el-select>
                     </el-form-item>
-                </el-form-item>
-                <el-form-item style="display: flex;">
-                    <el-form-item label="生日：">
+                    <el-form-item label="生日：" class="item">
                         <el-date-picker v-model="userForm.birthday" type="daterange" range-separator="To"
                             start-placeholder="Start date" end-placeholder="End date" />
                     </el-form-item>
-
-                    <el-button style="margin-left: 10px;" type="primary" title="搜索" @click="searchUser">
+                    <el-button style="margin-left: 10px; background-color: #CCFF99; border: none;" title="搜索" @click="searchUser">
                         <el-icon>
                             <Search />
                         </el-icon>
                         搜索
                     </el-button>
-                    <el-button type="warning" title="清空" @click="clearUserForm">
+                    <el-button title="清空" @click="clearUserForm">
                         <el-icon>
                             <Refresh />
                         </el-icon>
                         清空
                     </el-button>
-                </el-form-item>
+                </div>
             </el-form>
         </div>
 
@@ -243,7 +240,7 @@ const searchVisiable = ref(false)
 // 搜索下拉菜单
 function upAndDown() {
     searchVisiable.value = !searchVisiable.value
-    searchHeight.value = searchVisiable.value ? 150 : 0
+    searchHeight.value = searchVisiable.value ? 100 : 0
 }
 
 </script>
@@ -265,7 +262,8 @@ function upAndDown() {
 .search-from {
     display: flex;
     flex-direction: column;
-    background-color: #F8E2DC;
+    background-color: #99CCCC;
+    border-radius: 15px;
 
     .search-info {
         margin-top: 10px;
@@ -294,5 +292,11 @@ function upAndDown() {
         flex: 5;
         margin-right: 10px;
     }
+}
+</style>
+
+<style>
+.item .el-form-item__label {
+    color: #fff;
 }
 </style>
