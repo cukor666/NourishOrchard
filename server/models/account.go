@@ -8,7 +8,6 @@ import (
 type Account struct {
 	Username  string       `json:"username" gorm:"primarykey"`
 	Password  string       `json:"password"`
-	Salt      string       `json:"salt"`
 	Promise   int          `json:"promise"`
 	CreatedAt time.Time    `json:"createdAt"`
 	UpdatedAt time.Time    `json:"updatedAt"`

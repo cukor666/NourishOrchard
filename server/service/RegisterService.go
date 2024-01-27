@@ -8,6 +8,11 @@ import (
 	"server/utils"
 )
 
+/*
+*
+解构，对前端参数解构
+返回User对象
+*/
 func (r RegisterService) deconstruct(req request.RegisterRequest) (models.Account, models.User) {
 	return models.Account{
 			Password: req.Password,
@@ -21,14 +26,11 @@ func (r RegisterService) deconstruct(req request.RegisterRequest) (models.Accoun
 		}
 }
 
+// Register 用户注册业务
 func (r RegisterService) Register(req request.RegisterRequest) (response.RegisterResponse, bool) {
 	account, user := r.deconstruct(req)
 	username := utils.GenUsername()
 	user.Username = username
-	uid, userOk := userDao.Insert(user)
-	if !userOk {
-		return response.RegisterResponse{}, false
-	}
 	account.Username = username
 	password, err := utils.GetPwd(account.Password)
 	if err != nil {
@@ -36,8 +38,8 @@ func (r RegisterService) Register(req request.RegisterRequest) (response.Registe
 		return response.RegisterResponse{}, false
 	}
 	account.Password = string(password)
-	accountOk := accountDao.Insert(account)
-	if !accountOk {
+	uid, ok := accountDao.Insert(account, user)
+	if !ok {
 		return response.RegisterResponse{}, false
 	}
 	return response.RegisterResponse{
