@@ -1,0 +1,23 @@
+systemConfig:
+  host: localhost
+  port: 9000
+  secret: cukor.cn
+  issuer: cukor
+
+mysql:
+  host: localhost
+  port: 3306
+  user: root
+  password: cukor
+  dbname: nourish_orchard2
+  param: charset=utf8mb4&parseTime=True&loc=Local
+
+redis:
+  host: localhost
+  port: 6379
+  password:
+  db: 3
+
+jwt:
+  secretKey: cukorzhong-secret-key
+  issuer: CukorZhong
