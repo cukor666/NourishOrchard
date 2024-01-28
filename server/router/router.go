@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"server/config"
+	"server/utils"
 )
 
 // Start 启动gin
@@ -18,13 +19,19 @@ func Start() {
 
 // 中间件
 //func middleWare(r *gin.Engine) {
-//	r.Use(utils.CorssDomain())                                   // 解决跨域问题
-//	r.Use(utils.Session(config.GetConfig().SystemConfig.Secret)) // 配置session
+//	//r.Use(utils.CorssDomain())                                   // 解决跨域问题
+//	//r.Use(utils.Session(config.GetConfig().SystemConfig.Secret)) // 配置session
 //}
 
 // 注册路由
 func register(r *gin.Engine) {
-	r.POST("/insert", accountController.Insert)
 	r.POST("/register", registerController.Register)
 	r.POST("/login", loginController.Login)
+
+	// 账户管理
+	accountGroup := r.Group("/account", utils.ValidAuthorization)
+	{
+		accountGroup.GET("/get", accountController.GetAccount)
+	}
 }
+

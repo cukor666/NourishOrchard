@@ -2,6 +2,7 @@ package dao
 
 import (
 	"fmt"
+	"github.com/go-redis/redis/v8"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -9,6 +10,7 @@ import (
 )
 
 var mysqlDB *gorm.DB
+var redisDB = config.GetConfig().RedisConfig.GetClient()
 
 type AccountDao struct{}
 type UserDao struct{}
@@ -24,4 +26,9 @@ func init() {
 		panic(fmt.Sprintf("gorm.Open failed, myerr: %v", err))
 	}
 	mysqlDB = open
+}
+
+// GetRedisDB 开放给外部访问redis实例
+func GetRedisDB() *redis.Client {
+	return redisDB
 }

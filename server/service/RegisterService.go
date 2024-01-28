@@ -2,6 +2,7 @@ package service
 
 import (
 	"log"
+	"server/common"
 	"server/models"
 	"server/request"
 	"server/response"
@@ -16,7 +17,8 @@ import (
 func (r RegisterService) deconstruct(req request.RegisterRequest) (models.Account, models.User) {
 	return models.Account{
 			Password: req.Password,
-			Promise:  req.Promise,
+			//Promise:  req.Promise,
+			Promise: common.USER, // 该接口只提供用户注册，管理员和员工的注册由内部自己完成
 		}, models.User{
 			Name:     req.Name,
 			Gender:   req.Gender,

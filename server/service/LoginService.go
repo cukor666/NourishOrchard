@@ -6,6 +6,7 @@ import (
 	"server/common"
 	"server/common/statucode"
 	"server/config"
+	"server/dao"
 	"server/request"
 	"server/utils"
 	"strconv"
@@ -89,14 +90,15 @@ func (l LoginService) Login(req request.LoginRequest) (string, error) {
 	}
 	// 将account信息存入redis，然后将redis的键存入JWT然后生成token返回给前端
 	ctx := context.Background()
+	redisDB := dao.GetRedisDB()
 	for k, v := range redisCmd {
-		if err := redisDB.SetNX(ctx, k, v, 24*time.Hour).Err(); err != nil {
+		if err := redisDB.Set(ctx, k, v, 24*time.Hour).Err(); err != nil {
 			log.Println("存储到redis失败， err", err)
 		}
 	}
 
-	// 已经将数据存放到redis中，键名为account:username
-	jwtToken, err := config.GenerateJWT(account.Username)
+	// 生成JWT
+	jwtToken, err := config.GenerateJWT(account)
 	if err != nil {
 		log.Println("生成JWT失败")
 		return "", &common.MyError{
@@ -105,7 +107,7 @@ func (l LoginService) Login(req request.LoginRequest) (string, error) {
 		}
 	}
 	// 将token保存到redis中
-	redisDB.SetNX(ctx, "token:"+account.Username, jwtToken, 7*24*time.Hour)
+	redisDB.Set(ctx, "token:"+account.Username, jwtToken, 7*24*time.Hour)
 
 	return jwtToken, nil
 }

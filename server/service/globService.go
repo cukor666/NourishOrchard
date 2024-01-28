@@ -1,7 +1,6 @@
 package service
 
 import (
-	"server/config"
 	"server/dao"
 )
 
@@ -11,8 +10,6 @@ type RegisterService struct{}
 type UserService struct{}
 type EmployeeService struct{}
 type AdminService struct{}
-
-var redisDB = config.GetConfig().RedisConfig.GetClient()
 
 var (
 	accountDao  dao.AccountDao

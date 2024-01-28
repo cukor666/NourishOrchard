@@ -5,15 +5,11 @@ import (
 	"log"
 	"server/request"
 	"server/response"
-	"server/utils"
 )
 
 // 数据校验
 func (r RegisterController) validation(rg request.RegisterRequest) bool {
-	if rg.Name == "" || rg.Password == "" || utils.PromiseToString(rg.Promise) == "myerr" {
-		return false
-	}
-	return true
+	return len(rg.Name) >= 2 && len(rg.Name) <= 20 && len(rg.Password) >= 3 && len(rg.Password) <= 20
 }
 
 // Register 注册
