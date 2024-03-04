@@ -1,0 +1,64 @@
+.container {
+  color: #f6f5eb;
+  background-color: #110424;
+  --el-menu-text-color: #f6f5eb;
+  --el-menu-hover-bg-color: #ffa2ad;
+  animation: changeBoxShadow 3s infinite;
+
+  .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ee2a2a;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .img {
+      $radius: 20px;
+      width: 2 * $radius;
+      height: 2 * $radius;
+      background: url("https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/cukorlogo.jpg");
+      border-radius: 50%;
+      background-position: center center;
+      background-size: cover;
+    }
+
+    .title {
+      margin-left: 10px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+
+  .menu {
+    background-color: #110424;
+
+    .el-menu {
+      .el-menu-item {
+        background-color: #1e073f;
+        transition: all 1.5s;
+      }
+
+      .el-menu-item:hover {
+        background-color: #ffa2ad;
+        color: yellow;
+      }
+
+      .el-menu-item.is-active {
+        color: #e18383;
+      }
+    }
+  }
+}
+
+@keyframes changeBoxShadow {
+  0% {
+    box-shadow: 0px 0px 1px #ee2a2a;
+  }
+  50% {
+    box-shadow: 0px 1px 3px #ee2a2a;
+  }
+  100% {
+    box-shadow: 0px 3px 5px #ee2a2a;
+  }
+}

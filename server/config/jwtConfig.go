@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"log"
-	"server/common"
 	"server/models"
+	"server/utils"
 	"time"
 )
 
@@ -14,28 +14,15 @@ type JWTConfig struct {
 	Issuer    string `yaml:"issuer"`
 }
 
-// 权限整数值转为字面量字符串
-func promiseToString(promise int) string {
-	switch promise {
-	case common.USER:
-		return "user"
-	case common.EMPLOYEE:
-		return "employee"
-	case common.ADMIN:
-		return "admin"
-	}
-	return ""
-}
-
 // GenerateJWT 生成JWT
 func GenerateJWT(account models.Account) (string, error) {
 	// 设置过期时间为1小时
-	expirationTime := time.Now().Add(1 * time.Hour).Unix()
+	expirationTime := time.Now().Add(7 * 24 * time.Hour).Unix()
 	// 设置claims
 	claims := jwt.MapClaims{
 		"iss":      conf.JWTConfig.Issuer,
 		"username": account.Username,
-		"promise":  promiseToString(account.Promise),
+		"promise":  utils.PromiseToString(account.Promise),
 		"exp":      expirationTime,
 	}
 
@@ -53,12 +40,14 @@ func ParseAndVerifyJWT(tokenString string) (jwt.MapClaims, error) {
 		return []byte(conf.JWTConfig.SecretKey), nil
 	})
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return nil, err
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
 		if claims["iss"] != conf.JWTConfig.Issuer {
-			log.Fatal("Invalid issuer")
+			log.Println("Invalid issuer")
+			return nil, err
 		}
 		log.Println("Issuer verified: ", claims["iss"])
 	} else {

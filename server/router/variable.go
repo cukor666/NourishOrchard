@@ -6,5 +6,8 @@ var (
 	accountController  controller.AccountController
 	loginController    controller.LoginController
 	registerController controller.RegisterController
-	userController     controller.UserController
+)
+
+const (
+	clientDomain = "http://localhost:5173"
 )

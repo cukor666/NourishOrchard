@@ -58,6 +58,7 @@ func (l LoginService) Login(req request.LoginRequest) (string, error) {
 	}
 	// 对密码进行处理
 	if !utils.PwdOK(account.Password, req.Password) {
+		log.Println("密码错误")
 		return "", &common.MyError{
 			Code: statucode.PASSWORDFAILED,
 			Msg:  "密码错误",
