@@ -1,8 +1,8 @@
 package config
 
 import (
+	"fmt"
 	"gopkg.in/yaml.v3"
-	"log"
 	"os"
 )
 
@@ -26,15 +26,14 @@ func InitConfig() {
 	// 读取yaml文件
 	yamlFile, err := os.ReadFile("config/config.yaml") // 相对exe生成的路径
 	if err != nil {
-		log.Printf("读取总配置文件失败, myerr:%v", err)
+		levelLog(fmt.Sprintf("读取总配置文件失败, myerr:%v", err))
 		panic(err)
 	}
 	err = yaml.Unmarshal(yamlFile, &conf)
 	if err != nil {
-		log.Printf("解析失败 yaml.Unmarshal myerr:%v", err)
+		levelLog(fmt.Sprintf("解析失败 yaml.Unmarshal myerr:%v", err))
 		panic(err)
 	}
-	//log.Println(conf)
 }
 
 func init() {

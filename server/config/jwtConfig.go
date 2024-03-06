@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
-	"log"
 	"server/models"
 	"server/utils"
 	"time"
@@ -40,18 +39,18 @@ func ParseAndVerifyJWT(tokenString string) (jwt.MapClaims, error) {
 		return []byte(conf.JWTConfig.SecretKey), nil
 	})
 	if err != nil {
-		log.Println(err)
+		levelLog(fmt.Sprintf("%v", err))
 		return nil, err
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
 		if claims["iss"] != conf.JWTConfig.Issuer {
-			log.Println("Invalid issuer")
+			levelLog("Invalid issuer")
 			return nil, err
 		}
-		log.Println("Issuer verified: ", claims["iss"])
+		levelLog(fmt.Sprintf("发行人验证成功: %v", claims["iss"]))
 	} else {
-		log.Println(err)
+		levelLog(fmt.Sprintf("%v", err))
 		return nil, err
 	}
 	return claims, nil

@@ -1,8 +1,8 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"server/request"
 	"server/response"
 )
@@ -19,13 +19,12 @@ func (r RegisterController) Register(context *gin.Context) {
 		registerResponse response.RegisterResponse
 	)
 	if context.ShouldBind(&registerRequest) != nil {
-		log.Println("绑定参数失败")
+		levelLog("绑定参数失败")
 		response.Failed(context, "绑定参数失败")
 		return
 	}
-	log.Println("绑定成功")
-	log.Println(registerRequest)
-
+	levelLog("绑定成功")
+	levelLog(fmt.Sprintf("%v", registerRequest))
 	ok := r.validation(registerRequest)
 	if !ok {
 		response.Failed(context, "参数错误")
@@ -34,7 +33,7 @@ func (r RegisterController) Register(context *gin.Context) {
 	// 数据校验通过，交给业务层
 	registerResponse, ok = registerService.Register(registerRequest)
 	if !ok {
-		log.Println("注册失败")
+		levelLog("注册失败")
 		response.FailedWithCode(context, 500, "注册失败")
 		return
 	}

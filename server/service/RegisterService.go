@@ -1,7 +1,6 @@
 package service
 
 import (
-	"log"
 	"server/common"
 	"server/models"
 	"server/request"
@@ -36,7 +35,7 @@ func (r RegisterService) Register(req request.RegisterRequest) (response.Registe
 	account.Username = username
 	password, err := utils.GetPwd(account.Password)
 	if err != nil {
-		log.Println("加密失败")
+		levelLog("加密失败")
 		return response.RegisterResponse{}, false
 	}
 	account.Password = string(password)
