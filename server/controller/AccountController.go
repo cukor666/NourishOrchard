@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"server/common"
 	"server/config"
@@ -10,6 +11,7 @@ import (
 	"server/utils"
 )
 
+// GetAccount 获取账户信息
 func (a AccountController) GetAccount(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader("Authorization")
@@ -42,7 +44,16 @@ func (a AccountController) GetAccount(context *gin.Context) {
 			"data":    user,
 		}, "查询成功")
 	case common.EMPLOYEE:
-	// 调用employeeService
+		// 调用employeeService
+		emp, err := service.EmployeeService{}.Info(username.(string))
+		if err != nil {
+			response.Failed(context, "账号不规范")
+			return
+		}
+		response.Success(context, gin.H{
+			"promise": "employee",
+			"data":    emp,
+		}, "查询成功")
 	case common.ADMIN:
 		// 调用adminService
 		admin, err := service.AdminService{}.Info(username.(string))
@@ -80,34 +91,61 @@ func (a AccountController) Update(context *gin.Context) {
 	username := claims["username"]
 	promise := utils.PromiseToInt(claims["promise"].(string))
 	var (
-		user models.User
+		user     models.User
+		admin    models.Admin
+		employee models.Employee
 	)
-	err = context.ShouldBindJSON(&user)
-	if err != nil {
-		levelLog("数据绑定失败")
-		response.Failed(context, "数据绑定失败")
-		return
-	}
 	switch promise {
 	case common.USER:
+		err = context.ShouldBindJSON(&user)
+		if err != nil {
+			levelLog("数据绑定失败")
+			response.Failed(context, "数据绑定失败")
+			return
+		}
 		if username != user.Username {
-			levelLog("前端传递参数与JWT中不一样，拒绝请求")
+			levelLog(fmt.Sprintf("前端传递参数与JWT中不一样，拒绝请求, request: %v", user.Username))
 			response.Failed(context, "参数异常，拒绝请求")
 			return
 		}
 		// 调用UserService
 		err = userService.Update(user)
+	case common.EMPLOYEE:
+		err = context.ShouldBindJSON(&employee)
 		if err != nil {
-			response.Failed(context, "更新失败")
+			levelLog(fmt.Sprintf("数据绑定失败, emp: %v", employee))
+			response.Failed(context, "数据绑定失败")
 			return
 		}
-		response.Success(context, 0, "更新成功")
-	case common.EMPLOYEE:
-	// 调用employeeService
+		if username != employee.Username {
+			levelLog(fmt.Sprintf("前端传递参数与JWT中不一样，拒绝请求, request: %v", user.Username))
+			response.Failed(context, "参数异常，拒绝请求")
+			return
+		}
+		// 调用employeeService
+		err = service.EmployeeService{}.Update(employee)
 	case common.ADMIN:
-	// 调用adminService
+		err = context.ShouldBindJSON(&admin)
+		if err != nil {
+			levelLog("数据绑定失败")
+			response.Failed(context, "数据绑定失败")
+			return
+		}
+		if username != admin.Username {
+			levelLog(fmt.Sprintf("前端传递参数与JWT中不一样，拒绝请求, request: %v", admin.Username))
+			response.Failed(context, "参数异常，拒绝请求")
+			return
+		}
+		// 调用adminService
+		err = service.AdminService{}.Update(admin)
 	default:
 		levelLog("权限不对")
 		response.Failed(context, "权限不对")
+		return
 	}
+	if err != nil {
+		response.Failed(context, "更新失败")
+		return
+	}
+	response.Success(context, 0, "更新成功")
 }

@@ -10,6 +10,7 @@ import (
 	"server/utils"
 )
 
+// 登录参数校验
 func (l LoginController) validation(req request.LoginRequest) bool {
 	if req.Username == "" || req.Password == "" || utils.PromiseToInt(req.Promise) == 0 {
 		return false
@@ -17,6 +18,7 @@ func (l LoginController) validation(req request.LoginRequest) bool {
 	return true
 }
 
+// Login 登录接口
 func (l LoginController) Login(context *gin.Context) {
 	var (
 		loginRequest request.LoginRequest

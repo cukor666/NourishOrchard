@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"regexp"
+	"server/dao"
 	"server/models"
 )
 
@@ -14,4 +15,10 @@ func (a AdminService) Info(username string) (admin models.Admin, err error) {
 		return models.Admin{}, errors.New("账号不符合系统规范")
 	}
 	return adminDao.SelectByUsername(username)
+}
+
+// Update 更新管理员信息
+func (a AdminService) Update(admin models.Admin) error {
+	_, err := dao.AdminDao{}.Update(admin)
+	return err
 }

@@ -13,7 +13,7 @@ request.interceptors.request.use(
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
-    config.headers["username"] = localStorage.getItem("nourish-account")
+    config.headers["username"] = localStorage.getItem("nourish-account");
     return config;
   },
   (error) => {
@@ -23,7 +23,13 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
   (response) => {
-    console.log('响应成功：',response);
+    if (response.data.code === 200) {
+      console.log("响应成功：", response.data);
+    } else if (/^4[0-9]+$/.test(response.data.code)) {
+      console.log('参数错误');
+    } else if (/^5[0-9]+$/.test(response.data.code)) {
+      console.log('服务器错误');
+    }
     return response.data;
   },
   (error) => {

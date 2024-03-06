@@ -44,11 +44,11 @@ import { useRouter } from 'vue-router'
 import Vcode from "vue3-puzzle-vcode";
 import request from '@/axios/request'
 import { useUserInfoStore } from '@/stores/userInfo';
-// import { storeToRefs } from 'pinia'
+import { storeToRefs } from 'pinia'
 const router = useRouter()
 
 const userInfoStore = useUserInfoStore()
-// const { promise } = storeToRefs(userInfoStore)
+const { promise } = storeToRefs(userInfoStore)
 const { setPromise } = userInfoStore
 
 const isClickLoginButton = ref(false)
@@ -72,7 +72,6 @@ const { promiseList } = usePromise()
 const onSuccess = () => {
     console.log('验证成功');
     isShow.value = false
-    console.log('用户信息正确，正在发送给后端服务器');
 
     // 清除数据空格
     user.account = user.account.trim()
@@ -86,12 +85,13 @@ const onSuccess = () => {
             let token = res.data
             localStorage.setItem('nourish-token', token)
             localStorage.setItem('nourish-account', user.account)
-            setPromise(user.promise)
+            sessionStorage.setItem('nourish-promise', user.promise)
+            setPromise(sessionStorage.getItem('nourish-promise'))
             ElMessage({
                 message: '欢迎：' + user.account,
                 type: 'success'
             })
-            sessionStorage.setItem('nourish-promise', user.promise)
+            console.log('登录之后的权限：', promise.value);
             router.push({ name: 'Root' })
         } else {
             ElMessage({

@@ -18,3 +18,12 @@ func (a AdminDao) SelectByUsername(username string) (admin models.Admin, err err
 	}
 	return admin, nil
 }
+
+// Update 更新管理员信息
+func (a AdminDao) Update(admin models.Admin) (models.Admin, error) {
+	err := mysqlDB.Model(&admin).Omit("id", "username").Where("username = ?", admin.Username).Updates(&admin).Error
+	if err != nil {
+		return models.Admin{}, err
+	}
+	return admin, nil
+}

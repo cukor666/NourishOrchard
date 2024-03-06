@@ -31,7 +31,7 @@ func (u UserDao) Update(user models.User) (models.User, error) {
 	err := mysqlDB.Model(&user).Omit("id", "username").
 		Where("username = ?", user.Username).Updates(&user).Error
 	if err != nil {
-		return user, nil
+		return models.User{}, err
 	}
-	return models.User{}, err
+	return user, nil
 }

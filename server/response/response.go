@@ -28,5 +28,5 @@ func FailedWithCode(c *gin.Context, code int, msg string) {
 }
 
 func FailedWithError(c *gin.Context, err *common.MyError) {
-	c.JSON(err.Code, Response{err.Code, err.Msg, 0})
+	c.JSON(200, Response{err.Code, err.Msg, 0})
 }

@@ -1,15 +1,11 @@
-import { ref, watch } from "vue";
 import request from "@/axios/request";
 import { ElMessage } from "element-plus";
 
-export function useUserInfo(user) {
-  const selfInfoDialogVisiable = ref(false);
+export function useUserInfo(user, selfInfoDialogVisible) {
   const updateUserInfo = () => {
-    console.log(user);
-
     request
       .put("/account/update", {
-        ...user,
+        ...user.value,
       })
       .then((res) => {
         if (res.code === 200) {
@@ -32,16 +28,10 @@ export function useUserInfo(user) {
         console.log(err);
       });
 
-    selfInfoDialogVisiable.value = false;
+    selfInfoDialogVisible.value = false;
   };
 
-  const gender = ref(true);
-  watch(gender, (isMan) => {
-    user.gender = isMan ? "男" : "女";
-  });
   return {
-    selfInfoDialogVisiable,
-    gender,
     updateUserInfo,
   };
 }

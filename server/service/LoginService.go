@@ -13,6 +13,7 @@ import (
 	"time"
 )
 
+// 普通用户登录
 func (l LoginService) userLogin(username string) (id uint, err error) {
 	id, err = userDao.GetUId(username)
 	if err != nil {
@@ -21,6 +22,7 @@ func (l LoginService) userLogin(username string) (id uint, err error) {
 	return id, nil
 }
 
+// 员工登录
 func (l LoginService) employeeLogin(username string) (id uint, err error) {
 	id, err = employeeDao.GetUId(username)
 	if err != nil {
@@ -29,6 +31,7 @@ func (l LoginService) employeeLogin(username string) (id uint, err error) {
 	return id, nil
 }
 
+// 管理员登录
 func (l LoginService) adminLogin(username string) (id uint, err error) {
 	id, err = adminDao.GetUId(username)
 	if err != nil {

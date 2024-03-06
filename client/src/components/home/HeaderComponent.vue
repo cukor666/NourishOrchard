@@ -1,202 +1,255 @@
 <template>
-    <div class="container">
-        <div class="path__content">
-            <span style="font-size: 14px; font-weight: bold;">首页</span>
-        </div>
-        <div class="setting-bar">
-            <el-dropdown :hide-on-click="false">
-                <div class="avatar"></div>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item @click="selfInfo">个人信息</el-dropdown-item>
-                        <el-dropdown-item @click="exitDialogVisiable = true">退出登录</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
-        </div>
+  <div class="container">
+    <div class="path__content">
+      <span style="font-size: 14px; font-weight: bold;">首页</span>
     </div>
-    <div class="tags">
-        <el-tag v-for="(tag, index) in tags" :key="tag.id" closable type="primary" @close="removeTag(index)">
-            {{ tag.name }}
-        </el-tag>
+    <div class="setting-bar">
+      <el-dropdown :hide-on-click="false">
+        <div style="display: flex; align-items: center; justify-content: space-around">
+          <div style="color: #f5f1f1">Hi~ {{ promise}} !</div>
+          <div style="margin-left: 10px; margin-right: 10px" class="avatar"></div>
+        </div>
+
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="selfInfo">个人信息</el-dropdown-item>
+            <el-dropdown-item @click="exitDialogVisible = true">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
+  </div>
+  <div class="tags">
+    <el-tag v-for="(tag, index) in tags" :key="tag.id" closable type="primary" @close="removeTag(index)">
+      {{ tag.name }}
+    </el-tag>
+  </div>
 
-    <el-dialog v-model="selfInfoDialogVisiable" title="个人信息" width="500" align-center @close="infoDialogCancel">
-        <el-form class="user-info" label-width="100">
-            <el-form-item label="账号：">
-                <el-input v-model="user.username" disabled />
-            </el-form-item>
-            <el-form-item label="姓名：">
-                <el-input v-model="user.name" @blur="validName(user.name)" />
-            </el-form-item>
-            <div v-if="errWord.name" class="error-word left-space">{{ errWord.name }}</div>
-            <el-form-item label="性别：">
-                <el-switch v-model="gender" class="ml-2" inline-prompt
-                    style="--el-switch-on-color: #2394f0; --el-switch-off-color: #FF6699; margin-left: 5px;" active-text="男"
-                    inactive-text="女" />
-            </el-form-item>
-            <el-form-item label="联系电话：">
-                <el-input v-model="user.phone" @blur="validPhone(user.phone)" />
-            </el-form-item>
-            <div v-if="errWord.phone" class="error-word left-space">{{ errWord.phone }}</div>
+  <el-dialog v-model="selfInfoDialogVisible" title="个人信息" width="500" align-center @close="infoDialogCancel">
+    <user-info v-if="promise === 'user'"></user-info>
+    <admin-info v-else-if="promise === 'admin'"></admin-info>
+    <employee-info v-else-if="promise === 'employee'"></employee-info>
+    <div v-else>待开发</div>
 
-            <el-form-item label="联系地址：">
-                <el-input v-model="user.address" @blur="validAddress(user.address)" />
-            </el-form-item>
-            <div v-if="errWord.address" class="error-word left-space">{{ errWord.address }}</div>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="infoDialogCancel">取消</el-button>
+        <el-button type="primary" @click="updateUser">
+          更新
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 
-            <el-form-item label="出生日期：">
-                <el-date-picker v-model="user.birthday" type="date" @blur="validBirthday(user.birthday)" />
-            </el-form-item>
-            <div v-if="errWord.birthday" class="error-word left-space">{{ errWord.birthday }}</div>
+  <el-dialog v-model="exitDialogVisible" title="退出" width="300" align-center>
+    <span>你确定要退出吗？</span>
 
-        </el-form>
-        <template #footer>
-            <div class="dialog-footer">
-                <el-button @click="infoDialogCancel">取消</el-button>
-                <el-button type="primary" @click="updateUser">
-                    更新
-                </el-button>
-            </div>
-        </template>
-    </el-dialog>
-
-    <el-dialog v-model="exitDialogVisiable" title="退出" width="300" align-center>
-        <span>你确定要退出吗？</span>
-        <template #footer>
-            <div class="dialog-footer">
-                <el-button @click="exitDialogVisiable = false">取消</el-button>
-                <el-button type="primary" @click="exit">确定</el-button>
-            </div>
-        </template>
-    </el-dialog>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="exitDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="exit">确定</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
-import { useRouter } from 'vue-router'
-import { useUserInfo } from '@/hooks/header/useUserInfo'
-import { useValid } from '@/hooks/common/useValid'
-
+import {reactive, ref} from "vue";
+import {useRouter} from 'vue-router'
+import {useUserInfo} from '@/hooks/header/useUserInfo'
+import {useAdminInfo} from '@/hooks/header/useAdminInfo'
+import {useEmployeeInfo} from "@/hooks/header/useEmployeeInfo";
+import {useValid} from '@/hooks/common/useValid'
 import request from '@/axios/request'
-import { ElMessage } from "element-plus";
+import {ElMessage} from "element-plus";
+import UserInfo from "./dialog/UserInfo.vue";
+import AdminInfo from "./dialog/AdminInfo.vue";
+import EmployeeInfo from "./dialog/EmployeeInfo.vue";
+import {useUserInfoStore} from "@/stores/userInfo"
+import {useAdminInfoStore} from '@/stores/adminInfo'
+import {useEmployeeInfoStore} from '@/stores/employeeInfo'
+import {storeToRefs} from "pinia";
+
+const promise = ref(sessionStorage.getItem('nourish-promise'))
+
+// 用户store
+const userInfoStore = useUserInfoStore()
+const {user, gender} = storeToRefs(userInfoStore)
+const {setUser} = userInfoStore
+
+// 管理员store
+const adminInfoStore = useAdminInfoStore()
+const {admin} = storeToRefs(adminInfoStore)
+const {setAdmin} = adminInfoStore
+
+// 员工store
+const employeeInfoStore = useEmployeeInfoStore()
+const {employee} = storeToRefs(employeeInfoStore)
+const {setEmployee} = employeeInfoStore
+
+// 路由
 const router = useRouter()
 
+// 路由标签
 const tags = ref([
-    {
-        id: 1,
-        name: '首页',
-        path: '/'
-    },
-    {
-        id: 2,
-        name: '用户列表',
-        path: '/user/list'
-    },
-    {
-        id: 3,
-        name: '管理员列表',
-        path: '/admin/list'
-    },
-    {
-        id: 4,
-        name: '水果列表',
-        path: '/fruit/list'
-    }
+  {
+    id: 1,
+    name: '首页',
+    path: '/'
+  },
+  {
+    id: 2,
+    name: '用户列表',
+    path: '/user/list'
+  },
+  {
+    id: 3,
+    name: '管理员列表',
+    path: '/admin/list'
+  },
+  {
+    id: 4,
+    name: '水果列表',
+    path: '/fruit/list'
+  }
 ])
 
 const removeTag = (index) => {
-    tags.value.splice(index, 1)
+  tags.value.splice(index, 1)
 }
 
-const user = reactive({
-    username: "",
-    name: "",
-    gender: "",
-    phone: "",
-    address: "",
-    birthday: "",
-});
-
+// 错误提示
 const errWord = reactive({
-    name: '',
-    gender: '',
-    phone: '',
-    address: '',
-    birthday: ''
+  name: '',
+  gender: '',
+  phone: '',
+  address: '',
+  birthday: '',
+  email: "",
+  position: '',
+  salary: 0
 })
 
-const { validName, validGender, validPhone, validAddress, validBirthday } = useValid(errWord)
+// 表单参数校验
+const {
+  validName,
+  validGender,
+  validPhone,
+  validAddress,
+  validBirthday,
+  validEmail,
+  validPosition,
+  validSalary
+} = useValid(errWord)
 
+// 整体校验一遍
 const valid = () => {
-    validName(user.name)
-    validGender(user.gender)
-    validPhone(user.phone)
-    validAddress(user.address)
-    validBirthday(user.birthday)
+  if (promise.value === 'user') {
+    // 校验用户
+    validName(user.value.name);
+    validGender(user.value.gender)
+    validPhone(user.value.phone)
+    validAddress(user.value.address)
+    validBirthday(user.value.birthday)
+  } else if (promise.value === 'admin') {
+    // 校验管理员
+    validName(admin.value.name)
+    // todo 校验邮箱
+    validEmail(admin.value.email)
+  } else if (promise.value === 'employee') {
+    validName(employee.value.name)
+    validPhone(employee.value.phone)
+    validPosition(employee.value.position)
+    validSalary(employee.value.salary)
+  }
 }
 
-const { selfInfoDialogVisiable, gender, updateUserInfo } = useUserInfo(user)
+// 个人信息对话框
+const selfInfoDialogVisible = ref(false);
+
+// 用户Hooks
+const {updateUserInfo} = useUserInfo(user, selfInfoDialogVisible)
+
+// 管理员Hooks
+const {updateAdminInfo} = useAdminInfo(admin, selfInfoDialogVisible)
+
+// 员工Hooks
+const {updateEmployeeInfo} = useEmployeeInfo(employee, selfInfoDialogVisible)
 
 const infoDialogCancel = () => {
-    for (const key in errWord) {
-        errWord[key] = ''
-    }
-    // console.log(errWord);
-    selfInfoDialogVisiable.value = false
+  for (const key in errWord) {
+    errWord[key] = ''
+  }
+  selfInfoDialogVisible.value = false
 }
 
+// 更新信息
 const updateUser = () => {
-    valid()
-    for (const key in errWord) {
-        if (errWord[key] !== '') {
-            ElMessage({
-                message: '用户信息不正确',
-                type: 'error'
-            })
-            return
-        }
+  valid()
+  for (const key in errWord) {
+    if (errWord[key] !== '') {
+      ElMessage({
+        message: '用户信息不正确',
+        type: 'error'
+      })
+      return
     }
+  }
+  if (promise.value === 'user') {
     updateUserInfo()
+  } else if (promise.value === 'admin') {
+    updateAdminInfo()
+  } else if (promise.value === 'employee') {
+    updateEmployeeInfo()
+  } else {
+    console.log('待开发');
+  }
 }
 
+// 获取数据并打开信息对话框
 const selfInfo = () => {
-    // 向后端请求数据
-    request.get('/account/get').then(res => {
+  // 向后端请求数据
+  request.get('/account/get').then(res => {
+    if (res.code === 200) {
+      let v = res.data
+      if (v.promise === "user") {
+        setUser(v.data)
+        gender.value = user.value.gender === '男'
+      } else if (v.promise === "admin") {
+        setAdmin(v.data)
+      } else if (v.promise === 'employee') {
+        setEmployee(v.data)
+      } else {
+        ElMessage({
+          message: '尚未开发',
+          type: 'error'
+        })
+      }
+    } else {
+      ElMessage({
+        message: '请求失败，请退出重新登录',
+        type: 'error'
+      })
+      localStorage.removeItem('nourish-token')
+      localStorage.removeItem('nourish-account')
+      sessionStorage.removeItem('nourish-promise')
+      router.replace({name: 'Login'})
+    }
+  }).catch(err => {
+    console.error('请求失败：', err)
+  })
 
-        if (res.code === 200) {
-            user.username = res.data.username
-            user.name = res.data.name
-            user.gender = res.data.gender
-            user.phone = res.data.phone
-            user.address = res.data.address
-            user.birthday = res.data.birthday
-            gender.value = user.gender === '男'
-        } else {
-            ElMessage({
-                message: '请求失败，请退出重新登录',
-                type: 'error'
-            })
-            localStorage.removeItem('nourish-token')
-            localStorage.removeItem('nourish-account')
-            router.replace({ name: 'Login' })
-        }
-    }).catch(err => {
-        console.error('请求失败：', err)
-    })
-
-    selfInfoDialogVisiable.value = true
+  selfInfoDialogVisible.value = true
 }
 
-const exitDialogVisiable = ref(false)
+const exitDialogVisible = ref(false)
 
 const exit = () => {
-    localStorage.removeItem('nourish-token')
-    localStorage.removeItem('nourish-account')
-    exitDialogVisiable.value = false
-    router.push({ name: "Login" })
+  localStorage.removeItem('nourish-token')
+  localStorage.removeItem('nourish-account')
+  exitDialogVisible.value = false
+  router.push({name: "Login"})
 }
-
 
 </script>
 
@@ -205,7 +258,7 @@ const exit = () => {
 @import "@/scss/common/ErrorWord.scss";
 
 .left-space {
-    margin-left: 100px;
-    margin-top: -18px;
+  margin-left: 100px;
+  margin-top: -18px;
 }
 </style>
