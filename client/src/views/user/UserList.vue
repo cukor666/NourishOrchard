@@ -1,22 +1,20 @@
 <template>
-    <div class="container">
-        用户列表
-    </div>
+  <div class="container">
+    用户列表
+  </div>
 </template>
 
 <script setup>
-import { onMounted } from "vue";
-import { useUserInfoStore } from '@/stores/userInfo'
-import { storeToRefs } from "pinia";
+import {onMounted} from "vue";
 import router from "@/router";
 
-const userInfoStore = useUserInfoStore()
-const { promise } = storeToRefs(userInfoStore)
+const promise = sessionStorage.getItem('nourish-promise') || localStorage.getItem('nourish-promise')
 
 onMounted(() => {
-    if (promise.value != 'admin') {
-        router.push({ name: 'Root' })
-    }
+  console.log(promise)
+  if (promise !== 'admin') {
+    router.push({name: 'Root'})
+  }
 })
 
 </script>

@@ -8,8 +8,12 @@ export const useAsideStore = defineStore("asideStore", () => {
   function changeAsideWidth() {
     asideWidth.value = asideWidth.value === maxWidth ? minWidth : maxWidth;
   }
+
+  const defaultActive = ref('Home')
+
   return {
     asideWidth,
     changeAsideWidth,
+    defaultActive
   };
 });

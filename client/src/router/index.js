@@ -96,7 +96,7 @@ router.beforeEach((to, from, next) => {
     // 需要验证
     let token = localStorage.getItem("nourish-token");
     let regStr = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$/;
-    let promise = sessionStorage.getItem("nourish-promise");
+    let promise = sessionStorage.getItem("nourish-promise") || localStorage.getItem("nourish-promise");
     console.log(promise);
     if (!regStr.test(token)) {
       console.log("token格式不正确");

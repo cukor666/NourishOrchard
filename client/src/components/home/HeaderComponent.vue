@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <div class="path__content">
-      <span style="font-size: 14px; font-weight: bold;">首页</span>
+      <span style="font-size: 14px; font-weight: bold;">后台管理系统</span>
     </div>
     <div class="setting-bar">
       <el-dropdown :hide-on-click="false">
         <div style="display: flex; align-items: center; justify-content: space-around">
-          <div style="color: #f5f1f1">Hi~ {{ promise}} !</div>
+          <div style="color: #f5f1f1">Hi~ {{ promise }} !</div>
           <div style="margin-left: 10px; margin-right: 10px" class="avatar"></div>
         </div>
 
@@ -20,7 +20,8 @@
     </div>
   </div>
   <div class="tags">
-    <el-tag v-for="(tag, index) in tags" :key="tag.id" closable type="primary" @close="removeTag(index)">
+    <el-tag v-for="(tag, index) in tags" :key="index" closable type="primary" @close="removeTag(index)"
+            @click="selectTag(tag)">
       {{ tag.name }}
     </el-tag>
   </div>
@@ -68,9 +69,11 @@ import EmployeeInfo from "./dialog/EmployeeInfo.vue";
 import {useUserInfoStore} from "@/stores/userInfo"
 import {useAdminInfoStore} from '@/stores/adminInfo'
 import {useEmployeeInfoStore} from '@/stores/employeeInfo'
+import {useTagsStore} from "@/stores/tags.js";
+
 import {storeToRefs} from "pinia";
 
-const promise = ref(sessionStorage.getItem('nourish-promise'))
+const promise = ref(sessionStorage.getItem('nourish-promise') || localStorage.getItem('nourish-promise'))
 
 // 用户store
 const userInfoStore = useUserInfoStore()
@@ -91,32 +94,9 @@ const {setEmployee} = employeeInfoStore
 const router = useRouter()
 
 // 路由标签
-const tags = ref([
-  {
-    id: 1,
-    name: '首页',
-    path: '/'
-  },
-  {
-    id: 2,
-    name: '用户列表',
-    path: '/user/list'
-  },
-  {
-    id: 3,
-    name: '管理员列表',
-    path: '/admin/list'
-  },
-  {
-    id: 4,
-    name: '水果列表',
-    path: '/fruit/list'
-  }
-])
-
-const removeTag = (index) => {
-  tags.value.splice(index, 1)
-}
+const tagsStore = useTagsStore()
+const {tags} = storeToRefs(tagsStore)
+const {removeTag, selectTag} = tagsStore
 
 // 错误提示
 const errWord = reactive({
@@ -125,7 +105,7 @@ const errWord = reactive({
   phone: '',
   address: '',
   birthday: '',
-  email: "",
+  email: '',
   position: '',
   salary: 0
 })
