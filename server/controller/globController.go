@@ -13,9 +13,14 @@ import (
 	"strings"
 )
 
+// 公开结构体
+
 type AccountController struct{}
 type LoginController struct{}
 type RegisterController struct{}
+type UserController struct{}
+
+// 私有的结构体
 
 var (
 	loginService    service.LoginService
@@ -34,7 +39,6 @@ func ValidAuthorization(ctx *gin.Context) {
 		return
 	}
 	// 判断token里的和redis中的是否一致
-	levelLog("token: " + token)
 	redisDB := dao.GetRedisDB()
 	redisToken, err := redisDB.Get(context.Background(), "token:"+username).Result()
 	if err != nil {

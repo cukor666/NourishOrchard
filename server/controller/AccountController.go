@@ -11,6 +11,11 @@ import (
 	"server/utils"
 )
 
+/**
+AccountController是关于个人管理的接口控制管理，对应的大批管理由对应的Controller管理
+例如：用户列表由UserController自行管理
+*/
+
 // GetAccount 获取账户信息
 func (a AccountController) GetAccount(context *gin.Context) {
 	// 解析token

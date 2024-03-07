@@ -1,6 +1,9 @@
 package dao
 
-import "server/models"
+import (
+	"server/common/simpletool"
+	"server/models"
+)
 
 func (u UserDao) Insert(user models.User) (uint, bool) {
 	tx := mysqlDB.Create(&user)
@@ -34,4 +37,26 @@ func (u UserDao) Update(user models.User) (models.User, error) {
 		return models.User{}, err
 	}
 	return user, nil
+}
+
+// ListWithPage 查询普通用户列表，分页查询
+func (u UserDao) ListWithPage(p simpletool.Page) (result []models.User, err error) {
+	err = mysqlDB.Model(&models.User{}).Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
+	if err != nil {
+		levelLog("查询用户列表失败")
+		return nil, err
+	}
+	return
+}
+
+// DeleteByUsername 根据账号删除用户信息
+func (u UserDao) DeleteByUsername(username string) error {
+	err := mysqlDB.Model(&models.User{}).Delete("username = ?", username).Error
+	return err
+}
+
+// SelectDeletedUsers 查询被删除的用户，（用于后续恢复用户信息，或进一步清理用户）
+func (u UserDao) SelectDeletedUsers() (users []models.User, err error) {
+	mysqlDB.Model(&models.User{}).Where("deleted")
+	return nil, err
 }

@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"regexp"
+	"server/common/simpletool"
 	"server/dao"
 	"server/models"
 )
@@ -21,4 +22,15 @@ func (u UserService) Info(username string) (user models.User, err error) {
 func (u UserService) Update(user models.User) error {
 	_, err := dao.UserDao{}.Update(user)
 	return err
+}
+
+// List 访问用户列表，需要管理员或员工权限
+func (u UserService) List(p simpletool.Page) ([]models.User, error) {
+	//result, err := dao.UserDao{}.List()	// 不带分页
+	result, err := dao.UserDao{}.ListWithPage(p)
+	if err != nil {
+		levelLog("查询失败")
+		return nil, err
+	}
+	return result, nil
 }

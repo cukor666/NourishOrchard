@@ -46,7 +46,8 @@ func register(r *gin.Engine) {
 	}
 
 	// 用户管理
-	//userGroup := r.Group("/user", controller.ValidAuthorization)
-	//{
-	//}
+	userGroup := r.Group("/user", controller.ValidAuthorization)
+	{
+		userGroup.GET("/list", controller.UserController{}.List)
+	}
 }
