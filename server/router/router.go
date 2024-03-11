@@ -49,5 +49,7 @@ func register(r *gin.Engine) {
 	userGroup := r.Group("/user", controller.ValidAuthorization)
 	{
 		userGroup.GET("/list", controller.UserController{}.List)
+		userGroup.PUT("/update", controller.UserController{}.Update)
+		userGroup.DELETE("/delete", controller.UserController{}.Delete)
 	}
 }

@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"fmt"
 	"server/common/simpletool"
 	"server/models"
 )
@@ -40,23 +41,44 @@ func (u UserDao) Update(user models.User) (models.User, error) {
 }
 
 // ListWithPage 查询普通用户列表，分页查询
-func (u UserDao) ListWithPage(p simpletool.Page) (result []models.User, err error) {
-	err = mysqlDB.Model(&models.User{}).Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
+func (u UserDao) ListWithPage(p simpletool.Page) (result []models.User, total int64, err error) {
+	tx := mysqlDB.Model(&models.User{}).Count(&total)
+	levelLog(fmt.Sprintf("total = %d", total))
+	err = tx.Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
 	if err != nil {
 		levelLog("查询用户列表失败")
-		return nil, err
+		return nil, 0, err
 	}
 	return
 }
 
 // DeleteByUsername 根据账号删除用户信息
-func (u UserDao) DeleteByUsername(username string) error {
-	err := mysqlDB.Model(&models.User{}).Delete("username = ?", username).Error
-	return err
-}
-
-// SelectDeletedUsers 查询被删除的用户，（用于后续恢复用户信息，或进一步清理用户）
-func (u UserDao) SelectDeletedUsers() (users []models.User, err error) {
-	mysqlDB.Model(&models.User{}).Where("deleted")
-	return nil, err
+func (u UserDao) DeleteByUsername(username string) (user models.User, err error) {
+	tx := mysqlDB.Begin()
+	err = tx.Model(&models.User{}).Where("username = ?", username).Take(&user).Error
+	if err != nil {
+		levelLog(fmt.Sprintf("无此用户，username = %s", username))
+		tx.Rollback()
+		return models.User{}, err
+	}
+	err = tx.Model(&models.LogoutUser{}).Create(user).Error
+	if err != nil {
+		levelLog(fmt.Sprintf("将注销用户加入到logout_users表失败，user = %v", user))
+		tx.Rollback()
+		return models.User{}, err
+	}
+	err = tx.Model(&models.User{}).Where("username = ?", username).Delete(&models.User{}).Error
+	if err != nil {
+		levelLog(fmt.Sprintf("删除用户失败，username = %s", username))
+		tx.Rollback()
+		return models.User{}, err
+	}
+	err = tx.Model(&models.Account{}).Where("username = ?", username).Delete(&models.Account{}).Error
+	if err != nil {
+		levelLog(fmt.Sprintf("从account表中删除数据失败，username = %s", username))
+		tx.Rollback()
+		return models.User{}, err
+	}
+	tx.Commit()
+	return user, err
 }

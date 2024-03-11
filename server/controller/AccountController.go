@@ -17,6 +17,12 @@ AccountController是关于个人管理的接口控制管理，对应的大批管
 */
 
 // GetAccount 获取账户信息
+/**
+header:
+	Bearer Token
+	username: CZKJ991706348185
+body: 空
+*/
 func (a AccountController) GetAccount(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader("Authorization")
@@ -76,6 +82,20 @@ func (a AccountController) GetAccount(context *gin.Context) {
 	}
 }
 
+// Update 更新用户个人信息
+/**
+header:
+	Bearer Token
+	username: CZKJ991706348185
+body:
+	{
+		"username": "CZKJ991706348185",
+		"name": "Coco大美女",
+		"phone": "13489427501",
+		"position": "仓库管理员",
+		"salary": 3000
+	}
+*/
 func (a AccountController) Update(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader("Authorization")

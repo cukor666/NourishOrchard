@@ -19,6 +19,15 @@ func (l LoginController) validation(req request.LoginRequest) bool {
 }
 
 // Login 登录接口
+/**
+header: 空
+body: application/json
+	{
+		"username": "CZKJ901704561805",
+		"password": "123456",
+		"promise": "user"
+	}
+*/
 func (l LoginController) Login(context *gin.Context) {
 	var (
 		loginRequest request.LoginRequest

@@ -25,12 +25,21 @@ func (u UserService) Update(user models.User) error {
 }
 
 // List 访问用户列表，需要管理员或员工权限
-func (u UserService) List(p simpletool.Page) ([]models.User, error) {
-	//result, err := dao.UserDao{}.List()	// 不带分页
-	result, err := dao.UserDao{}.ListWithPage(p)
+func (u UserService) List(p simpletool.Page) ([]models.User, int64, error) {
+	result, total, err := dao.UserDao{}.ListWithPage(p)
 	if err != nil {
 		levelLog("查询失败")
-		return nil, err
+		return nil, 0, err
 	}
-	return result, nil
+	return result, total, nil
+}
+
+// DeleteUser 根据账号删除用户信息
+func (u UserService) DeleteUser(username string) (models.User, error) {
+	user, err := dao.UserDao{}.DeleteByUsername(username)
+	if err != nil {
+		levelLog("用户删除失败")
+		return models.User{}, err
+	}
+	return user, nil
 }

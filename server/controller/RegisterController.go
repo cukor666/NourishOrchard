@@ -13,6 +13,19 @@ func (r RegisterController) validation(rg request.RegisterRequest) bool {
 }
 
 // Register 注册
+/**
+header: 空
+body: application/json
+{
+    "name": "李丽梅",
+    "password": "lilimei",
+    "promise": 2458,
+    "gender": "女",
+    "phone": "13746510502",
+    "address": "广东省深圳市",
+    "birthday": "1996-08-26T15:03:10Z"
+}
+*/
 func (r RegisterController) Register(context *gin.Context) {
 	var (
 		registerRequest  request.RegisterRequest

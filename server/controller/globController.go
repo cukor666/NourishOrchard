@@ -36,6 +36,7 @@ func ValidAuthorization(ctx *gin.Context) {
 	if err != nil {
 		levelLog("token校验失败")
 		response.Failed(ctx, "token校验失败，请检查token是否过期")
+		ctx.Abort()
 		return
 	}
 	// 判断token里的和redis中的是否一致
@@ -44,11 +45,13 @@ func ValidAuthorization(ctx *gin.Context) {
 	if err != nil {
 		levelLog("从redis中获取token失败")
 		response.Failed(ctx, "从数据库中获取token失败")
+		ctx.Abort()
 		return
 	}
 	if token != redisToken {
-		levelLog("token已过期")
-		response.FailedWithCode(ctx, statucode.TOKENERROR, "token已过期")
+		levelLog("前端传递token与redis中不一致")
+		response.FailedWithCode(ctx, statucode.TOKENERROR, "无效的token")
+		ctx.Abort()
 		return
 	}
 	levelLog("token校验通过")
