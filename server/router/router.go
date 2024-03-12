@@ -51,5 +51,7 @@ func register(r *gin.Engine) {
 		userGroup.GET("/list", controller.UserController{}.List)
 		userGroup.PUT("/update", controller.UserController{}.Update)
 		userGroup.DELETE("/delete", controller.UserController{}.Delete)
+		userGroup.GET("/logout-list", controller.UserController{}.LogoutList)
+		userGroup.POST("/recover", controller.UserController{}.RecoverUser)
 	}
 }

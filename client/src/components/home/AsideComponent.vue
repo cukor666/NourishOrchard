@@ -33,6 +33,16 @@
             <span>管理员列表</span>
           </template>
         </el-menu-item>
+        <el-menu-item index="EmployeeList" @click="gotoEmployeeList">
+          <template #title>
+            <span>员工列表</span>
+          </template>
+        </el-menu-item>
+        <el-menu-item index="LogoutUserList" @click="gotoLogoutUserList">
+          <template #title>
+            <span>注销用户列表</span>
+          </template>
+        </el-menu-item>
       </el-sub-menu>
       <el-sub-menu index="Fruit">
         <template #title>
@@ -54,15 +64,18 @@
 <script setup>
 import {computed, ref} from "vue";
 import {useAsideStore} from '@/stores/aside'
-import router from "@/router";
 import {useHome} from "@/hooks/aside/useHome.js";
 import {useUser} from "@/hooks/aside/useUser.js";
 import {useAdmin} from "@/hooks/aside/useAdmin.js";
 import {useFruit} from "@/hooks/aside/useFruit.js";
+import {useLogoutUser} from "@/hooks/aside/useLogoutUser.js";
+import {useEmployee} from "@/hooks/aside/useEmployee.js";
 
 const {goHome} = useHome()
 const {gotoUserList} = useUser()
-const {gotoAdminList} =useAdmin()
+const {gotoAdminList} = useAdmin()
+const {gotoLogoutUserList} = useLogoutUser()
+const {gotoEmployeeList} = useEmployee()
 const {gotoFruitList} = useFruit()
 
 const asideStore = useAsideStore()

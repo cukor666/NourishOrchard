@@ -177,8 +177,31 @@ const detailInfo = (item) => {
   user.value = item
 }
 
-const deleteUser = (item) => {
-  console.log(item)
+// 删除用户，将删除的用户存入到注销表中
+const deleteUser = async (item) => {
+  try {
+    let res = await request.delete('/user/delete', {
+      params: {
+        username: item.username
+      }
+    })
+    if (res.code === 200) {
+      ElMessage({message: '删除成功', type: 'success'})
+    } else {
+      ElMessage({message: '删除失败', type: 'error'})
+    }
+    res = await request.get('/user/logout-list', {
+      params: {
+        pageSize: pageSize,
+        pageNum: currentPage
+      }
+    })
+    if (res.code !== 200) {
+      ElMessage({message: '未能及时更新列表，请刷新', type: 'warning'})
+    }
+  } catch {
+    ElMessage({message: '系统错误', type: 'error'})
+  }
 }
 
 </script>

@@ -24,6 +24,11 @@ const routes = [
             name: "UserList",
             component: () => import("@/views/user/UserList.vue"),
           },
+          {
+            path: "/user/logout-list",
+            name: "LogoutUserList",
+            component: () => import("@/views/user/LogoutUserList.vue")
+          }
         ],
       },
       {
@@ -37,6 +42,18 @@ const routes = [
             component: () => import("@/views/admin/AdminList.vue"),
           },
         ],
+      },
+      {
+        path: "/employee",
+        name: "Employee",
+        meta: {requireAuth: true, requireAdmin: true},
+        children: [
+          {
+            path: "/employee/list",
+            name: "EmployeeList",
+            component: () => import("@/views/employee/EmployeeList.vue")
+          }
+        ]
       },
       {
         path: "/fruit",

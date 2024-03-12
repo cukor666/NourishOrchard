@@ -43,3 +43,23 @@ func (u UserService) DeleteUser(username string) (models.User, error) {
 	}
 	return user, nil
 }
+
+// LogoutList 查询注销用户列表，需要管理员或员工权限
+func (u UserService) LogoutList(p simpletool.Page) ([]models.LogoutUser, int64, error) {
+	result, total, err := dao.UserDao{}.LogoutListWithPage(p)
+	if err != nil {
+		levelLog("查询失败")
+		return nil, 0, err
+	}
+	return result, total, nil
+}
+
+// RecoverUser 恢复用户信息
+func (u UserService) RecoverUser(username string) (models.User, error) {
+	user, err := dao.UserDao{}.RecoverUser(username)
+	if err != nil {
+		levelLog("无法恢复用户信息")
+		return models.User{}, err
+	}
+	return user, nil
+}

@@ -6,12 +6,12 @@ import (
 )
 
 type Account struct {
-	Username  string         `json:"username" gorm:"primarykey"`
-	Password  string         `json:"password"`
-	Promise   int            `json:"promise"`
-	CreatedAt time.Time      `json:"createdAt"`
-	UpdatedAt time.Time      `json:"updatedAt"`
-	DeletedAt gorm.DeletedAt `json:"deletedAt" gorm:"index"`
+	Username  string          `json:"username" gorm:"primarykey"`
+	Password  string          `json:"password"`
+	Promise   int             `json:"promise"`
+	CreatedAt time.Time       `json:"createdAt"`
+	UpdatedAt time.Time       `json:"updatedAt"`
+	DeletedAt *gorm.DeletedAt `json:"deletedAt" gorm:"index"`
 }
 
 func (a Account) TableName() string {

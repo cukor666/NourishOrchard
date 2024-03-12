@@ -82,3 +82,54 @@ func (u UserDao) DeleteByUsername(username string) (user models.User, err error)
 	tx.Commit()
 	return user, err
 }
+
+// LogoutListWithPage 查询注销用户列表，带有分页查询
+func (u UserDao) LogoutListWithPage(p simpletool.Page) (result []models.LogoutUser, total int64, err error) {
+	tx := mysqlDB.Model(&models.LogoutUser{}).Count(&total)
+	levelLog(fmt.Sprintf("total = %d", total))
+	err = tx.Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
+	if err != nil {
+		levelLog("查询注销用户失败")
+		return nil, 0, err
+	}
+	return result, total, nil
+}
+
+// RecoverUser 恢复用户信息
+func (u UserDao) RecoverUser(username string) (user models.User, err error) {
+	tx := mysqlDB.Begin()
+	err = tx.Model(&models.LogoutUser{}).Where("username = ?", username).Take(&user).Error
+	if err != nil {
+		levelLog(fmt.Sprintf("无法从注销用户表中查找到该用户，username = %s", username))
+		tx.Rollback()
+		return models.User{}, err
+	}
+	err = tx.Model(&models.User{}).Create(user).Error
+	if err != nil {
+		levelLog("无法将用户信息添加到user表中")
+		tx.Rollback()
+		return models.User{}, err
+	}
+	var ac models.Account
+	err = tx.Unscoped().Where("username = ?", username).Take(&ac).Error
+	if err != nil {
+		levelLog(fmt.Sprintf("无法从account表中查找到username = %s的记录", username))
+		tx.Rollback()
+		return models.User{}, err
+	}
+	ac.DeletedAt = nil
+	err = tx.Save(&ac).Error
+	if err != nil {
+		levelLog(fmt.Sprintf("无法在account表中将账号恢复，username = %s", username))
+		tx.Rollback()
+		return models.User{}, err
+	}
+	err = tx.Model(&models.LogoutUser{}).Where("username = ?", username).Delete(&models.LogoutUser{}).Error
+	if err != nil {
+		levelLog("无法将用户信息从logout_user表中删除")
+		tx.Rollback()
+		return models.User{}, err
+	}
+	tx.Commit()
+	return user, nil
+}
