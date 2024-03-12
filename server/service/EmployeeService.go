@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"regexp"
+	"server/common/simpletool"
 	"server/dao"
 	"server/models"
 )
@@ -14,11 +15,21 @@ func (e EmployeeService) Info(username string) (emp models.Employee, err error) 
 	if !matchString {
 		return models.Employee{}, errors.New("账号不符合系统规范")
 	}
-	return employeeDao.SelectByUsername(username)
+	return dao.EmployeeDao{}.SelectByUsername(username)
 }
 
 // Update 更新员工信息
 func (e EmployeeService) Update(employee models.Employee) error {
 	_, err := dao.EmployeeDao{}.Update(employee)
 	return err
+}
+
+// ListWithPage 查询员工信息，带有分页
+func (e EmployeeService) ListWithPage(p simpletool.Page) ([]models.Employee, error) {
+	result, err := dao.EmployeeDao{}.ListWithPage(p)
+	if err != nil {
+		levelLog("查询失败")
+		return nil, err
+	}
+	return result, nil
 }

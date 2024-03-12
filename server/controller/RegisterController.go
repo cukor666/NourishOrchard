@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"server/request"
 	"server/response"
+	"server/service"
 )
 
 // 数据校验
@@ -44,7 +45,7 @@ func (r RegisterController) Register(context *gin.Context) {
 		return
 	}
 	// 数据校验通过，交给业务层
-	registerResponse, ok = registerService.Register(registerRequest)
+	registerResponse, ok = service.RegisterService{}.Register(registerRequest)
 	if !ok {
 		levelLog("注册失败")
 		response.FailedWithCode(context, 500, "注册失败")

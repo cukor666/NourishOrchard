@@ -7,6 +7,7 @@ import (
 	"server/common"
 	"server/request"
 	"server/response"
+	"server/service"
 	"server/utils"
 )
 
@@ -45,7 +46,7 @@ func (l LoginController) Login(context *gin.Context) {
 		return
 	}
 	// 登录业务
-	token, err := loginService.Login(loginRequest)
+	token, err := service.LoginService{}.Login(loginRequest)
 	if errors.As(err, &myErr) {
 		levelLog("登录失败")
 		response.FailedWithError(context, myErr)

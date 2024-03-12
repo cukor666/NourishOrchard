@@ -129,6 +129,7 @@ const handleCurrentChange = () => {
 onMounted(() => {
   // 从sessionStorage中获取，如果没有则访问服务器获取
   let users = sessionStorage.getItem('nourish-logout-user-list');
+  total.value = Number(sessionStorage.getItem('nourish-logout-user-total'))
   if (users === null || userInfoUpdated.value === "true") {
     // 从服务器端获取
     request.get('/user/logout-list', {

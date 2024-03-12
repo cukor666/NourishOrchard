@@ -15,7 +15,7 @@ func (u UserService) Info(username string) (user models.User, err error) {
 	if !matchString {
 		return models.User{}, errors.New("用户名不符合系统规范")
 	}
-	return userDao.SelectByUsername(username)
+	return dao.UserDao{}.SelectByUsername(username)
 }
 
 // Update 更新用户信息

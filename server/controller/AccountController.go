@@ -45,7 +45,7 @@ func (a AccountController) GetAccount(context *gin.Context) {
 	switch promise {
 	case common.USER:
 		// 调用UserService
-		user, err := userService.Info(username.(string))
+		user, err := service.UserService{}.Info(username.(string))
 		if err != nil {
 			response.Failed(context, "账号不规范")
 			return
@@ -134,7 +134,7 @@ func (a AccountController) Update(context *gin.Context) {
 			return
 		}
 		// 调用UserService
-		err = userService.Update(user)
+		err = service.UserService{}.Update(user)
 	case common.EMPLOYEE:
 		err = context.ShouldBindJSON(&employee)
 		if err != nil {

@@ -1,6 +1,9 @@
 package dao
 
-import "server/models"
+import (
+	"server/common/simpletool"
+	"server/models"
+)
 
 type EmployeeDao struct{}
 
@@ -28,4 +31,14 @@ func (e EmployeeDao) Update(employee models.Employee) (models.Employee, error) {
 		return models.Employee{}, err
 	}
 	return employee, nil
+}
+
+// ListWithPage 查询员工列表，带有分页
+func (e EmployeeDao) ListWithPage(p simpletool.Page) (result []models.Employee, err error) {
+	err = mysqlDB.Model(&models.Employee{}).Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
+	if err != nil {
+		levelLog("查询员工信息失败")
+		return nil, err
+	}
+	return result, nil
 }

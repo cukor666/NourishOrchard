@@ -14,7 +14,7 @@ func (a AdminService) Info(username string) (admin models.Admin, err error) {
 	if !matchString {
 		return models.Admin{}, errors.New("账号不符合系统规范")
 	}
-	return adminDao.SelectByUsername(username)
+	return dao.AdminDao{}.SelectByUsername(username)
 }
 
 // Update 更新管理员信息

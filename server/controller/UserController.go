@@ -65,7 +65,7 @@ func (u UserController) List(context *gin.Context) {
 		return
 	}
 
-	users, total, err := userService.List(p)
+	users, total, err := service.UserService{}.List(p)
 	if err != nil {
 		levelLog("服务端错误，查询失败")
 		response.Failed(context, "服务端错误，查询失败")
@@ -232,7 +232,7 @@ func (u UserController) LogoutList(context *gin.Context) {
 		return
 	}
 
-	users, total, err := userService.LogoutList(p)
+	users, total, err := service.UserService{}.LogoutList(p)
 	if err != nil {
 		levelLog("服务端错误，查询失败")
 		response.Failed(context, "服务端错误，查询失败")

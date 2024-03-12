@@ -2,6 +2,7 @@ package service
 
 import (
 	"regexp"
+	"server/dao"
 	"server/utils"
 )
 
@@ -15,6 +16,6 @@ func (a AccountService) IsExists(username string, promise int) bool {
 		return false
 	}
 	// 开始查询数据库
-	cnt := accountDao.GetCountByUsername(username, promise)
+	cnt := dao.AccountDao{}.GetCountByUsername(username, promise)
 	return cnt != 0
 }

@@ -15,7 +15,7 @@ import (
 
 // 普通用户登录
 func (l LoginService) userLogin(username string) (id uint, err error) {
-	id, err = userDao.GetUId(username)
+	id, err = dao.UserDao{}.GetUId(username)
 	if err != nil {
 		return 0, err
 	}
@@ -24,7 +24,7 @@ func (l LoginService) userLogin(username string) (id uint, err error) {
 
 // 员工登录
 func (l LoginService) employeeLogin(username string) (id uint, err error) {
-	id, err = employeeDao.GetUId(username)
+	id, err = dao.EmployeeDao{}.GetUId(username)
 	if err != nil {
 		return 0, err
 	}
@@ -33,7 +33,7 @@ func (l LoginService) employeeLogin(username string) (id uint, err error) {
 
 // 管理员登录
 func (l LoginService) adminLogin(username string) (id uint, err error) {
-	id, err = adminDao.GetUId(username)
+	id, err = dao.AdminDao{}.GetUId(username)
 	if err != nil {
 		return 0, err
 	}
@@ -52,7 +52,7 @@ func (l LoginService) Login(req request.LoginRequest) (string, error) {
 	}
 	// 如果该用户存在，则继续校验密码是否正确
 	// 从数据库中获取该账号
-	account, err := accountDao.Get(req.Username, promise)
+	account, err := dao.AccountDao{}.Get(req.Username, promise)
 	if err != nil {
 		return "", &common.MyError{
 			Code: statucode.SYSTEMERR,

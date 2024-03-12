@@ -34,15 +34,15 @@ func middleWare(r *gin.Engine) {
 
 // 注册路由
 func register(r *gin.Engine) {
-	r.POST("/register", registerController.Register)
-	r.POST("/login", loginController.Login)
+	r.POST("/register", controller.RegisterController{}.Register)
+	r.POST("/login", controller.LoginController{}.Login)
 
 	// 账户管理
 	// 内部处理不同权限的功能调用
 	accountGroup := r.Group("/account", controller.ValidAuthorization)
 	{
-		accountGroup.GET("/get", accountController.GetAccount) // 获取个人信息
-		accountGroup.PUT("/update", accountController.Update)  // 更新个人信息
+		accountGroup.GET("/get", controller.AccountController{}.GetAccount) // 获取个人信息
+		accountGroup.PUT("/update", controller.AccountController{}.Update)  // 更新个人信息
 	}
 
 	// 用户管理
@@ -53,5 +53,11 @@ func register(r *gin.Engine) {
 		userGroup.DELETE("/delete", controller.UserController{}.Delete)
 		userGroup.GET("/logout-list", controller.UserController{}.LogoutList)
 		userGroup.POST("/recover", controller.UserController{}.RecoverUser)
+	}
+
+	// 员工管理
+	r.Group("/employee", controller.ValidAuthorization)
+	{
+
 	}
 }

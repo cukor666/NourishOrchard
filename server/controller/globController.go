@@ -9,7 +9,6 @@ import (
 	"server/common/statucode"
 	"server/dao"
 	"server/response"
-	"server/service"
 	"strings"
 )
 
@@ -19,14 +18,9 @@ type AccountController struct{}
 type LoginController struct{}
 type RegisterController struct{}
 type UserController struct{}
+type EmployeeController struct{}
 
 // 私有的结构体
-
-var (
-	loginService    service.LoginService
-	registerService service.RegisterService
-	userService     service.UserService
-)
 
 // ValidAuthorization 校验authorization
 func ValidAuthorization(ctx *gin.Context) {
