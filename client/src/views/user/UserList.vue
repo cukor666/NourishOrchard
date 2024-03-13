@@ -6,7 +6,7 @@
       </el-icon>
       <span style="margin-left: 5px">搜索</span>
     </el-button>
-    <search-user :searchDialogV="searchDialogV" @closeDialog="handleCloseDialog"></search-user>
+    <search-user :searchDialogV="searchDialogV" @closeDialog="handleCloseDialog" @search="search"></search-user>
     <el-card style="width: 99%">
       <el-table :data="userList" stripe style="width: 100%">
         <el-table-column prop="id" label="id" width="50"/>
@@ -59,18 +59,18 @@ const handleCloseDialog = () => {
   searchDialogV.value = false
 }
 
+const searchUser = ref({
+  id: 0,
+  username: '',
+  name: '',
+  gender: '',
+  phone: '',
+  address: '',
+  birthday: ''
+})
+
 // 展示数据的用户列表
-const userList = ref([
-  {
-    id: 1,
-    username: 'CZKJ4634',
-    name: 'CukorZhong',
-    gender: '男',
-    phone: '18577659826',
-    address: '广东省深圳市福田区下梅林',
-    birthday: '2000-08-07'
-  }
-])
+const userList = ref([{...searchUser.value}])
 
 const userInfoUpdated = computed(() => {
   return sessionStorage.getItem('nourish-user-info-updated') || "false"
@@ -89,44 +89,58 @@ const total = ref(Number(sessionStorage.getItem('nourish-user-total')) || 0)
 
 // 改变pageSize
 const handleSizeChange = () => {
-  request.get('/user/list', {
-    params: {
-      pageSize: pageSize.value,
-      pageNum: currentPage.value
-    }
-  }).then(res => {
-    let v = res.data
-    total.value = v.total
-    userList.value = v.users
-    sessionStorage.setItem('nourish-user-list', JSON.stringify(userList.value))
-  }).catch(err => {
-    ElMessage({
-      message: '服务器出错',
-      type: 'error'
-    })
-    console.log(err)
-  })
+  console.log(pageSize.value)
 }
 
 // 改变currentPage
-const handleCurrentChange = () => {
-  request.get('/user/list', {
-    params: {
-      pageSize: pageSize.value,
-      pageNum: currentPage.value
-    }
-  }).then(res => {
-    let v = res.data
-    total.value = v.total
-    userList.value = v.users
-    sessionStorage.setItem('nourish-user-list', JSON.stringify(userList.value))
-  }).catch(err => {
-    ElMessage({
-      message: '服务器出错',
-      type: 'error'
+const handleCurrentChange = async () => {
+  try {
+    let res = await request.get('/user/list', {
+      params: {
+        pageSize: pageSize.value,
+        pageNum: currentPage.value,
+        ...searchUser.value
+      }
     })
-    console.log(err)
-  })
+    if (res.code === 200) {
+      total.value = res.data.total
+      userList.value = res.data.users
+    } else {
+      console.log(res.msg)
+      ElMessage({message: '参数错误', type: 'error'})
+    }
+  } catch (err) {
+    console.error(err)
+    ElMessage({message: '服务器错误', type: 'error'})
+  }
+}
+
+const search = async (u) => {
+  searchUser.value = u
+  console.log('searchUser = ', searchUser.value)
+  searchDialogV.value = false
+  // 向服务器端做查询，然后将结果放到userList中
+
+  try {
+   let res = await request.get('/user/list', {
+      params: {
+        pageSize: pageSize.value,
+        pageNum: currentPage.value,
+        ...searchUser.value
+      }
+    })
+    if (res.code === 200) {
+      total.value = res.data.total
+      userList.value = res.data.users
+      ElMessage({message: '查询成功', type: 'success'})
+    } else {
+      ElMessage({message: '查询失败', type: 'error'})
+    }
+  } catch (err) {
+    console.error(err)
+    ElMessage({message: '服务器错误', type: 'error'})
+  }
+
 }
 
 onMounted(() => {

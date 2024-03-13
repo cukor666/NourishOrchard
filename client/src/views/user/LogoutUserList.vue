@@ -34,8 +34,6 @@
                    @size-change="handleSizeChange"
                    @current-change="handleCurrentChange"
     />
-
-
   </div>
 </template>
 
@@ -69,6 +67,8 @@ const userList = ref([
   }
 ])
 
+const showUsers = ref([])
+
 const userInfoUpdated = computed(() => {
   return sessionStorage.getItem('nourish-logout-user-info-updated') || "false"
 })
@@ -86,44 +86,12 @@ const total = ref(Number(sessionStorage.getItem('nourish-logout-user-total')) ||
 
 // 改变pageSize
 const handleSizeChange = () => {
-  request.get('/user/logout-list', {
-    params: {
-      pageSize: pageSize.value,
-      pageNum: currentPage.value
-    }
-  }).then(res => {
-    let v = res.data
-    total.value = v.total
-    userList.value = v.users
-    sessionStorage.setItem('nourish-logout-user-list', JSON.stringify(userList.value))
-  }).catch(err => {
-    ElMessage({
-      message: '服务器出错',
-      type: 'error'
-    })
-    console.log(err)
-  })
+  console.log(pageSize.value)
 }
 
 // 改变currentPage
 const handleCurrentChange = () => {
-  request.get('/user/logout-list', {
-    params: {
-      pageSize: pageSize.value,
-      pageNum: currentPage.value
-    }
-  }).then(res => {
-    let v = res.data
-    total.value = v.total
-    userList.value = v.users
-    sessionStorage.setItem('nourish-logout-user-list', JSON.stringify(userList.value))
-  }).catch(err => {
-    ElMessage({
-      message: '服务器出错',
-      type: 'error'
-    })
-    console.log(err)
-  })
+  console.log(currentPage.value);
 }
 
 onMounted(() => {

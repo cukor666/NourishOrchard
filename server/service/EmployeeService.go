@@ -25,11 +25,11 @@ func (e EmployeeService) Update(employee models.Employee) error {
 }
 
 // ListWithPage 查询员工信息，带有分页
-func (e EmployeeService) ListWithPage(p simpletool.Page) ([]models.Employee, error) {
-	result, err := dao.EmployeeDao{}.ListWithPage(p)
+func (e EmployeeService) ListWithPage(p simpletool.Page) ([]models.Employee, int64, error) {
+	result, total, err := dao.EmployeeDao{}.ListWithPage(p)
 	if err != nil {
 		levelLog("查询失败")
-		return nil, err
+		return nil, 0, err
 	}
-	return result, nil
+	return result, total, nil
 }

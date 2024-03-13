@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"regexp"
+	"server/common/simpletool"
 	"server/dao"
 	"server/models"
 )
@@ -21,4 +22,14 @@ func (a AdminService) Info(username string) (admin models.Admin, err error) {
 func (a AdminService) Update(admin models.Admin) error {
 	_, err := dao.AdminDao{}.Update(admin)
 	return err
+}
+
+// ListWithPage 查询管理员列表，分页查询
+func (a AdminService) ListWithPage(p simpletool.Page) ([]models.Admin, int64, error) {
+	result, total, err := dao.AdminDao{}.ListWithPage(p)
+	if err != nil {
+		levelLog("查询失败")
+		return nil, 0, err
+	}
+	return result, total, nil
 }

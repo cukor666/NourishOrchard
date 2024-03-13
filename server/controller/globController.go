@@ -19,6 +19,7 @@ type LoginController struct{}
 type RegisterController struct{}
 type UserController struct{}
 type EmployeeController struct{}
+type AdminController struct{}
 
 // 私有的结构体
 

@@ -22,9 +22,14 @@ header:
 params:
 	query:
 		pageSize: 3
-		pageNum: 2
+		pageNum: 1
+		id: 3
+		username: CZKJ991706344513
+		... user的字段信息
 
-http://localhost:9000/user/list?pageSize=3&pageNum=2
+如果user字段的值是零值，则服务器端不做该字段的SQL拼接
+
+http://localhost:9000/user/list?pageSize=3&pageNum=2&id=3&username=CZKJ991706344513 ...
 */
 func (u UserController) List(context *gin.Context) {
 	// 解析token
@@ -51,7 +56,12 @@ func (u UserController) List(context *gin.Context) {
 	}
 
 	// 权限校验通过之后获取参数
-	var p simpletool.Page
+	var (
+		p    simpletool.Page
+		user models.User
+	)
+
+	// 获取分页的参数
 	pageSize := context.Query("pageSize")
 	if p.Size, err = strconv.Atoi(pageSize); err != nil {
 		levelLog(fmt.Sprintf("pageSize参数错误, pageSize: %v", p.Size))
@@ -65,7 +75,15 @@ func (u UserController) List(context *gin.Context) {
 		return
 	}
 
-	users, total, err := service.UserService{}.List(p)
+	// 获取查询用户的参数
+	err = context.ShouldBindQuery(&user)
+	if err != nil {
+		levelLog(fmt.Sprintf("获取用户参数失败, user: %v", user))
+		response.Failed(context, "获取用户相关参数失败")
+		return
+	}
+
+	users, total, err := service.UserService{}.List(p, user)
 	if err != nil {
 		levelLog("服务端错误，查询失败")
 		response.Failed(context, "服务端错误，查询失败")

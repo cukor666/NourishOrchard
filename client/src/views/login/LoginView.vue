@@ -82,19 +82,14 @@ const onSuccess = () => {
       localStorage.setItem('nourish-account', user.account)
       localStorage.setItem('nourish-promise', user.promise)
       sessionStorage.setItem('nourish-promise', user.promise)
-      ElMessage({
-        message: '欢迎：' + user.account,
-        type: 'success'
-      })
+      ElMessage({message: '欢迎：' + user.account, type: 'success'})
       router.push({name: 'Root'})
     } else {
-      ElMessage({
-        message: '服务器响应失败',
-        type: 'error'
-      })
+      ElMessage({message: '账号或密码错误', type: 'error'})
     }
   }).catch(error => {     // 后端校验不通过则不能登录
     console.log(error);
+    ElMessage({message: '服务器响应失败', type: 'error'})
   })
 }
 
@@ -107,10 +102,7 @@ const login = () => {
   for (const key in errWord) {
     if (Object.hasOwnProperty.call(errWord, key)) {
       if (errWord[key] !== '') {
-        ElMessage({
-          message: '用户信息不正确',
-          type: 'error',
-        })
+        ElMessage({message: '用户信息不正确', type: 'error',})
         console.log('key: ', key);
         console.log('value: ', errWord[key]);
         setTimeout(() => {
@@ -128,7 +120,7 @@ const login = () => {
 }
 
 const gotoRegister = () => {
-  router.push('/register')
+  router.push({name: "Register"})
 }
 </script>
 

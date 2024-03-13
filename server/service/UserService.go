@@ -25,8 +25,8 @@ func (u UserService) Update(user models.User) error {
 }
 
 // List 访问用户列表，需要管理员或员工权限
-func (u UserService) List(p simpletool.Page) ([]models.User, int64, error) {
-	result, total, err := dao.UserDao{}.ListWithPage(p)
+func (u UserService) List(p simpletool.Page, user models.User) ([]models.User, int64, error) {
+	result, total, err := dao.UserDao{}.ListWithPage(p, user)
 	if err != nil {
 		levelLog("查询失败")
 		return nil, 0, err

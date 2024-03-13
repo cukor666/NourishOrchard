@@ -1,6 +1,9 @@
 package dao
 
-import "server/models"
+import (
+	"server/common/simpletool"
+	"server/models"
+)
 
 type AdminDao struct{}
 
@@ -26,4 +29,15 @@ func (a AdminDao) Update(admin models.Admin) (models.Admin, error) {
 		return models.Admin{}, err
 	}
 	return admin, nil
+}
+
+// ListWithPage 查询管理员接口
+func (a AdminDao) ListWithPage(p simpletool.Page) (result []models.Admin, total int64, err error) {
+	tx := mysqlDB.Model(&models.Admin{}).Count(&total)
+	err = tx.Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
+	if err != nil {
+		levelLog("查询管理员列表失败")
+		return nil, 0, err
+	}
+	return result, total, nil
 }

@@ -52,6 +52,7 @@ export function useValid(errWord) {
 
     // 校验姓名
     const validName = (name) => {
+        console.log(typeof name)
         let maxLen = 50;
         if (name === "") {
             errWord.name = "姓名不能为空";
