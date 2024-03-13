@@ -1,0 +1,36 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    background: linear-gradient(to top, #200A3E, #fff);
+    border-radius: 0px 0px 0px 10px;
+    color: #eee6e6;
+
+    .path__content {
+        margin-left: 5px;
+    }
+
+    .setting-bar {
+        margin-right: 5px;
+        margin-bottom: 5px;
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            background: url('https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/cukorlogo.jpg');
+            background-position: center center;
+            background-size: cover;
+            border-radius: 50%;
+        }
+    }
+}
+
+.tags {
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+    .el-tag {
+        margin-left: 5px;
+    }
+}

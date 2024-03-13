@@ -1,0 +1,132 @@
+.login-box {
+  min-height: 100vh;
+  animation: changeBackgroud 20s infinite;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .login-card {
+    width: 400px;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: changeLoginCard 3s infinite;
+    backdrop-filter: blur(5px);
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      background-image: -webkit-linear-gradient(30deg, red, #fd8403, yellow);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .el-form {
+      .el-form-item {
+        display: flex;
+        justify-content: space-around;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-bottom: 10px;
+        .label {
+          flex: 1;
+          color: #eae5e5;
+          font-size: 14px;
+          font-weight: bold;
+        }
+        .el-input {
+          flex: 8;
+        }
+      }
+
+      .forget-password {
+        font-size: 13px;
+        color: #3c9fe7;
+        text-decoration: none;
+        margin-top: -15px;
+        margin-left: auto;
+      }
+    }
+
+    .el-radio-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      --el-color-primary: #df611d;
+      .el-radio {
+        color: #d1ee7b;
+      }
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      padding-left: 10px;
+      padding-right: 10px;
+      .login-button {
+        width: 25%;
+        background-color: #df611d;
+        border: none;
+        border-radius: 20px;
+        transition: all 1s;
+      }
+      .login-button:hover {
+        color: #fff;
+        background-color: #ff7701;
+        box-shadow: 0px 0px 50px #ff7701;
+        cursor: pointer;
+      }
+      .register-button {
+        width: 25%;
+        background-color: #d1ee7b;
+        border: none;
+        border-radius: 20px;
+        transition: all 1s;
+      }
+      .register-button:hover {
+        color: #fd8403;
+        background-color: #bfff00;
+        box-shadow: 0px 0px 50px #bfff00;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+@keyframes changeBackgroud {
+  0% {
+    background-image: url("https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/番石榴.jpg");
+  }
+
+  50% {
+    background-image: url("https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/猕猴桃.jpeg");
+  }
+
+  100% {
+    background-image: url("https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/蘋果.png");
+  }
+}
+
+@keyframes changeLoginCard {
+  0% {
+    border-radius: 50px 0px 0px 0px;
+    box-shadow: 0 0 30px red;
+  }
+  25% {
+    border-radius: 0px 50px 0px 0px;
+    box-shadow: 0 0 25px #b59e3d;
+  }
+  50% {
+    border-radius: 0px 0px 50px 0px;
+    box-shadow: 0 0 30px #b2cb7d;
+  }
+  75% {
+    border-radius: 0px 0px 0px 50px;
+    box-shadow: 0 0 25px #b59e3d;
+  }
+  100% {
+    border-radius: 50px 0px 0px 0px;
+    box-shadow: 0 0 25px red;
+  }
+}
