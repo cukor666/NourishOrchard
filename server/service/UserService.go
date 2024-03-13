@@ -45,8 +45,8 @@ func (u UserService) DeleteUser(username string) (models.User, error) {
 }
 
 // LogoutList 查询注销用户列表，需要管理员或员工权限
-func (u UserService) LogoutList(p simpletool.Page) ([]models.LogoutUser, int64, error) {
-	result, total, err := dao.UserDao{}.LogoutListWithPage(p)
+func (u UserService) LogoutList(p simpletool.Page, logoutUser models.LogoutUser) ([]models.LogoutUser, int64, error) {
+	result, total, err := dao.UserDao{}.LogoutListWithPage(p, logoutUser)
 	if err != nil {
 		levelLog("查询失败")
 		return nil, 0, err

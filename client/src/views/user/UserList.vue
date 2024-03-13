@@ -88,8 +88,26 @@ const pageSizes = ref([3, 6, 10, 15, 20])
 const total = ref(Number(sessionStorage.getItem('nourish-user-total')) || 0)
 
 // 改变pageSize
-const handleSizeChange = () => {
-  console.log(pageSize.value)
+const handleSizeChange = async () => {
+  try {
+    let res = await request.get('/user/list', {
+      params: {
+        pageSize: pageSize.value,
+        pageNum: currentPage.value,
+        ...searchUser.value
+      }
+    })
+    if (res.code === 200) {
+      total.value = res.data.total
+      userList.value = res.data.users
+    } else {
+      console.log(res.msg)
+      ElMessage({message: '参数错误', type: 'error'})
+    }
+  } catch (err) {
+    console.error(err)
+    ElMessage({message: '服务器错误', type: 'error'})
+  }
 }
 
 // 改变currentPage

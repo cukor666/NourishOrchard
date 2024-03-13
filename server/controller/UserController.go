@@ -236,7 +236,11 @@ func (u UserController) LogoutList(context *gin.Context) {
 	}
 
 	// 权限校验通过之后获取参数
-	var p simpletool.Page
+	var (
+		p          simpletool.Page
+		logoutUser models.LogoutUser
+	)
+
 	pageSize := context.Query("pageSize")
 	if p.Size, err = strconv.Atoi(pageSize); err != nil {
 		levelLog(fmt.Sprintf("pageSize参数错误, pageSize: %v", p.Size))
@@ -250,7 +254,14 @@ func (u UserController) LogoutList(context *gin.Context) {
 		return
 	}
 
-	users, total, err := service.UserService{}.LogoutList(p)
+	err = context.ShouldBindQuery(&logoutUser)
+	if err != nil {
+		levelLog(fmt.Sprintf("获取注销用户参数失败, logoutUser: %v", logoutUser))
+		response.Failed(context, "获取注销用户参数失败")
+		return
+	}
+
+	users, total, err := service.UserService{}.LogoutList(p, logoutUser)
 	if err != nil {
 		levelLog("服务端错误，查询失败")
 		response.Failed(context, "服务端错误，查询失败")

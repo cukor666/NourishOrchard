@@ -52,13 +52,7 @@ func (u UserDao) ListWithPage(p simpletool.Page, user models.User) (result []mod
 		Where("address LIKE ?", fmt.Sprintf("%%%s%%", address)).
 		Count(&total)
 	levelLog(fmt.Sprintf("total = %d", total))
-	err = tx.Model(&user).Where(&user).
-		Where("username LIKE ?", fmt.Sprintf("%%%s%%", username)).
-		Where("name LIKE ?", fmt.Sprintf("%%%s%%", name)).
-		Where("gender LIKE ?", fmt.Sprintf("%%%s%%", gender)).
-		Where("phone LIKE ?", fmt.Sprintf("%%%s%%", phone)).
-		Where("address LIKE ?", fmt.Sprintf("%%%s%%", address)).
-		Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
+	err = tx.Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
 	if err != nil {
 		levelLog("查询用户列表失败")
 		return nil, 0, err
@@ -98,8 +92,16 @@ func (u UserDao) DeleteByUsername(username string) (user models.User, err error)
 }
 
 // LogoutListWithPage 查询注销用户列表，带有分页查询
-func (u UserDao) LogoutListWithPage(p simpletool.Page) (result []models.LogoutUser, total int64, err error) {
-	tx := mysqlDB.Model(&models.LogoutUser{}).Count(&total)
+func (u UserDao) LogoutListWithPage(p simpletool.Page, logoutUser models.LogoutUser) (result []models.LogoutUser, total int64, err error) {
+	id, username, name, gender, phone, address, _ := logoutUser.SetZero()
+	logoutUser.ID = id
+	tx := mysqlDB.Model(&logoutUser).Where(&logoutUser).
+		Where("username LIKE ?", fmt.Sprintf("%%%s%%", username)).
+		Where("name LIKE ?", fmt.Sprintf("%%%s%%", name)).
+		Where("gender LIKE ?", fmt.Sprintf("%%%s%%", gender)).
+		Where("phone LIKE ?", fmt.Sprintf("%%%s%%", phone)).
+		Where("address LIKE ?", fmt.Sprintf("%%%s%%", address)).
+		Count(&total)
 	levelLog(fmt.Sprintf("total = %d", total))
 	err = tx.Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
 	if err != nil {
