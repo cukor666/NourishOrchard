@@ -29,7 +29,6 @@
         <el-button type="primary" class="login-button" @click="login">登录</el-button>
         <el-button class="register-button" @click="gotoRegister">去注册</el-button>
       </div>
-
     </div>
   </div>
   <Vcode :show="isShow" @success="onSuccess" @close="isShow = false"/>

@@ -11,7 +11,6 @@
 <script setup>
 import { reactive } from "vue";
 
-
 const user = reactive({
     username: 'Cukor',
     age: 18

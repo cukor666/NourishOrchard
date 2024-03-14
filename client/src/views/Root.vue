@@ -36,7 +36,7 @@ const asideStyle = () => {
 
 <style lang="scss" scoped>
 .el-aside {
-  box-shadow: 5px 0px 5px #000;
+  box-shadow: 5px 0 5px #000;
   animation: changeAside 5s infinite;
 }
 
@@ -54,24 +54,16 @@ const asideStyle = () => {
 }
 
 @keyframes changeAside {
-  0% {
-    border-radius: 0px;
+  0%, 100% {
+    border-radius: 0;
   }
 
-  25% {
-    border-radius: 0px 15px 15px 0px;
+  25%, 75% {
+    border-radius: 0 15px 15px 0;
   }
 
   50% {
-    border-radius: 0px 30px 30px 0px;
-  }
-
-  75% {
-    border-radius: 0px 15px 15px 0px;
-  }
-
-  100% {
-    border-radius: 0px;
+    border-radius: 0 30px 30px 0;
   }
 }
 </style>
