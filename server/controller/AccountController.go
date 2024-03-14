@@ -3,9 +3,9 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"server/common"
 	"server/config"
 	"server/models"
+	mc "server/models/code"
 	"server/response"
 	"server/service"
 	"server/utils"
@@ -43,7 +43,7 @@ func (a AccountController) GetAccount(context *gin.Context) {
 	username := claims["username"]
 	promise := utils.PromiseToInt(claims["promise"].(string))
 	switch promise {
-	case common.USER:
+	case mc.USER:
 		// 调用UserService
 		user, err := service.UserService{}.Info(username.(string))
 		if err != nil {
@@ -54,7 +54,7 @@ func (a AccountController) GetAccount(context *gin.Context) {
 			"promise": "user",
 			"data":    user,
 		}, "查询成功")
-	case common.EMPLOYEE:
+	case mc.EMPLOYEE:
 		// 调用employeeService
 		emp, err := service.EmployeeService{}.Info(username.(string))
 		if err != nil {
@@ -62,10 +62,10 @@ func (a AccountController) GetAccount(context *gin.Context) {
 			return
 		}
 		response.Success(context, gin.H{
-			"promise": "employee",
+			"promise": "empcode",
 			"data":    emp,
 		}, "查询成功")
-	case common.ADMIN:
+	case mc.ADMIN:
 		// 调用adminService
 		admin, err := service.AdminService{}.Info(username.(string))
 		if err != nil {
@@ -121,7 +121,7 @@ func (a AccountController) Update(context *gin.Context) {
 		employee models.Employee
 	)
 	switch promise {
-	case common.USER:
+	case mc.USER:
 		err = context.ShouldBindJSON(&user)
 		if err != nil {
 			levelLog("数据绑定失败")
@@ -135,7 +135,7 @@ func (a AccountController) Update(context *gin.Context) {
 		}
 		// 调用UserService
 		err = service.UserService{}.Update(user)
-	case common.EMPLOYEE:
+	case mc.EMPLOYEE:
 		err = context.ShouldBindJSON(&employee)
 		if err != nil {
 			levelLog(fmt.Sprintf("数据绑定失败, emp: %v", employee))
@@ -149,7 +149,7 @@ func (a AccountController) Update(context *gin.Context) {
 		}
 		// 调用employeeService
 		err = service.EmployeeService{}.Update(employee)
-	case common.ADMIN:
+	case mc.ADMIN:
 		err = context.ShouldBindJSON(&admin)
 		if err != nil {
 			levelLog("数据绑定失败")

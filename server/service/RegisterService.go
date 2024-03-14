@@ -1,9 +1,9 @@
 package service
 
 import (
-	"server/common"
 	"server/dao"
 	"server/models"
+	mc "server/models/code"
 	"server/request"
 	"server/response"
 	"server/utils"
@@ -18,7 +18,7 @@ func (r RegisterService) deconstruct(req request.RegisterRequest) (models.Accoun
 	return models.Account{
 			Password: req.Password,
 			//Promise:  req.Promise,
-			Promise: common.USER, // 该接口只提供用户注册，管理员和员工的注册由内部自己完成
+			Promise: mc.USER, // 该接口只提供用户注册，管理员和员工的注册由内部自己完成
 		}, models.User{
 			Name:     req.Name,
 			Gender:   req.Gender,

@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
-	"server/common/statucode"
 	"server/dao"
 	"server/response"
+	resc "server/response/code"
 	"strings"
 )
 
@@ -45,7 +45,7 @@ func ValidAuthorization(ctx *gin.Context) {
 	}
 	if token != redisToken {
 		levelLog("前端传递token与redis中不一致")
-		response.FailedWithCode(ctx, statucode.TOKENERROR, "无效的token")
+		response.FailedWithCode(ctx, resc.TokenError, "无效的token")
 		ctx.Abort()
 		return
 	}

@@ -56,9 +56,10 @@ func register(r *gin.Engine) {
 	}
 
 	// 员工管理
-	employeeGroup := r.Group("/employee", controller.ValidAuthorization)
+	employeeGroup := r.Group("/empcode", controller.ValidAuthorization)
 	{
 		employeeGroup.GET("/list", controller.EmployeeController{}.List)
+		employeeGroup.PUT("/update", controller.EmployeeController{}.Update)
 	}
 
 	// 管理员管理

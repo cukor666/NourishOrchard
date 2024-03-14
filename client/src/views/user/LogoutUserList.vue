@@ -6,7 +6,7 @@
       </el-icon>
       <span style="margin-left: 5px">搜索</span>
     </el-button>
-    <search-user :searchDialogV="searchDialogV" @closeDialog="handleCloseDialog"></search-user>
+    <search-user :searchDialogV="searchDialogV" @closeDialog="handleCloseDialog" @search="search"></search-user>
     <el-card style="width: 99%">
       <el-table :data="userList" stripe style="width: 100%">
         <el-table-column prop="id" label="id" width="50"/>
@@ -54,20 +54,52 @@ const handleCloseDialog = () => {
   searchDialogV.value = false
 }
 
-// 展示数据的用户列表
-const userList = ref([
-  {
-    id: 1,
-    username: 'CZKJ4634',
-    name: 'CukorZhong',
-    gender: '男',
-    phone: '18577659826',
-    address: '广东省深圳市福田区下梅林',
-    birthday: '2000-08-07'
-  }
-])
+const searchUser = ref({
+  id: 0,
+  username: '',
+  name: '',
+  gender: '',
+  phone: '',
+  address: '',
+  birthday: ''
+})
 
-const showUsers = ref([])
+const search = async (u) => {
+  searchUser.value = u
+  console.log('searchUser = ', searchUser.value)
+  searchDialogV.value = false
+  // 向服务器端做查询，然后将结果放到userList中
+  try {
+    let res = await request.get('/user/logout-list', {
+      params: {
+        pageSize: pageSize.value,
+        pageNum: currentPage.value,
+        ...searchUser.value
+      }
+    })
+    if (res.code === 200) {
+      total.value = res.data.total
+      userList.value = res.data.users
+      ElMessage({message: '查询成功', type: 'success'})
+    } else {
+      ElMessage({message: '查询失败', type: 'error'})
+    }
+  } catch (err) {
+    console.error(err)
+    ElMessage({message: '服务器错误', type: 'error'})
+  }
+}
+
+// 展示数据的用户列表
+const userList = ref([{
+  id: 1,
+  username: 'CZKJ4634',
+  name: 'CukorZhong',
+  gender: '男',
+  phone: '18577659826',
+  address: '广东省深圳市福田区下梅林',
+  birthday: '2000-08-07'
+}])
 
 const userInfoUpdated = computed(() => {
   return sessionStorage.getItem('nourish-logout-user-info-updated') || "false"
@@ -85,37 +117,79 @@ const pageSizes = ref([3, 6, 10, 15, 20])
 const total = ref(Number(sessionStorage.getItem('nourish-logout-user-total')) || 0)
 
 // 改变pageSize
-const handleSizeChange = () => {
-  console.log(pageSize.value)
+const handleSizeChange = async () => {
+  try {
+    let res = await request.get('/user/logout-list', {
+      params: {
+        pageSize: pageSize.value,
+        pageNum: currentPage.value,
+        ...searchUser.value
+      }
+    })
+    if (res.code === 200) {
+      total.value = res.data.total
+      userList.value = res.data.users
+    } else {
+      console.log(res.msg)
+      ElMessage({message: '参数错误', type: 'error'})
+    }
+  } catch (err) {
+    console.error(err)
+    ElMessage({message: '服务器错误', type: 'error'})
+  }
 }
 
 // 改变currentPage
-const handleCurrentChange = () => {
-  console.log(currentPage.value);
+const handleCurrentChange = async () => {
+  try {
+    let res = await request.get('/user/logout-list', {
+      params: {
+        pageSize: pageSize.value,
+        pageNum: currentPage.value,
+        ...searchUser.value
+      }
+    })
+    if (res.code === 200) {
+      total.value = res.data.total
+      userList.value = res.data.users
+    } else {
+      console.log(res.msg)
+      ElMessage({message: '参数错误', type: 'error'})
+    }
+  } catch (err) {
+    console.error(err)
+    ElMessage({message: '服务器错误', type: 'error'})
+  }
 }
 
-onMounted(() => {
+onMounted(async () => {
   // 从sessionStorage中获取，如果没有则访问服务器获取
   let users = sessionStorage.getItem('nourish-logout-user-list');
   total.value = Number(sessionStorage.getItem('nourish-logout-user-total'))
   if (users === null || userInfoUpdated.value === "true") {
     // 从服务器端获取
-    request.get('/user/logout-list', {
-      params: {
-        pageSize: pageSize.value,
-        pageNum: currentPage.value
+    try {
+      let res = await request.get('/user/logout-list', {
+        params: {
+          pageSize: pageSize.value,
+          pageNum: currentPage.value
+        }
+      })
+      if (res.code === 200) {
+        let v = res.data
+        total.value = v.total
+        userList.value = v.users
+        users = JSON.stringify(userList.value)
+        sessionStorage.setItem('nourish-logout-user-list', users)
+        sessionStorage.setItem('nourish-logout-user-total', total.value.toString())
+        sessionStorage.removeItem('nourish-logout-user-info-updated')
+      } else {
+        ElMessage({message: '参数错误', type: 'error'})
       }
-    }).then(res => {
-      let v = res.data
-      total.value = v.total
-      userList.value = v.users
-      users = JSON.stringify(userList.value)
-      sessionStorage.setItem('nourish-logout-user-list', users)
-      sessionStorage.setItem('nourish-logout-user-total', total.value.toString())
-      sessionStorage.removeItem('nourish-logout-user-info-updated')
-    }).catch(err => {
-      console.log(err)
-    })
+    } catch (err) {
+      console.error(err)
+      ElMessage({message: '服务器错误', type: 'error'})
+    }
   } else {
     userList.value = JSON.parse(users);
   }
@@ -133,36 +207,37 @@ const user = ref({
 
 // 恢复用户
 const recoverUser = async (item) => {
-  await request.post('/user/recover', {
-    username: item.username
-  }).then(res => {
+  try {
+    let res = await request.post('/user/recover', {
+      username: item.username
+    })
     if (res.code === 200) {
       console.log(res.data)
       ElMessage({message: '恢复用户成功', type: 'success'})
     } else {
       ElMessage({message: '恢复用户失败', type: 'error'})
     }
-  }).catch(err => {
+    res = await request.get('/user/logout-list', {
+      params: {
+        pageSize: pageSize,
+        pageNum: currentPage
+      }
+    })
+    if (res.code === 200) {
+      console.log('更新注销用户列表成功')
+      let v = res.data
+      total.value = v.total
+      userList.value = v.users
+      sessionStorage.setItem('nourish-logout-user-list', JSON.stringify(userList.value))
+      sessionStorage.setItem('nourish-logout-user-total', total.value.toString())
+      sessionStorage.removeItem('nourish-logout-user-info-updated')
+    } else {
+      ElMessage({message: '参数错误', type: 'error'})
+    }
+  } catch (err) {
     console.error(err)
     ElMessage({message: '系统错误', type: 'error'})
-  })
-  request.get('/user/logout-list', {
-    params: {
-      pageSize: pageSize,
-      pageNum: currentPage
-    }
-  }).then(res => {
-    console.log('更新注销用户列表成功')
-    let v = res.data
-    total.value = v.total
-    userList.value = v.users
-    sessionStorage.setItem('nourish-logout-user-list', JSON.stringify(userList.value))
-    sessionStorage.setItem('nourish-logout-user-total', total.value.toString())
-    sessionStorage.removeItem('nourish-logout-user-info-updated')
-  }).catch(err => {
-    console.log('更新注销用户列表失败,err = ', err)
-    ElMessage({message: '未能及时更新列表', type: 'warning'})
-  })
+  }
 }
 
 const deleteUser = (item) => {

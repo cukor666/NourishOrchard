@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 	"server/common"
-	"server/common/statucode"
 	"server/config"
 	"server/dao"
+	mc "server/models/code"
 	"server/request"
+	resc "server/response/code"
 	"server/utils"
 	"strconv"
 	"time"
@@ -46,7 +47,7 @@ func (l LoginService) Login(req request.LoginRequest) (string, error) {
 	exists := AccountService{}.IsExists(req.Username, promise)
 	if !exists {
 		return "", &common.MyError{
-			Code: statucode.NOTFOUNDACCOUNT,
+			Code: resc.NotFoundAccount,
 			Msg:  "账号不存在, 参数格式不正确: " + req.Username,
 		}
 	}
@@ -55,7 +56,7 @@ func (l LoginService) Login(req request.LoginRequest) (string, error) {
 	account, err := dao.AccountDao{}.Get(req.Username, promise)
 	if err != nil {
 		return "", &common.MyError{
-			Code: statucode.SYSTEMERR,
+			Code: resc.SystemError,
 			Msg:  "系统错误",
 		}
 	}
@@ -63,17 +64,17 @@ func (l LoginService) Login(req request.LoginRequest) (string, error) {
 	if !utils.PwdOK(account.Password, req.Password) {
 		levelLog("密码错误")
 		return "", &common.MyError{
-			Code: statucode.PASSWORDFAILED,
+			Code: resc.PasswordFailed,
 			Msg:  "密码错误",
 		}
 	}
 	uid := uint(0)
 	switch promise {
-	case common.USER:
+	case mc.USER:
 		uid, err = l.userLogin(account.Username)
-	case common.EMPLOYEE:
+	case mc.EMPLOYEE:
 		uid, err = l.employeeLogin(account.Username)
-	case common.ADMIN:
+	case mc.ADMIN:
 		uid, err = l.adminLogin(account.Username)
 	default:
 		levelLog("没有定义")
@@ -81,7 +82,7 @@ func (l LoginService) Login(req request.LoginRequest) (string, error) {
 	if err != nil {
 		levelLog("获取ID失败")
 		return "", &common.MyError{
-			Code: statucode.SYSTEMERR,
+			Code: resc.SystemError,
 			Msg:  "账号" + account.Username + "没有对应的ID, promise: " + strconv.Itoa(promise),
 		}
 	}
@@ -106,7 +107,7 @@ func (l LoginService) Login(req request.LoginRequest) (string, error) {
 	if err != nil {
 		levelLog("生成JWT失败")
 		return "", &common.MyError{
-			Code: statucode.SYSTEMERR,
+			Code: resc.SystemError,
 			Msg:  "系统错误无法生成JWT",
 		}
 	}

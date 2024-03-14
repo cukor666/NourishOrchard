@@ -3,9 +3,9 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"server/common"
 	"server/common/simpletool"
 	"server/config"
+	mc "server/models/code"
 	"server/response"
 	"server/service"
 	"server/utils"
@@ -40,7 +40,7 @@ func (a AdminController) List(context *gin.Context) {
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
 	promise := utils.PromiseToInt(claims["promise"].(string))
-	if promise < common.ADMIN {
+	if promise < mc.ADMIN {
 		levelLog("权限不够，无权访问用户列表")
 		response.Failed(context, "权限不够，无权访问")
 		return

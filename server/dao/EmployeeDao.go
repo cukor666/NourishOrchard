@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"fmt"
 	"server/common/simpletool"
 	"server/models"
 )
@@ -34,8 +35,19 @@ func (e EmployeeDao) Update(employee models.Employee) (models.Employee, error) {
 }
 
 // ListWithPage 查询员工列表，带有分页
-func (e EmployeeDao) ListWithPage(p simpletool.Page) (result []models.Employee, total int64, err error) {
-	tx := mysqlDB.Model(&models.Employee{}).Count(&total)
+func (e EmployeeDao) ListWithPage(p simpletool.Page, employee models.Employee) (result []models.Employee, total int64, err error) {
+	id, username, name, phone, position, salary := employee.SetZero()
+	employee.ID = id
+	employee.Salary = salary
+	tx := mysqlDB.Model(&employee).Where("id IN (?)",
+		mysqlDB.Model(&models.EmployeeStatus{}).Select("id").Where("status = ?", 1)).
+		Where(&employee).
+		Where("username LIKE ?", fmt.Sprintf("%%%s%%", username)).
+		Where("name LIKE ?", fmt.Sprintf("%%%s%%", name)).
+		Where("phone LIKE ?", fmt.Sprintf("%%%s%%", phone)).
+		Where("position LIKE ?", fmt.Sprintf("%%%s%%", position)).
+		Count(&total)
+	levelLog(fmt.Sprintf("total = %d", total))
 	err = tx.Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
 	if err != nil {
 		levelLog("查询员工信息失败")

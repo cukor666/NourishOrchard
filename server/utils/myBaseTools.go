@@ -2,17 +2,17 @@ package utils
 
 import (
 	"golang.org/x/crypto/bcrypt"
-	"server/common"
+	mc "server/models/code"
 	"strings"
 )
 
 func PromiseToString(promise int) string {
 	switch promise {
-	case common.USER:
+	case mc.USER:
 		return "user"
-	case common.EMPLOYEE:
-		return "employee"
-	case common.ADMIN:
+	case mc.EMPLOYEE:
+		return "empcode"
+	case mc.ADMIN:
 		return "admin"
 	}
 	return ""
@@ -22,11 +22,11 @@ func PromiseToInt(promise string) int {
 	promise = strings.ToLower(promise)
 	switch promise {
 	case "user":
-		return common.USER
-	case "employee":
-		return common.EMPLOYEE
+		return mc.USER
+	case "empcode":
+		return mc.EMPLOYEE
 	case "admin":
-		return common.ADMIN
+		return mc.ADMIN
 	}
 	return 0
 }

@@ -31,9 +31,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="cancel">取消</el-button>
-        <el-button type="primary" @click="search">
-          搜索
-        </el-button>
+        <el-button type="primary" @click="search">搜索</el-button>
       </div>
     </template>
   </el-dialog>
