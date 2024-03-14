@@ -11,7 +11,7 @@ func PromiseToString(promise int) string {
 	case mc.USER:
 		return "user"
 	case mc.EMPLOYEE:
-		return "empcode"
+		return "employee"
 	case mc.ADMIN:
 		return "admin"
 	}
@@ -23,7 +23,7 @@ func PromiseToInt(promise string) int {
 	switch promise {
 	case "user":
 		return mc.USER
-	case "empcode":
+	case "employee":
 		return mc.EMPLOYEE
 	case "admin":
 		return mc.ADMIN

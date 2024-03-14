@@ -15,6 +15,8 @@ var redisDB = config.GetConfig().RedisConfig.GetClient()
 
 type AccountDao struct{}
 type UserDao struct{}
+type AdminDao struct{}
+type EmployeeDao struct{}
 type FruitDao struct{}
 
 // 初始化数据源，以连接数据库

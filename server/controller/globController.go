@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
+	"server/controller/args/header"
 	"server/dao"
 	"server/response"
 	resc "server/response/code"
@@ -25,8 +26,8 @@ type AdminController struct{}
 
 // ValidAuthorization 校验authorization
 func ValidAuthorization(ctx *gin.Context) {
-	authorization := ctx.GetHeader("Authorization")
-	username := ctx.GetHeader("username")
+	authorization := ctx.GetHeader(header.Authorization)
+	username := ctx.GetHeader(header.Username)
 	token, err := GetToken(authorization)
 	if err != nil {
 		levelLog("token校验失败")

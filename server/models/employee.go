@@ -10,7 +10,7 @@ type Employee struct {
 }
 
 func (e Employee) TableName() string {
-	return "empcode"
+	return "employee"
 }
 
 // SetZero 设置字段为零值

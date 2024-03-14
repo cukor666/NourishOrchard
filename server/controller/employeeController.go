@@ -5,6 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"server/common/simpletool"
 	"server/config"
+	cm "server/controller/args/claims"
+	"server/controller/args/header"
 	"server/models"
 	mc "server/models/code"
 	"server/response"
@@ -25,7 +27,7 @@ params:
 */
 func (e EmployeeController) List(context *gin.Context) {
 	// 解析token
-	authorization := context.GetHeader("Authorization")
+	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
 		levelLog("获取token失败，请检查token是否过期")
@@ -40,7 +42,7 @@ func (e EmployeeController) List(context *gin.Context) {
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
-	promise := utils.PromiseToInt(claims["promise"].(string))
+	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise < mc.ADMIN {
 		levelLog("权限不够，无权访问用户列表")
 		response.Failed(context, "权限不够，无权访问")
@@ -100,7 +102,7 @@ body:
 */
 func (e EmployeeController) Update(context *gin.Context) {
 	// 解析token
-	authorization := context.GetHeader("Authorization")
+	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
 		levelLog("获取token失败，请检查token是否过期")
@@ -115,7 +117,7 @@ func (e EmployeeController) Update(context *gin.Context) {
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
-	promise := utils.PromiseToInt(claims["promise"].(string))
+	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise < mc.ADMIN {
 		levelLog("权限不够，更新用户信息")
 		response.Failed(context, "权限不够，无权操作")
@@ -130,7 +132,7 @@ func (e EmployeeController) Update(context *gin.Context) {
 		response.Failed(context, "参数绑定失败")
 		return
 	}
-	levelLog(fmt.Sprintf("empcode: %v", employee))
+	levelLog(fmt.Sprintf("employee: %v", employee))
 	err = service.EmployeeService{}.Update(employee)
 	if err != nil {
 		levelLog("更新失败")

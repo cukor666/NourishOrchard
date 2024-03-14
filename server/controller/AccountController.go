@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"server/config"
+	cm "server/controller/args/claims"
+	"server/controller/args/header"
 	"server/models"
 	mc "server/models/code"
 	"server/response"
@@ -25,7 +27,7 @@ body: 空
 */
 func (a AccountController) GetAccount(context *gin.Context) {
 	// 解析token
-	authorization := context.GetHeader("Authorization")
+	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
 		levelLog("获取token失败，请检查token是否过期")
@@ -40,8 +42,8 @@ func (a AccountController) GetAccount(context *gin.Context) {
 		return
 	}
 	// 查询数据库，将对应的账户个人信息返回给前端
-	username := claims["username"]
-	promise := utils.PromiseToInt(claims["promise"].(string))
+	username := claims[cm.Username]
+	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	switch promise {
 	case mc.USER:
 		// 调用UserService
@@ -62,7 +64,7 @@ func (a AccountController) GetAccount(context *gin.Context) {
 			return
 		}
 		response.Success(context, gin.H{
-			"promise": "empcode",
+			"promise": "employee",
 			"data":    emp,
 		}, "查询成功")
 	case mc.ADMIN:
@@ -98,7 +100,7 @@ body:
 */
 func (a AccountController) Update(context *gin.Context) {
 	// 解析token
-	authorization := context.GetHeader("Authorization")
+	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
 		levelLog("获取token失败，请检查token是否过期")
@@ -113,8 +115,8 @@ func (a AccountController) Update(context *gin.Context) {
 		return
 	}
 	// 查询数据库，将对应的账户个人信息返回给前端
-	username := claims["username"]
-	promise := utils.PromiseToInt(claims["promise"].(string))
+	username := claims[cm.Username]
+	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	var (
 		user     models.User
 		admin    models.Admin

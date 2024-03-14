@@ -5,6 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"server/common/simpletool"
 	"server/config"
+	cm "server/controller/args/claims"
+	"server/controller/args/header"
 	"server/models"
 	mc "server/models/code"
 	"server/response"
@@ -33,7 +35,7 @@ http://localhost:9000/user/list?pageSize=3&pageNum=2&id=3&username=CZKJ991706344
 */
 func (u UserController) List(context *gin.Context) {
 	// 解析token
-	authorization := context.GetHeader("Authorization")
+	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
 		levelLog("获取token失败，请检查token是否过期")
@@ -48,7 +50,7 @@ func (u UserController) List(context *gin.Context) {
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
-	promise := utils.PromiseToInt(claims["promise"].(string))
+	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise <= mc.USER {
 		levelLog("权限不够，无权访问用户列表")
 		response.Failed(context, "权限不够，无权访问")
@@ -113,7 +115,7 @@ body:
 */
 func (u UserController) Update(context *gin.Context) {
 	// 解析token
-	authorization := context.GetHeader("Authorization")
+	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
 		levelLog("获取token失败，请检查token是否过期")
@@ -128,7 +130,7 @@ func (u UserController) Update(context *gin.Context) {
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
-	promise := utils.PromiseToInt(claims["promise"].(string))
+	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise < mc.ADMIN {
 		levelLog("权限不够，更新用户信息")
 		response.Failed(context, "权限不够，无权操作")
@@ -156,7 +158,7 @@ func (u UserController) Update(context *gin.Context) {
 // Delete 删除用户接口
 func (u UserController) Delete(context *gin.Context) {
 	// 解析token
-	authorization := context.GetHeader("Authorization")
+	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
 		levelLog("获取token失败，请检查token是否过期")
@@ -171,7 +173,7 @@ func (u UserController) Delete(context *gin.Context) {
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
-	promise := utils.PromiseToInt(claims["promise"].(string))
+	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise < mc.ADMIN {
 		levelLog("权限不够，更新用户信息")
 		response.Failed(context, "权限不够，无权操作")
@@ -184,7 +186,7 @@ func (u UserController) Delete(context *gin.Context) {
 		response.Failed(context, "参数错误")
 		return
 	}
-	ok := valid.ValidUsername(username)
+	ok := valid.Username(username)
 	if !ok {
 		levelLog("账号校验失败")
 		response.Failed(context, "参数校验失败")
@@ -213,7 +215,7 @@ http://localhost:9000/user/logout-list?pageSize=3&pageNum=2
 */
 func (u UserController) LogoutList(context *gin.Context) {
 	// 解析token
-	authorization := context.GetHeader("Authorization")
+	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
 		levelLog("获取token失败，请检查token是否过期")
@@ -228,7 +230,7 @@ func (u UserController) LogoutList(context *gin.Context) {
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
-	promise := utils.PromiseToInt(claims["promise"].(string))
+	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise <= mc.USER {
 		levelLog("权限不够，无权访问用户列表")
 		response.Failed(context, "权限不够，无权访问")
@@ -285,7 +287,7 @@ body:
 */
 func (u UserController) RecoverUser(context *gin.Context) {
 	// 解析token
-	authorization := context.GetHeader("Authorization")
+	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
 		levelLog("获取token失败，请检查token是否过期")
@@ -300,7 +302,7 @@ func (u UserController) RecoverUser(context *gin.Context) {
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
-	promise := utils.PromiseToInt(claims["promise"].(string))
+	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise < mc.ADMIN {
 		levelLog("权限不够，更新用户信息")
 		response.Failed(context, "权限不够，无权操作")
@@ -317,7 +319,7 @@ func (u UserController) RecoverUser(context *gin.Context) {
 		response.Failed(context, "参数绑定失败")
 		return
 	}
-	ok := valid.ValidUsername(req.Username)
+	ok := valid.Username(req.Username)
 	if !ok {
 		levelLog("账号校验失败")
 		response.Failed(context, "参数校验失败")

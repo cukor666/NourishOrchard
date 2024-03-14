@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"server/common/simpletool"
 	"server/models"
+	empc "server/models/code"
 )
-
-type EmployeeDao struct{}
 
 func (e EmployeeDao) GetUId(username string) (id uint, err error) {
 	err = mysqlDB.Table(models.Employee{}.TableName()).
@@ -40,7 +39,7 @@ func (e EmployeeDao) ListWithPage(p simpletool.Page, employee models.Employee) (
 	employee.ID = id
 	employee.Salary = salary
 	tx := mysqlDB.Model(&employee).Where("id IN (?)",
-		mysqlDB.Model(&models.EmployeeStatus{}).Select("id").Where("status = ?", 1)).
+		mysqlDB.Model(&models.EmployeeStatus{}).Select("id").Where("status = ?", empc.Employed)).
 		Where(&employee).
 		Where("username LIKE ?", fmt.Sprintf("%%%s%%", username)).
 		Where("name LIKE ?", fmt.Sprintf("%%%s%%", name)).

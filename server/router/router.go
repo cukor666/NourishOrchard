@@ -34,8 +34,8 @@ func middleWare(r *gin.Engine) {
 
 // 注册路由
 func register(r *gin.Engine) {
-	r.POST("/register", controller.RegisterController{}.Register)
-	r.POST("/login", controller.LoginController{}.Login)
+	r.POST("/register", controller.RegisterController{}.Register) // 注册
+	r.POST("/login", controller.LoginController{}.Login)          // 登录
 
 	// 账户管理
 	// 内部处理不同权限的功能调用
@@ -48,23 +48,23 @@ func register(r *gin.Engine) {
 	// 用户管理
 	userGroup := r.Group("/user", controller.ValidAuthorization)
 	{
-		userGroup.GET("/list", controller.UserController{}.List)
-		userGroup.PUT("/update", controller.UserController{}.Update)
-		userGroup.DELETE("/delete", controller.UserController{}.Delete)
-		userGroup.GET("/logout-list", controller.UserController{}.LogoutList)
-		userGroup.POST("/recover", controller.UserController{}.RecoverUser)
+		userGroup.GET("/list", controller.UserController{}.List)              // 用户列表
+		userGroup.PUT("/update", controller.UserController{}.Update)          // 更新用户信息
+		userGroup.DELETE("/delete", controller.UserController{}.Delete)       // 删除用户信息
+		userGroup.GET("/logout-list", controller.UserController{}.LogoutList) // 注销用户列表
+		userGroup.POST("/recover", controller.UserController{}.RecoverUser)   // 恢复用户信息
 	}
 
 	// 员工管理
-	employeeGroup := r.Group("/empcode", controller.ValidAuthorization)
+	employeeGroup := r.Group("/employee", controller.ValidAuthorization)
 	{
-		employeeGroup.GET("/list", controller.EmployeeController{}.List)
-		employeeGroup.PUT("/update", controller.EmployeeController{}.Update)
+		employeeGroup.GET("/list", controller.EmployeeController{}.List)     // 员工列表
+		employeeGroup.PUT("/update", controller.EmployeeController{}.Update) // 更新员工信息
 	}
 
 	// 管理员管理
 	adminGroup := r.Group("/admin", controller.ValidAuthorization)
 	{
-		adminGroup.GET("/list", controller.AdminController{}.List)
+		adminGroup.GET("/list", controller.AdminController{}.List) // 管理员列表
 	}
 }
