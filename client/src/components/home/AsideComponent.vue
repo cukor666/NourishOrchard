@@ -70,6 +70,8 @@ import {useAdmin} from "@/hooks/aside/useAdmin.js";
 import {useFruit} from "@/hooks/aside/useFruit.js";
 import {useLogoutUser} from "@/hooks/aside/useLogoutUser.js";
 import {useEmployee} from "@/hooks/aside/useEmployee.js";
+import {useLocalKey} from "@/hooks/common/useLocalKey.js";
+import {useSessionKey} from "@/hooks/common/useSessionKey.js";
 
 const {goHome} = useHome()
 const {gotoUserList} = useUser()
@@ -80,8 +82,11 @@ const {gotoFruitList} = useFruit()
 
 const asideStore = useAsideStore()
 
+const { NourishPromise } = useLocalKey()
+const sessionKey = useSessionKey()
+
 const promise = computed(() => {
-  return sessionStorage.getItem('nourish-promise') || localStorage.getItem('nourish-promise')
+  return sessionStorage.getItem(sessionKey.NourishPromise) || localStorage.getItem(NourishPromise)
 })
 
 const showItemContent = computed(() => {

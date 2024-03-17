@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 	"server/common/simpletool"
 	"server/dao"
@@ -62,4 +63,15 @@ func (u UserService) RecoverUser(username string) (models.User, error) {
 		return models.User{}, err
 	}
 	return user, nil
+}
+
+// RemoveUser 彻底删除用户
+func (u UserService) RemoveUser(id uint, username string) error {
+	user, err := dao.UserDao{}.RemoveUser(id, username)
+	if err != nil {
+		levelLog(fmt.Sprintf("删除用户失败，user = %v", user))
+		return err
+	}
+	levelLog(fmt.Sprintf("删除用户成功，user = %v", user))
+	return nil
 }

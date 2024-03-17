@@ -1,4 +1,7 @@
 import {computed, ref} from "vue";
+import {useSessionKey} from "@/hooks/common/useSessionKey.js";
+
+const { NourishUserInfoUpdated } = useSessionKey()
 
 export function useDetail() {
     const detailDialogV = ref(false)
@@ -12,14 +15,14 @@ export function useDetail() {
         birthday: ""
     })
     const userInfoUpdated = computed(() => {
-        return sessionStorage.getItem('nourish-user-info-updated') || "false"
+        return sessionStorage.getItem(NourishUserInfoUpdated) || "false"
     })
     const closeDetailDialog = () => {
         detailDialogV.value = false
     }
     const updateUser = () => {
         console.log('执行了更新用户的函数')
-        sessionStorage.setItem('nourish-user-info-updated', "true")
+        sessionStorage.setItem(NourishUserInfoUpdated, "true")
     }
 
     return {

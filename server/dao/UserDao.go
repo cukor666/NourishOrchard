@@ -149,3 +149,33 @@ func (u UserDao) RecoverUser(username string) (user models.User, err error) {
 	tx.Commit()
 	return user, nil
 }
+
+// RemoveUser 彻底删除用户
+func (u UserDao) RemoveUser(id uint, username string) (user models.LogoutUser, err error) {
+	tx := mysqlDB.Begin()
+	err = tx.Model(&models.LogoutUser{}).
+		Where("id = ?", id).Where("username = ?", username).Delete(&user).Error
+	if err != nil {
+		levelLog(fmt.Sprintf("从%s表中删除用户失败, user = %v", user.TableName(), user))
+		tx.Rollback()
+		return models.LogoutUser{}, err
+	}
+	err = tx.Model(&models.Account{}).Unscoped().Where("username = ?", username).Delete(&models.Account{}).Error
+	if err != nil {
+		levelLog(fmt.Sprintf("从%s表中删除%s用户失败", models.Account{}.TableName(), username))
+		tx.Rollback()
+		return models.LogoutUser{}, err
+	}
+	tx.Commit()
+	return user, nil
+}
+
+// SelectByUsernameAndPhone 通过账号和电话查找用户信息
+func (u UserDao) SelectByUsernameAndPhone(username, phone string) (user models.User, err error) {
+	err = mysqlDB.Model(&models.User{}).Where("username = ? AND phone = ?", username, phone).Take(&user).Error
+	if err != nil {
+		levelLog(fmt.Sprintf("查询用户失败, user = %v", user))
+		return models.User{}, err
+	}
+	return user, nil
+}

@@ -72,8 +72,13 @@ import {useEmployeeInfoStore} from '@/stores/employeeInfo'
 import {useTagsStore} from "@/stores/tags.js";
 
 import {storeToRefs} from "pinia";
+import {useLocalKey} from "@/hooks/common/useLocalKey.js";
+import {useSessionKey} from "@/hooks/common/useSessionKey.js";
 
-const promise = ref(sessionStorage.getItem('nourish-promise') || localStorage.getItem('nourish-promise'))
+const { NourishAccount, NourishToken, NourishPromise } = useLocalKey()
+const sessionKey = useSessionKey()
+
+const promise = ref(sessionStorage.getItem(sessionKey.NourishPromise) || localStorage.getItem(NourishPromise))
 
 // 用户store
 const userInfoStore = useUserInfoStore()
@@ -112,14 +117,8 @@ const errWord = reactive({
 
 // 表单参数校验
 const {
-  validName,
-  validGender,
-  validPhone,
-  validAddress,
-  validBirthday,
-  validEmail,
-  validPosition,
-  validSalary
+  validName, validGender, validPhone, validAddress, validBirthday, validEmail,
+  validPosition, validSalary
 } = useValid(errWord)
 
 // 整体校验一遍
@@ -168,10 +167,7 @@ const updateUser = () => {
   valid()
   for (const key in errWord) {
     if (errWord[key] !== '') {
-      ElMessage({
-        message: '用户信息不正确',
-        type: 'error'
-      })
+      ElMessage({message: '用户信息不正确', type: 'error'})
       return
     }
   }
@@ -200,19 +196,13 @@ const selfInfo = () => {
       } else if (v.promise === 'employee') {
         setEmployee(v.data)
       } else {
-        ElMessage({
-          message: '尚未开发',
-          type: 'error'
-        })
+        ElMessage({message: '尚未开发', type: 'error'})
       }
     } else {
-      ElMessage({
-        message: '请求失败，请退出重新登录',
-        type: 'error'
-      })
-      localStorage.removeItem('nourish-token')
-      localStorage.removeItem('nourish-account')
-      sessionStorage.removeItem('nourish-promise')
+      ElMessage({message: '请求失败，请退出重新登录', type: 'error'})
+      localStorage.removeItem(NourishToken)
+      localStorage.removeItem(NourishAccount)
+      sessionStorage.removeItem(sessionKey.NourishPromise)
       router.replace({name: 'Login'})
     }
   }).catch(err => {
@@ -224,11 +214,23 @@ const selfInfo = () => {
 
 const exitDialogVisible = ref(false)
 
-const exit = () => {
-  localStorage.removeItem('nourish-token')
-  localStorage.removeItem('nourish-account')
+const exit = async () => {
+  // 先向后端发送删除token的请求，然后再删除前端的storage
+  try {
+    let res = await request.get('/account/exit')
+    if (res.code === 200) {
+      ElMessage({message: res.data + '退出成功', type: 'success'})
+    } else {
+      ElMessage({message: '参数错误', type: 'error'})
+    }
+  } catch (e) {
+    console.error(e)
+    ElMessage({message: '服务器端错误', type: 'error'})
+  }
+  localStorage.removeItem(NourishToken)
+  localStorage.removeItem(NourishAccount)
   exitDialogVisible.value = false
-  router.push({name: "Login"})
+  await router.push({name: "Login"})
 }
 
 </script>

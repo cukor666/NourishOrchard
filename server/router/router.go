@@ -23,7 +23,7 @@ func Start() {
 func middleWare(r *gin.Engine) {
 	// 配置CORS
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{clientDomain}, // 允许的域名列表，使用*允许所有域名
+		AllowOrigins:     domains[:], // 允许的域名列表，使用*允许所有域名
 		AllowMethods:     []string{"PUT", "PATCH", "GET", "POST", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "username"},
 		ExposeHeaders:    []string{"Content-Length"},
@@ -34,15 +34,18 @@ func middleWare(r *gin.Engine) {
 
 // 注册路由
 func register(r *gin.Engine) {
-	r.POST("/register", controller.RegisterController{}.Register) // 注册
-	r.POST("/login", controller.LoginController{}.Login)          // 登录
+	r.POST("/register", controller.RegisterController{}.Register)            // 注册
+	r.POST("/login", controller.LoginController{}.Login)                     // 登录
+	r.PUT("/forget-password", controller.AccountController{}.ForgetPassword) // 忘记密码
 
 	// 账户管理
 	// 内部处理不同权限的功能调用
 	accountGroup := r.Group("/account", controller.ValidAuthorization)
 	{
-		accountGroup.GET("/get", controller.AccountController{}.GetAccount) // 获取个人信息
-		accountGroup.PUT("/update", controller.AccountController{}.Update)  // 更新个人信息
+		accountGroup.GET("/get", controller.AccountController{}.GetAccount)                 // 获取个人信息
+		accountGroup.PUT("/update", controller.AccountController{}.Update)                  // 更新个人信息
+		accountGroup.GET("/exit", controller.AccountController{}.Exit)                      // 退出登录
+		accountGroup.PUT("/change-password", controller.AccountController{}.ChangePassword) // 修改账户密码
 	}
 
 	// 用户管理
@@ -53,6 +56,7 @@ func register(r *gin.Engine) {
 		userGroup.DELETE("/delete", controller.UserController{}.Delete)       // 删除用户信息
 		userGroup.GET("/logout-list", controller.UserController{}.LogoutList) // 注销用户列表
 		userGroup.POST("/recover", controller.UserController{}.RecoverUser)   // 恢复用户信息
+		userGroup.DELETE("/remove", controller.UserController{}.RemoveUser)   // 彻底删除用户
 	}
 
 	// 员工管理

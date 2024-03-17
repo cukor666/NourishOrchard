@@ -8,6 +8,7 @@ import (
 	"server/controller/args/header"
 	"server/models"
 	mc "server/models/code"
+	"server/request"
 	"server/response"
 	"server/service"
 	"server/utils"
@@ -175,4 +176,128 @@ func (a AccountController) Update(context *gin.Context) {
 		return
 	}
 	response.Success(context, 0, "更新成功")
+}
+
+// Exit 账号退出登录
+/**
+header:
+	Bearer Token
+	username: CZKJ991706348185
+*/
+func (a AccountController) Exit(context *gin.Context) {
+	// 解析token
+	authorization := context.GetHeader(header.Authorization)
+	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
+	if err != nil {
+		levelLog("获取token失败，请检查token是否过期")
+		response.Failed(context, "获取token失败，请检查token是否过期")
+		return
+	}
+	// 解析token，或token里面的内容
+	claims, err := config.ParseAndVerifyJWT(token)
+	if err != nil {
+		levelLog("解析token失败")
+		response.Failed(context, "解析token失败")
+		return
+	}
+	// 查询数据库，将对应的账户个人信息返回给前端
+	username := claims[cm.Username]
+	promise := utils.PromiseToInt(claims[cm.Promise].(string))
+	switch promise {
+	case mc.USER, mc.ADMIN, mc.EMPLOYEE:
+		err = service.AccountService{}.Exit(username.(string))
+		if err != nil {
+			levelLog("服务器错误退出失败")
+			response.Failed(context, "服务器错误退出失败")
+			return
+		}
+		response.Success(context, username, "退出成功")
+	default:
+		levelLog(fmt.Sprintf("权限不正确，promise: %d", promise))
+		response.Failed(context, "权限不正确")
+		return
+	}
+}
+
+// ChangePassword 修改账户密码
+func (a AccountController) ChangePassword(context *gin.Context) {
+	// 解析token
+	authorization := context.GetHeader(header.Authorization)
+	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
+	if err != nil {
+		levelLog("获取token失败，请检查token是否过期")
+		response.Failed(context, "获取token失败，请检查token是否过期")
+		return
+	}
+	// 解析token，或token里面的内容
+	claims, err := config.ParseAndVerifyJWT(token)
+	if err != nil {
+		levelLog("解析token失败")
+		response.Failed(context, "解析token失败")
+		return
+	}
+	username := claims[cm.Username]
+	promise := utils.PromiseToInt(claims[cm.Promise].(string))
+	type pwdType struct {
+		OldPassword string `json:"oldPassword" form:"oldPassword"`
+		NewPassword string `json:"newPassword" form:"newPassword"`
+	}
+	var pwd pwdType
+	err = context.ShouldBindJSON(&pwd)
+	if err != nil {
+		levelLog(fmt.Sprintf("绑定前端数据失败, pwd = %v", pwd))
+		response.Failed(context, "参数错误")
+		return
+	}
+	switch promise {
+	case mc.USER, mc.ADMIN, mc.EMPLOYEE:
+		err = service.AccountService{}.ChangePassword(username.(string), pwd.OldPassword, pwd.NewPassword)
+		if err != nil {
+			levelLog("服务器错误修改密码失败")
+			response.Failed(context, "服务器错误修改密码失败")
+			return
+		}
+		response.Success(context, username, "修改密码成功")
+	default:
+		levelLog(fmt.Sprintf("权限不正确，promise: %d", promise))
+		response.Failed(context, "权限不正确")
+		return
+	}
+}
+
+// ForgetPassword 用户忘记密码
+func (a AccountController) ForgetPassword(context *gin.Context) {
+	var (
+		req request.ForgetPwdReq
+		err error
+	)
+
+	err = context.ShouldBindJSON(&req)
+	if err != nil {
+		levelLog(fmt.Sprintf("数据绑定失败， req = %v", req))
+		response.Failed(context, "参数错误")
+		return
+	}
+	promise := utils.PromiseToInt(req.Promise)
+	if promise != mc.USER {
+		levelLog(fmt.Sprintf("权限不正确，promise = %s", req.Promise))
+		response.Failed(context, "权限不正确，拒绝请求")
+		return
+	}
+
+	// 校验短信验证码
+	myCode := "1024"
+	if req.Code != myCode {
+		levelLog(fmt.Sprintf("验证码错误应该得到：%s，却得到%s", myCode, req.Code))
+		response.Failed(context, "验证码错误")
+		return
+	}
+
+	err = service.AccountService{}.ForgetPassword(req)
+	if err != nil {
+		levelLog("服务器错误，忘记密码接口拒绝请求")
+		response.Failed(context, "服务器错误")
+		return
+	}
+	response.Success(context, 0, "忘记密码更改密码成功")
 }

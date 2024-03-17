@@ -54,16 +54,24 @@ const asideStyle = () => {
 }
 
 @keyframes changeAside {
-  0%, 100% {
+  0% {
     border-radius: 0;
   }
 
-  25%, 75% {
+  25% {
     border-radius: 0 15px 15px 0;
   }
 
   50% {
     border-radius: 0 30px 30px 0;
+  }
+
+  75% {
+    border-radius: 0 15px 15px 0;
+  }
+
+  100% {
+    border-radius: 0;
   }
 }
 </style>
