@@ -54,3 +54,13 @@ func (e EmployeeDao) ListWithPage(p simpletool.Page, employee models.Employee) (
 	}
 	return result, total, nil
 }
+
+// SelectByUsernameAndPhone 通过账号和电话查找员工信息
+func (e EmployeeDao) SelectByUsernameAndPhone(username, phone string) (employee models.Employee, err error) {
+	err = mysqlDB.Model(&models.Employee{}).Where("username = ? AND phone = ?", username, phone).Take(&employee).Error
+	if err != nil {
+		levelLog(fmt.Sprintf("查找员工失败, employee = %v", employee))
+		return models.Employee{}, err
+	}
+	return employee, nil
+}

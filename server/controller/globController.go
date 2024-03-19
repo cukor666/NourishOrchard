@@ -21,6 +21,7 @@ type RegisterController struct{}
 type UserController struct{}
 type EmployeeController struct{}
 type AdminController struct{}
+type FruitController struct{}
 
 // 私有的结构体
 

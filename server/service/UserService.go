@@ -7,6 +7,8 @@ import (
 	"server/common/simpletool"
 	"server/dao"
 	"server/models"
+	"server/request"
+	"server/utils"
 )
 
 // Info 根据用户名获取用户信息
@@ -73,5 +75,28 @@ func (u UserService) RemoveUser(id uint, username string) error {
 		return err
 	}
 	levelLog(fmt.Sprintf("删除用户成功，user = %v", user))
+	return nil
+}
+
+// ForgetPassword 用户忘记密码
+func (u UserService) ForgetPassword(req request.ForgetPwdReq) (err error) {
+	// 校验数据库是否有该用户并且校验绑定的号码是否正确
+	_, err = dao.UserDao{}.SelectByUsernameAndPhone(req.Username, req.Phone)
+	if err != nil {
+		levelLog("用户绑定电话错误")
+		return err
+	}
+	// 对新密码加密
+	pwd, err := utils.GetPwd(req.Password)
+	if err != nil {
+		levelLog("新密码加密失败")
+		return err
+	}
+	// 更新新密码
+	err = dao.AccountDao{}.ChangePassword(req.Username, string(pwd))
+	if err != nil {
+		levelLog("修改密码错误")
+		return err
+	}
 	return nil
 }

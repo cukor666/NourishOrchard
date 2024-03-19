@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"fmt"
 	"server/common/simpletool"
 	"server/models"
 )
@@ -38,4 +39,14 @@ func (a AdminDao) ListWithPage(p simpletool.Page) (result []models.Admin, total 
 		return nil, 0, err
 	}
 	return result, total, nil
+}
+
+// SelectByUsernameAndEmail 根据账号和邮箱查找管理员
+func (a AdminDao) SelectByUsernameAndEmail(username, email string) (admin models.Admin, err error) {
+	err = mysqlDB.Model(&models.Admin{}).Where("username = ? AND email = ?", username, email).Take(&admin).Error
+	if err != nil {
+		levelLog(fmt.Sprintf("查询管理员失败，admin = %v", admin))
+		return models.Admin{}, err
+	}
+	return admin, nil
 }

@@ -1,3 +1,4 @@
+2
 <template>
   <div class="container">
     <div class="path__content">
@@ -13,6 +14,7 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="selfInfo">个人信息</el-dropdown-item>
+            <el-dropdown-item @click="changePwdDialogV = true">修改密码</el-dropdown-item>
             <el-dropdown-item @click="exitDialogVisible = true">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -42,6 +44,30 @@
     </template>
   </el-dialog>
 
+  <el-dialog v-model="changePwdDialogV" title="修改密码" width="500" align-center>
+    <el-form label-width="100px">
+      <el-form-item label="原密码：">
+        <el-input v-model="oldPassword" type="password" clearable placeholder="请输入原密码"/>
+      </el-form-item>
+      <el-form-item label="新密码：">
+        <el-input v-model="password" type="password" clearable placeholder="请输入新密码"
+                  @blur="validPassword(password)"/>
+      </el-form-item>
+      <div class="error-word change-pwd" v-if="errWord2.password">{{ errWord2.password }}</div>
+      <el-form-item label="再次确认：">
+        <el-input v-model="password2" type="password" clearable placeholder="再次输入新密码"
+                  @blur="validPassword2(password,password2)"/>
+      </el-form-item>
+      <div class="error-word change-pwd" v-if="errWord2.password2">{{ errWord2.password2 }}</div>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="changePwdCancel">取消</el-button>
+        <el-button type="primary" @click="changePwd">修改</el-button>
+      </div>
+    </template>
+  </el-dialog>
+
   <el-dialog v-model="exitDialogVisible" title="退出" width="300" align-center>
     <span>你确定要退出吗？</span>
 
@@ -62,7 +88,7 @@ import {useAdminInfo} from '@/hooks/header/useAdminInfo'
 import {useEmployeeInfo} from "@/hooks/header/useEmployeeInfo";
 import {useValid} from '@/hooks/common/useValid'
 import request from '@/axios/request'
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import UserInfo from "./dialog/UserInfo.vue";
 import AdminInfo from "./dialog/AdminInfo.vue";
 import EmployeeInfo from "./dialog/EmployeeInfo.vue";
@@ -75,7 +101,7 @@ import {storeToRefs} from "pinia";
 import {useLocalKey} from "@/hooks/common/useLocalKey.js";
 import {useSessionKey} from "@/hooks/common/useSessionKey.js";
 
-const { NourishAccount, NourishToken, NourishPromise } = useLocalKey()
+const {NourishAccount, NourishToken, NourishPromise} = useLocalKey()
 const sessionKey = useSessionKey()
 
 const promise = ref(sessionStorage.getItem(sessionKey.NourishPromise) || localStorage.getItem(NourishPromise))
@@ -212,6 +238,60 @@ const selfInfo = () => {
   selfInfoDialogVisible.value = true
 }
 
+const changePwdDialogV = ref(false)
+
+const oldPassword = ref('')
+const password = ref('')
+const password2 = ref('')
+
+const errWord2 = reactive({
+  password: '',
+  password2: ''
+})
+
+const {validPassword, validPassword2} = useValid(errWord2)
+
+const changePwdCancel = () => {
+  oldPassword.value = ''
+  password.value = ''
+  password2.value = ''
+  changePwdDialogV.value = false
+}
+
+const changePwd = () => {
+  validPassword(password.value)
+  validPassword2(password.value, password2.value)
+  for (let key in errWord2) {
+    if (errWord2[key] !== '') {
+      ElMessage({message: '校验不通过', type: 'error'})
+      return
+    }
+  }
+
+  ElMessageBox.confirm('您确定要修改密码吗', 'Warning', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    request.put('/account/change-password', {
+      oldPassword: oldPassword.value,
+      newPassword: password.value
+    }).then(res => {
+      if (res.code === 200) {
+        exit()
+        ElMessage({message: '修改密码成功，请重新登录', type: 'success'})
+      } else {
+        ElMessage({message: '参数错误', type: 'error'})
+      }
+    }).catch(err => {
+      console.error(err)
+      ElMessage({message: '系统错误', type: 'error'})
+    })
+  }).catch(() => {
+    ElMessage({message: '取消更改', type: 'info'})
+  })
+}
+
 const exitDialogVisible = ref(false)
 
 const exit = async () => {
@@ -243,4 +323,10 @@ const exit = async () => {
   margin-left: 100px;
   margin-top: -18px;
 }
+
+.change-pwd {
+  margin-left: 100px;
+  margin-top: -18px;
+}
+
 </style>

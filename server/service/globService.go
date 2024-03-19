@@ -10,6 +10,7 @@ type RegisterService struct{}
 type UserService struct{}
 type EmployeeService struct{}
 type AdminService struct{}
+type FruitService struct{}
 
 func levelLog(w string) {
 	log.Println("service层：", w)

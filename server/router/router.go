@@ -71,4 +71,10 @@ func register(r *gin.Engine) {
 	{
 		adminGroup.GET("/list", controller.AdminController{}.List) // 管理员列表
 	}
+
+	// 水果管理
+	fruitGroup := r.Group("/fruit", controller.ValidAuthorization)
+	{
+		fruitGroup.GET("/list", controller.FruitController{}.List) // 水果列表
+	}
 }

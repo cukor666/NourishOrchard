@@ -11,5 +11,5 @@ type Fruit struct {
 }
 
 func (f Fruit) TableName() string {
-	return "fruit"
+	return "fruits"
 }

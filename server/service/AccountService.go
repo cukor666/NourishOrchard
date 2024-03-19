@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"regexp"
 	"server/dao"
-	"server/request"
 	"server/utils"
 )
 
@@ -55,29 +54,6 @@ func (a AccountService) ChangePassword(username, oldPassword, newPassword string
 	err = dao.AccountDao{}.ChangePassword(username, string(newPwd))
 	if err != nil {
 		levelLog("修改密码失败")
-		return err
-	}
-	return nil
-}
-
-// ForgetPassword 用户忘记密码
-func (a AccountService) ForgetPassword(req request.ForgetPwdReq) (err error) {
-	// 校验数据库是否有该用户并且校验绑定的号码是否正确
-	_, err = dao.UserDao{}.SelectByUsernameAndPhone(req.Username, req.Phone)
-	if err != nil {
-		levelLog("用户绑定电话错误")
-		return err
-	}
-	// 对新密码加密
-	pwd, err := utils.GetPwd(req.Password)
-	if err != nil {
-		levelLog("新密码加密失败")
-		return err
-	}
-	// 更新新密码
-	err = dao.AccountDao{}.ChangePassword(req.Username, string(pwd))
-	if err != nil {
-		levelLog("修改密码错误")
 		return err
 	}
 	return nil

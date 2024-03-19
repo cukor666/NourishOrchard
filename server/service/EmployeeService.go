@@ -6,6 +6,8 @@ import (
 	"server/common/simpletool"
 	"server/dao"
 	"server/models"
+	"server/request"
+	"server/utils"
 )
 
 // Info 根据账号获取员工信息
@@ -32,4 +34,25 @@ func (e EmployeeService) ListWithPage(p simpletool.Page, employee models.Employe
 		return nil, 0, err
 	}
 	return result, total, nil
+}
+
+// ForgetPassword 忘记密码
+func (e EmployeeService) ForgetPassword(req request.ForgetPwdReq) error {
+	_, err := dao.EmployeeDao{}.SelectByUsernameAndPhone(req.Username, req.Phone)
+	if err != nil {
+		levelLog("查询员工失败")
+		return err
+	}
+	// 对新密码加密
+	pwd, err := utils.GetPwd(req.Password)
+	if err != nil {
+		levelLog("新密码加密失败")
+		return err
+	}
+	err = dao.AccountDao{}.ChangePassword(req.Username, string(pwd))
+	if err != nil {
+		levelLog("修改密码错误")
+		return err
+	}
+	return nil
 }

@@ -6,6 +6,8 @@ import (
 	"server/common/simpletool"
 	"server/dao"
 	"server/models"
+	"server/request"
+	"server/utils"
 )
 
 // Info 根据账号获取管理员信息
@@ -32,4 +34,24 @@ func (a AdminService) ListWithPage(p simpletool.Page) ([]models.Admin, int64, er
 		return nil, 0, err
 	}
 	return result, total, nil
+}
+
+func (a AdminService) ForgetPassword(req request.ForgetPwdReq) error {
+	_, err := dao.AdminDao{}.SelectByUsernameAndEmail(req.Username, req.Email)
+	if err != nil {
+		levelLog("查询管理员失败")
+		return err
+	}
+	// 对新密码加密
+	pwd, err := utils.GetPwd(req.Password)
+	if err != nil {
+		levelLog("新密码加密失败")
+		return err
+	}
+	err = dao.AccountDao{}.ChangePassword(req.Username, string(pwd))
+	if err != nil {
+		levelLog("修改密码错误")
+		return err
+	}
+	return nil
 }

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"server/config"
@@ -278,12 +279,6 @@ func (a AccountController) ForgetPassword(context *gin.Context) {
 		response.Failed(context, "参数错误")
 		return
 	}
-	promise := utils.PromiseToInt(req.Promise)
-	if promise != mc.USER {
-		levelLog(fmt.Sprintf("权限不正确，promise = %s", req.Promise))
-		response.Failed(context, "权限不正确，拒绝请求")
-		return
-	}
 
 	// 校验短信验证码
 	myCode := "1024"
@@ -293,7 +288,18 @@ func (a AccountController) ForgetPassword(context *gin.Context) {
 		return
 	}
 
-	err = service.AccountService{}.ForgetPassword(req)
+	promise := utils.PromiseToInt(req.Promise)
+	switch promise {
+	case mc.USER:
+		err = service.UserService{}.ForgetPassword(req)
+	case mc.EMPLOYEE:
+		err = service.EmployeeService{}.ForgetPassword(req)
+	case mc.ADMIN:
+		err = service.AdminService{}.ForgetPassword(req)
+	default:
+		levelLog("未开放")
+		err = errors.New("权限未开放")
+	}
 	if err != nil {
 		levelLog("服务器错误，忘记密码接口拒绝请求")
 		response.Failed(context, "服务器错误")
