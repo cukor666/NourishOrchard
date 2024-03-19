@@ -49,7 +49,7 @@
         <div v-if="errWord.birthday" class="errword">{{ errWord.birthday }}</div>
 
       </el-form>
-      <div class="buttom-group">
+      <div class="button-group">
         <el-button class="register-button" @click="register">注册</el-button>
         <el-button class="back-button" @click="gotoLogin">去登录</el-button>
       </div>
@@ -102,13 +102,8 @@ const errWord = reactive({
 })
 
 const {
-  validName,
-  validPassword,
-  validPassword2,
-  validGender,
-  validPhone,
-  validAddress,
-  validBirthday
+  validName, validPassword, validPassword2, validGender,
+  validPhone, validAddress, validBirthday
 } = useValid(errWord)
 
 const valid = () => {
@@ -136,10 +131,7 @@ const handleClose = () => {
 const copyText = () => {
   console.log('复制到剪切板');
   navigator.clipboard.writeText(account.value)
-  ElMessage({
-    message: '成功复制到剪切板',
-    type: 'success'
-  })
+  ElMessage({message: '成功复制到剪切板', type: 'success'})
   dialogVisible.value = false
 }
 

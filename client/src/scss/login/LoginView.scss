@@ -1,6 +1,6 @@
 .login-box {
   min-height: 100vh;
-  animation: changeBackgroud 20s infinite;
+  animation: changeBackground 20s infinite;
 
   display: flex;
   justify-content: center;
@@ -9,7 +9,9 @@
   .login-card {
     width: 400px;
     background-color: rgba(0, 0, 0, 0.5);
-    animation: changeLoginCard 3s infinite;
+    animation-name: changeLoginCard, grow;
+    animation-duration: 3s, 1s;
+    animation-iteration-count: infinite, 1;
     backdrop-filter: blur(5px);
 
     h1 {
@@ -27,12 +29,14 @@
         padding-left: 10px;
         padding-right: 10px;
         margin-bottom: 10px;
+
         .label {
           flex: 1;
           color: #eae5e5;
           font-size: 14px;
           font-weight: bold;
         }
+
         .el-input {
           flex: 8;
         }
@@ -52,6 +56,7 @@
       justify-content: center;
       align-items: center;
       --el-color-primary: #df611d;
+
       .el-radio {
         color: #d1ee7b;
       }
@@ -64,6 +69,7 @@
       margin-bottom: 10px;
       padding-left: 10px;
       padding-right: 10px;
+
       .login-button {
         width: 25%;
         background-color: #df611d;
@@ -71,12 +77,14 @@
         border-radius: 20px;
         transition: all 1s;
       }
+
       .login-button:hover {
         color: #fff;
         background-color: #ff7701;
-        box-shadow: 0px 0px 50px #ff7701;
+        box-shadow: 0 0 10px #ff7701, 0 0 20px #ff7701, 0 0 30px #ff7701;
         cursor: pointer;
       }
+
       .register-button {
         width: 25%;
         background-color: #d1ee7b;
@@ -84,17 +92,18 @@
         border-radius: 20px;
         transition: all 1s;
       }
+
       .register-button:hover {
         color: #fd8403;
         background-color: #bfff00;
-        box-shadow: 0px 0px 50px #bfff00;
+        box-shadow: 0 0 10px #bfff00, 0 0 20px #bfff00, 0 0 30px #bfff00;
         cursor: pointer;
       }
     }
   }
 }
 
-@keyframes changeBackgroud {
+@keyframes changeBackground {
   0% {
     background-image: url("https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/番石榴.jpg");
   }
@@ -109,24 +118,30 @@
 }
 
 @keyframes changeLoginCard {
-  0% {
-    border-radius: 50px 0px 0px 0px;
+  0%, 100% {
+    border-radius: 50px 0 0 0;
     box-shadow: 0 0 30px red;
   }
-  25% {
-    border-radius: 0px 50px 0px 0px;
+  25%, 75% {
+    border-radius: 0 50px 0 0;
     box-shadow: 0 0 25px #b59e3d;
   }
   50% {
-    border-radius: 0px 0px 50px 0px;
+    border-radius: 0 0 50px 0;
     box-shadow: 0 0 30px #b2cb7d;
   }
-  75% {
-    border-radius: 0px 0px 0px 50px;
-    box-shadow: 0 0 25px #b59e3d;
+}
+
+@keyframes grow {
+  0% {
+    transform: scale(0);
   }
+
+  50% {
+    transform: scale(1.2);
+  }
+
   100% {
-    border-radius: 50px 0px 0px 0px;
-    box-shadow: 0 0 25px red;
+    transform: scale(1);
   }
 }
