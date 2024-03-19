@@ -4,3 +4,5 @@ vue/.vscode/
 Gin/.idea/
 vue-project.zip
 *.exe
+server/log/
+server/*.exe
