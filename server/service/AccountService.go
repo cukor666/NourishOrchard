@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"regexp"
 	"server/dao"
+	"server/models"
 	"server/utils"
 )
 
@@ -20,6 +21,11 @@ func (a AccountService) IsExists(username string, promise int) bool {
 	// 开始查询数据库
 	cnt := dao.AccountDao{}.GetCountByUsername(username, promise)
 	return cnt != 0
+}
+
+// Get 获取账号信息
+func (a AccountService) Get(username string, promise int) (account models.Account, err error) {
+	return dao.AccountDao{}.Get(username, promise)
 }
 
 // Exit 账号退出

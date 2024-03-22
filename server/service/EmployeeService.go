@@ -2,10 +2,12 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 	"server/common/simpletool"
 	"server/dao"
 	"server/models"
+	mc "server/models/code"
 	"server/request"
 	"server/utils"
 )
@@ -52,6 +54,22 @@ func (e EmployeeService) ForgetPassword(req request.ForgetPwdReq) error {
 	err = dao.AccountDao{}.ChangePassword(req.Username, string(pwd))
 	if err != nil {
 		levelLog("修改密码错误")
+		return err
+	}
+	return nil
+}
+
+// Promotion 员工晋升管理员
+func (e EmployeeService) Promotion(req request.PromotionRequest) error {
+	cnt := dao.AccountDao{}.GetCountByUsername(req.Username, mc.EMPLOYEE)
+	if cnt == 0 {
+		str := fmt.Sprintf("%s表中无数据username = %s", models.Account{}.TableName(), req.Username)
+		levelLog(str)
+		return errors.New(str)
+	}
+	err := dao.EmployeeDao{}.Promotion(req.Username, req.Name, req.Email, req.Mark)
+	if err != nil {
+		levelLog("晋升管理员失败")
 		return err
 	}
 	return nil

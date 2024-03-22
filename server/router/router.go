@@ -86,8 +86,9 @@ func register(r *gin.Engine) {
 	// 员工管理
 	employeeGroup := r.Group("/employee", controller.ValidAuthorization)
 	{
-		employeeGroup.GET("/list", controller.EmployeeController{}.List)     // 员工列表
-		employeeGroup.PUT("/update", controller.EmployeeController{}.Update) // 更新员工信息
+		employeeGroup.GET("/list", controller.EmployeeController{}.List)           // 员工列表
+		employeeGroup.PUT("/update", controller.EmployeeController{}.Update)       // 更新员工信息
+		employeeGroup.PUT("/promotion", controller.EmployeeController{}.Promotion) // 晋升管理员
 	}
 
 	// 管理员管理
@@ -99,6 +100,10 @@ func register(r *gin.Engine) {
 	// 水果管理
 	fruitGroup := r.Group("/fruit", controller.ValidAuthorization)
 	{
-		fruitGroup.GET("/list", controller.FruitController{}.List) // 水果列表
+		fruitGroup.GET("/list", controller.FruitController{}.List)     // 水果列表
+		fruitGroup.GET("/detail", controller.FruitController{}.Detail) // 水果详情
+		fruitGroup.POST("/add", controller.FruitController{}.Insert)   // 添加水果
+		fruitGroup.DELETE("/del", controller.FruitController{}.Delete) // 删除水果
+		fruitGroup.PUT("/update", controller.FruitController{}.Update) // 更新水果信息
 	}
 }

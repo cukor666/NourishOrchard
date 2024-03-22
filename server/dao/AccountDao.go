@@ -36,14 +36,17 @@ func (a AccountDao) Insert(account models.Account, user models.User) (uint, bool
 
 // GetCountByUsername 检验账号存不存在
 func (a AccountDao) GetCountByUsername(username string, promise int) (cnt int64) {
-	mysqlDB.Table(models.Account{}.TableName()).
-		Where("username = ? AND promise = ?", username, promise).Count(&cnt)
+	err := mysqlDB.Model(&models.Account{}).Where("username = ? AND promise = ?", username, promise).Count(&cnt).Error
+	if err != nil {
+		levelLog("获取数量失败")
+		return 0
+	}
 	return
 }
 
 // Get 根据账号获取账号信息
 func (a AccountDao) Get(username string, promise int) (result models.Account, err error) {
-	err = mysqlDB.Table(models.Account{}.TableName()).
+	err = mysqlDB.Model(&models.Account{}).
 		Where("username = ? AND promise = ?", username, promise).
 		First(&result).Error
 	return

@@ -6,3 +6,4 @@ vue-project.zip
 *.exe
 server/log/
 server/*.exe
+*.zip
