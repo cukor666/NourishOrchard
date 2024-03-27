@@ -8,7 +8,7 @@ import (
 	"server/common/simpletool"
 	"server/models"
 	"server/request"
-	"server/utils"
+	"server/utils/pwdtool"
 )
 
 // Info 根据用户名获取用户信息
@@ -87,7 +87,7 @@ func (u UserService) ForgetPassword(req request.ForgetPwdReq) (err error) {
 		return err
 	}
 	// 对新密码加密
-	pwd, err := utils.GetPwd(req.Password)
+	pwd, err := pwdtool.GetPwd(req.Password)
 	if err != nil {
 		levellog.Service("新密码加密失败")
 		return err

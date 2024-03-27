@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"server/models"
-	"server/utils"
+	"server/utils/promisetool"
 	"time"
 )
 
@@ -21,7 +21,7 @@ func GenerateJWT(account models.Account) (string, error) {
 	claims := jwt.MapClaims{
 		"iss":      conf.JWTConfig.Issuer,
 		"username": account.Username,
-		"promise":  utils.PromiseToString(account.Promise),
+		"promise":  promisetool.ToString(account.Promise),
 		"exp":      expirationTime,
 	}
 

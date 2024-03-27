@@ -10,7 +10,8 @@ import (
 	mc "server/models/code"
 	"server/request"
 	resc "server/response/code"
-	"server/utils"
+	"server/utils/promisetool"
+	"server/utils/pwdtool"
 	"strconv"
 	"time"
 )
@@ -43,7 +44,7 @@ func (l LoginService) adminLogin(username string) (id uint, err error) {
 }
 
 func (l LoginService) Login(req request.LoginRequest) (string, error) {
-	promise := utils.PromiseToInt(req.Promise)
+	promise := promisetool.ToInt(req.Promise)
 	// 通过账号名找到对应的账号信息，如果没有该用户名则直接返回false
 	exists := AccountService{}.IsExists(req.Username, promise)
 	if !exists {
@@ -62,7 +63,7 @@ func (l LoginService) Login(req request.LoginRequest) (string, error) {
 		}
 	}
 	// 对密码进行处理
-	if !utils.PwdOK(account.Password, req.Password) {
+	if !pwdtool.PwdOK(account.Password, req.Password) {
 		levellog.Service("密码错误")
 		return "", &common.MyError{
 			Code: resc.PasswordFailed,

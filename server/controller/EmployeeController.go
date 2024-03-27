@@ -13,7 +13,8 @@ import (
 	"server/request"
 	"server/response"
 	"server/service"
-	"server/utils"
+	"server/utils/promisetool"
+	"server/utils/pwdtool"
 	"strconv"
 )
 
@@ -44,7 +45,7 @@ func (ec *EmployeeController) List(context *gin.Context) {
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
-	promise := utils.PromiseToInt(claims[cm.Promise].(string))
+	promise := promisetool.ToInt(claims[cm.Promise].(string))
 	if promise < mc.ADMIN {
 		levellog.Controller("权限不够，无权访问用户列表")
 		response.Failed(context, "权限不够，无权访问")
@@ -119,7 +120,7 @@ func (ec *EmployeeController) Update(context *gin.Context) {
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
-	promise := utils.PromiseToInt(claims[cm.Promise].(string))
+	promise := promisetool.ToInt(claims[cm.Promise].(string))
 	if promise < mc.ADMIN {
 		levellog.Controller("权限不够，更新用户信息")
 		response.Failed(context, "权限不够，无权操作")
@@ -162,7 +163,7 @@ func (ec *EmployeeController) Promotion(context *gin.Context) {
 		return
 	}
 	reqUsername := claims[cm.Username].(string)
-	reqPromise := utils.PromiseToInt(claims[cm.Promise].(string))
+	reqPromise := promisetool.ToInt(claims[cm.Promise].(string))
 	account, err := service.AccountService{}.Get(reqUsername, reqPromise)
 	if err != nil {
 		levellog.Controller("获取账号信息失败")
@@ -178,7 +179,7 @@ func (ec *EmployeeController) Promotion(context *gin.Context) {
 		return
 	}
 
-	if !utils.PwdOK(account.Password, req.Password) {
+	if !pwdtool.PwdOK(account.Password, req.Password) {
 		levellog.Controller(fmt.Sprintf("请求账号%s密码错误，拒绝请求", reqUsername))
 		response.Failed(context, "密码错误")
 		return

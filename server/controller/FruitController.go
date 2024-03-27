@@ -12,7 +12,7 @@ import (
 	mc "server/models/code"
 	"server/response"
 	"server/service"
-	"server/utils"
+	"server/utils/promisetool"
 	"strconv"
 )
 
@@ -110,7 +110,7 @@ func (fc *FruitController) Insert(context *gin.Context) {
 		response.Failed(context, "解析token失败")
 		return
 	}
-	promise := utils.PromiseToInt(claims[cm.Promise].(string))
+	promise := promisetool.ToInt(claims[cm.Promise].(string))
 	var fruit models.Fruit
 	switch promise {
 	case mc.USER:
@@ -153,7 +153,7 @@ func (fc *FruitController) Delete(context *gin.Context) {
 		response.Failed(context, "解析token失败")
 		return
 	}
-	promise := utils.PromiseToInt(claims[cm.Promise].(string))
+	promise := promisetool.ToInt(claims[cm.Promise].(string))
 	switch promise {
 	case mc.USER:
 		levellog.Controller("权限不够")
@@ -195,7 +195,7 @@ func (fc *FruitController) Update(context *gin.Context) {
 		response.Failed(context, "解析token失败")
 		return
 	}
-	promise := utils.PromiseToInt(claims[cm.Promise].(string))
+	promise := promisetool.ToInt(claims[cm.Promise].(string))
 	var fruit models.Fruit
 	switch promise {
 	case mc.USER:

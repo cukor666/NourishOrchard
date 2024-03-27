@@ -7,6 +7,7 @@ import (
 	"server/common/levellog"
 	"server/models"
 	"server/utils"
+	"server/utils/pwdtool"
 )
 
 // IsExists 判断账号在数据库中是否存在
@@ -47,12 +48,12 @@ func (a AccountService) ChangePassword(username, oldPassword, newPassword string
 		return err
 	}
 	// 将前端传递的密码和数据库中的密码进行比较
-	if !utils.PwdOK(password, oldPassword) {
+	if !pwdtool.PwdOK(password, oldPassword) {
 		levellog.Service("前端传递密码与数据库中原密码不一致，拒绝修改密码请求")
 		return errors.New("前端传递密码与数据库中密码不一致")
 	}
 	// 对新密码进行加密
-	newPwd, err := utils.GetPwd(newPassword)
+	newPwd, err := pwdtool.GetPwd(newPassword)
 	if err != nil {
 		levellog.Service(fmt.Sprintf("对密码加密失败, newPassword = %s", newPassword))
 		return err

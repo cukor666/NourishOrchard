@@ -9,12 +9,12 @@ import (
 	"server/request"
 	"server/response"
 	"server/service"
-	"server/utils"
+	"server/utils/promisetool"
 )
 
 // 登录参数校验
 func (lc *LoginController) validation(req request.LoginRequest) bool {
-	if req.Username == "" || req.Password == "" || utils.PromiseToInt(req.Promise) == 0 {
+	if req.Username == "" || req.Password == "" || promisetool.ToInt(req.Promise) == 0 {
 		return false
 	}
 	return true

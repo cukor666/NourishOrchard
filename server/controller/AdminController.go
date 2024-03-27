@@ -11,7 +11,7 @@ import (
 	mc "server/models/code"
 	"server/response"
 	"server/service"
-	"server/utils"
+	"server/utils/promisetool"
 	"strconv"
 )
 
@@ -42,7 +42,7 @@ func (ad *AdminController) List(context *gin.Context) {
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
-	promise := utils.PromiseToInt(claims[cm.Promise].(string))
+	promise := promisetool.ToInt(claims[cm.Promise].(string))
 	if promise < mc.ADMIN {
 		levellog.Controller("权限不够，无权访问用户列表")
 		response.Failed(context, "权限不够，无权访问")

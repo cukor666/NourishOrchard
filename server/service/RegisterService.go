@@ -7,6 +7,8 @@ import (
 	"server/request"
 	"server/response"
 	"server/utils"
+	"server/utils/promisetool"
+	"server/utils/pwdtool"
 )
 
 /*
@@ -34,7 +36,7 @@ func (r RegisterService) Register(req request.RegisterRequest) (response.Registe
 	username := utils.GenUsername()
 	user.Username = username
 	account.Username = username
-	password, err := utils.GetPwd(account.Password)
+	password, err := pwdtool.GetPwd(account.Password)
 	if err != nil {
 		levellog.Service("加密失败")
 		return response.RegisterResponse{}, false
@@ -47,6 +49,6 @@ func (r RegisterService) Register(req request.RegisterRequest) (response.Registe
 	return response.RegisterResponse{
 		ID:       uid,
 		Username: account.Username,
-		Promise:  utils.PromiseToString(account.Promise),
+		Promise:  promisetool.ToString(account.Promise),
 	}, true
 }

@@ -13,7 +13,7 @@ import (
 	"server/request"
 	"server/response"
 	"server/service"
-	"server/utils"
+	"server/utils/promisetool"
 )
 
 /**
@@ -46,7 +46,7 @@ func (ac *AccountController) GetAccount(context *gin.Context) {
 	}
 	// 查询数据库，将对应的账户个人信息返回给前端
 	username := claims[cm.Username]
-	promise := utils.PromiseToInt(claims[cm.Promise].(string))
+	promise := promisetool.ToInt(claims[cm.Promise].(string))
 	var i acters
 	switch promise {
 	case mc.USER:
@@ -95,7 +95,7 @@ func (ac *AccountController) Update(context *gin.Context) {
 	}
 	// 查询数据库，将对应的账户个人信息返回给前端
 	username := claims[cm.Username]
-	promise := utils.PromiseToInt(claims[cm.Promise].(string))
+	promise := promisetool.ToInt(claims[cm.Promise].(string))
 	var i acters
 	switch promise {
 	case mc.USER:
@@ -136,7 +136,7 @@ func (ac *AccountController) Exit(context *gin.Context) {
 	}
 	// 查询数据库，将对应的账户个人信息返回给前端
 	username := claims[cm.Username]
-	promise := utils.PromiseToInt(claims[cm.Promise].(string))
+	promise := promisetool.ToInt(claims[cm.Promise].(string))
 	switch promise {
 	case mc.USER, mc.ADMIN, mc.EMPLOYEE:
 		err = service.AccountService{}.Exit(username.(string))
@@ -171,7 +171,7 @@ func (ac *AccountController) ChangePassword(context *gin.Context) {
 		return
 	}
 	username := claims[cm.Username]
-	promise := utils.PromiseToInt(claims[cm.Promise].(string))
+	promise := promisetool.ToInt(claims[cm.Promise].(string))
 	type pwdType struct {
 		OldPassword string `json:"oldPassword" form:"oldPassword"`
 		NewPassword string `json:"newPassword" form:"newPassword"`
@@ -221,7 +221,7 @@ func (ac *AccountController) ForgetPassword(context *gin.Context) {
 		return
 	}
 
-	promise := utils.PromiseToInt(req.Promise)
+	promise := promisetool.ToInt(req.Promise)
 	switch promise {
 	case mc.USER:
 		err = userService.ForgetPassword(req)
