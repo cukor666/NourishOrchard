@@ -33,7 +33,7 @@ params:
 
 http://localhost:9000/user/list?pageSize=3&pageNum=2&id=3&username=CZKJ991706344513 ...
 */
-func (u UserController) List(context *gin.Context) {
+func (uc *UserController) List(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -113,7 +113,7 @@ body:
 		"birthday": "1995-03-16T00:00:00Z"
 	}
 */
-func (u UserController) Update(context *gin.Context) {
+func (uc *UserController) Update(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -156,7 +156,7 @@ func (u UserController) Update(context *gin.Context) {
 }
 
 // Delete 删除用户接口
-func (u UserController) Delete(context *gin.Context) {
+func (uc *UserController) Delete(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -213,7 +213,7 @@ params:
 
 http://localhost:9000/user/logout-list?pageSize=3&pageNum=2
 */
-func (u UserController) LogoutList(context *gin.Context) {
+func (uc *UserController) LogoutList(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -285,7 +285,7 @@ body:
 		"username": "CZKJ991706340782"
 	}
 */
-func (u UserController) RecoverUser(context *gin.Context) {
+func (uc *UserController) RecoverUser(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -344,7 +344,7 @@ params:
 		id: 6
 		username: CZKJ18543453
 */
-func (u UserController) RemoveUser(context *gin.Context) {
+func (uc *UserController) RemoveUser(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验

@@ -24,7 +24,7 @@ params:
 		pageSize: 3
 		pageNum: 2
 */
-func (a AdminController) List(context *gin.Context) {
+func (ad *AdminController) List(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验

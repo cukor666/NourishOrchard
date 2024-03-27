@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"regexp"
 	"server/common/simpletool"
-	"server/dao"
 	"server/models"
 	"server/request"
 	"server/utils"
@@ -18,18 +17,18 @@ func (u UserService) Info(username string) (user models.User, err error) {
 	if !matchString {
 		return models.User{}, errors.New("用户名不符合系统规范")
 	}
-	return dao.UserDao{}.SelectByUsername(username)
+	return userDao.SelectByUsername(username)
 }
 
 // Update 更新用户信息
 func (u UserService) Update(user models.User) error {
-	_, err := dao.UserDao{}.Update(user)
+	_, err := userDao.Update(user)
 	return err
 }
 
 // List 访问用户列表，需要管理员或员工权限
 func (u UserService) List(p simpletool.Page, user models.User) ([]models.User, int64, error) {
-	result, total, err := dao.UserDao{}.ListWithPage(p, user)
+	result, total, err := userDao.ListWithPage(p, user)
 	if err != nil {
 		levelLog("查询失败")
 		return nil, 0, err
@@ -39,7 +38,7 @@ func (u UserService) List(p simpletool.Page, user models.User) ([]models.User, i
 
 // DeleteUser 根据账号删除用户信息
 func (u UserService) DeleteUser(username string) (models.User, error) {
-	user, err := dao.UserDao{}.DeleteByUsername(username)
+	user, err := userDao.DeleteByUsername(username)
 	if err != nil {
 		levelLog("用户删除失败")
 		return models.User{}, err
@@ -49,7 +48,7 @@ func (u UserService) DeleteUser(username string) (models.User, error) {
 
 // LogoutList 查询注销用户列表，需要管理员或员工权限
 func (u UserService) LogoutList(p simpletool.Page, logoutUser models.LogoutUser) ([]models.LogoutUser, int64, error) {
-	result, total, err := dao.UserDao{}.LogoutListWithPage(p, logoutUser)
+	result, total, err := userDao.LogoutListWithPage(p, logoutUser)
 	if err != nil {
 		levelLog("查询失败")
 		return nil, 0, err
@@ -59,7 +58,7 @@ func (u UserService) LogoutList(p simpletool.Page, logoutUser models.LogoutUser)
 
 // RecoverUser 恢复用户信息
 func (u UserService) RecoverUser(username string) (models.User, error) {
-	user, err := dao.UserDao{}.RecoverUser(username)
+	user, err := userDao.RecoverUser(username)
 	if err != nil {
 		levelLog("无法恢复用户信息")
 		return models.User{}, err
@@ -69,7 +68,7 @@ func (u UserService) RecoverUser(username string) (models.User, error) {
 
 // RemoveUser 彻底删除用户
 func (u UserService) RemoveUser(id uint, username string) error {
-	user, err := dao.UserDao{}.RemoveUser(id, username)
+	user, err := userDao.RemoveUser(id, username)
 	if err != nil {
 		levelLog(fmt.Sprintf("删除用户失败，user = %v", user))
 		return err
@@ -81,7 +80,7 @@ func (u UserService) RemoveUser(id uint, username string) error {
 // ForgetPassword 用户忘记密码
 func (u UserService) ForgetPassword(req request.ForgetPwdReq) (err error) {
 	// 校验数据库是否有该用户并且校验绑定的号码是否正确
-	_, err = dao.UserDao{}.SelectByUsernameAndPhone(req.Username, req.Phone)
+	_, err = userDao.SelectByUsernameAndPhone(req.Username, req.Phone)
 	if err != nil {
 		levelLog("用户绑定电话错误")
 		return err
@@ -93,7 +92,7 @@ func (u UserService) ForgetPassword(req request.ForgetPwdReq) (err error) {
 		return err
 	}
 	// 更新新密码
-	err = dao.AccountDao{}.ChangePassword(req.Username, string(pwd))
+	err = accountDao.ChangePassword(req.Username, string(pwd))
 	if err != nil {
 		levelLog("修改密码错误")
 		return err

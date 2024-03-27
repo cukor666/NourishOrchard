@@ -27,7 +27,7 @@ header:
 	username: CZKJ991706348185
 body: 空
 */
-func (a AccountController) GetAccount(context *gin.Context) {
+func (ac *AccountController) GetAccount(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -100,7 +100,7 @@ body:
 		"salary": 3000
 	}
 */
-func (a AccountController) Update(context *gin.Context) {
+func (ac *AccountController) Update(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -185,7 +185,7 @@ header:
 	Bearer Token
 	username: CZKJ991706348185
 */
-func (a AccountController) Exit(context *gin.Context) {
+func (ac *AccountController) Exit(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -221,7 +221,7 @@ func (a AccountController) Exit(context *gin.Context) {
 }
 
 // ChangePassword 修改账户密码
-func (a AccountController) ChangePassword(context *gin.Context) {
+func (ac *AccountController) ChangePassword(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -267,7 +267,7 @@ func (a AccountController) ChangePassword(context *gin.Context) {
 }
 
 // ForgetPassword 用户忘记密码
-func (a AccountController) ForgetPassword(context *gin.Context) {
+func (ac *AccountController) ForgetPassword(context *gin.Context) {
 	var (
 		req request.ForgetPwdReq
 		err error

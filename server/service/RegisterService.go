@@ -1,7 +1,6 @@
 package service
 
 import (
-	"server/dao"
 	"server/models"
 	mc "server/models/code"
 	"server/request"
@@ -40,7 +39,7 @@ func (r RegisterService) Register(req request.RegisterRequest) (response.Registe
 		return response.RegisterResponse{}, false
 	}
 	account.Password = string(password)
-	uid, ok := dao.AccountDao{}.Insert(account, user)
+	uid, ok := accountDao.Insert(account, user)
 	if !ok {
 		return response.RegisterResponse{}, false
 	}

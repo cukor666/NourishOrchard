@@ -12,7 +12,7 @@ import (
 )
 
 // 登录参数校验
-func (l LoginController) validation(req request.LoginRequest) bool {
+func (lc *LoginController) validation(req request.LoginRequest) bool {
 	if req.Username == "" || req.Password == "" || utils.PromiseToInt(req.Promise) == 0 {
 		return false
 	}
@@ -29,7 +29,7 @@ body: application/json
 		"promise": "user"
 	}
 */
-func (l LoginController) Login(context *gin.Context) {
+func (lc *LoginController) Login(context *gin.Context) {
 	var (
 		loginRequest request.LoginRequest
 		myErr        *common.MyError
@@ -39,7 +39,7 @@ func (l LoginController) Login(context *gin.Context) {
 		response.Failed(context, "参数错误")
 		return
 	}
-	ok := l.validation(loginRequest)
+	ok := lc.validation(loginRequest)
 	if !ok {
 		levelLog("参数校验不通过")
 		response.Failed(context, "参数校验不通过")

@@ -26,7 +26,7 @@ params:
 		pageSize: 3
 		pageNum: 2
 */
-func (e EmployeeController) List(context *gin.Context) {
+func (ec *EmployeeController) List(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -101,7 +101,7 @@ body:
 		"salary": 4000
 	}
 */
-func (e EmployeeController) Update(context *gin.Context) {
+func (ec *EmployeeController) Update(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -144,7 +144,7 @@ func (e EmployeeController) Update(context *gin.Context) {
 }
 
 // Promotion 晋升管理员
-func (e EmployeeController) Promotion(context *gin.Context) {
+func (ec *EmployeeController) Promotion(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验

@@ -16,7 +16,7 @@ import (
 )
 
 // List 查询水果列表
-func (f FruitController) List(context *gin.Context) {
+func (fc *FruitController) List(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -59,7 +59,7 @@ func (f FruitController) List(context *gin.Context) {
 }
 
 // Detail 水果详情
-func (f FruitController) Detail(context *gin.Context) {
+func (fc *FruitController) Detail(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -93,7 +93,7 @@ func (f FruitController) Detail(context *gin.Context) {
 }
 
 // Insert 添加水果接口
-func (f FruitController) Insert(context *gin.Context) {
+func (fc *FruitController) Insert(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -136,7 +136,7 @@ func (f FruitController) Insert(context *gin.Context) {
 }
 
 // Delete 删除水果信息
-func (f FruitController) Delete(context *gin.Context) {
+func (fc *FruitController) Delete(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
@@ -178,7 +178,7 @@ func (f FruitController) Delete(context *gin.Context) {
 }
 
 // Update 更新水果接口
-func (f FruitController) Update(context *gin.Context) {
+func (fc *FruitController) Update(context *gin.Context) {
 	// 解析token
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验

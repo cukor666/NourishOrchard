@@ -10,10 +10,9 @@ import (
 	"server/dao"
 	"server/response"
 	resc "server/response/code"
+	"server/service"
 	"strings"
 )
-
-// 公开结构体
 
 type AccountController struct{}
 type LoginController struct{}
@@ -23,7 +22,15 @@ type EmployeeController struct{}
 type AdminController struct{}
 type FruitController struct{}
 
-// 私有的结构体
+var (
+	accountService  service.AccountService
+	loginService    service.LoginService
+	registerService service.RegisterService
+	userService     service.UserService
+	employeeService service.EmployeeService
+	adminService    service.AdminService
+	fruitService    service.FruitService
+)
 
 // ValidAuthorization 校验authorization
 func ValidAuthorization(ctx *gin.Context) {

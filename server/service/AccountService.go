@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
-	"server/dao"
 	"server/models"
 	"server/utils"
 )
@@ -19,18 +18,18 @@ func (a AccountService) IsExists(username string, promise int) bool {
 		return false
 	}
 	// 开始查询数据库
-	cnt := dao.AccountDao{}.GetCountByUsername(username, promise)
+	cnt := accountDao.GetCountByUsername(username, promise)
 	return cnt != 0
 }
 
 // Get 获取账号信息
 func (a AccountService) Get(username string, promise int) (account models.Account, err error) {
-	return dao.AccountDao{}.Get(username, promise)
+	return accountDao.Get(username, promise)
 }
 
 // Exit 账号退出
 func (a AccountService) Exit(username string) error {
-	err := dao.AccountDao{}.Exit(username)
+	err := accountDao.Exit(username)
 	if err != nil {
 		levelLog("退出失败")
 		return err
@@ -41,7 +40,7 @@ func (a AccountService) Exit(username string) error {
 // ChangePassword 修改密码
 func (a AccountService) ChangePassword(username, oldPassword, newPassword string) error {
 	// 从数据库中获取原密码
-	password, err := dao.AccountDao{}.GetPassword(username)
+	password, err := accountDao.GetPassword(username)
 	if err != nil {
 		levelLog("获取密码失败")
 		return err
@@ -57,7 +56,7 @@ func (a AccountService) ChangePassword(username, oldPassword, newPassword string
 		levelLog(fmt.Sprintf("对密码加密失败, newPassword = %s", newPassword))
 		return err
 	}
-	err = dao.AccountDao{}.ChangePassword(username, string(newPwd))
+	err = accountDao.ChangePassword(username, string(newPwd))
 	if err != nil {
 		levelLog("修改密码失败")
 		return err

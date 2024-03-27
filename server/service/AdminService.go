@@ -4,7 +4,6 @@ import (
 	"errors"
 	"regexp"
 	"server/common/simpletool"
-	"server/dao"
 	"server/models"
 	"server/request"
 	"server/utils"
@@ -17,18 +16,18 @@ func (a AdminService) Info(username string) (admin models.Admin, err error) {
 	if !matchString {
 		return models.Admin{}, errors.New("账号不符合系统规范")
 	}
-	return dao.AdminDao{}.SelectByUsername(username)
+	return adminDao.SelectByUsername(username)
 }
 
 // Update 更新管理员信息
 func (a AdminService) Update(admin models.Admin) error {
-	_, err := dao.AdminDao{}.Update(admin)
+	_, err := adminDao.Update(admin)
 	return err
 }
 
 // ListWithPage 查询管理员列表，分页查询
 func (a AdminService) ListWithPage(p simpletool.Page) ([]models.Admin, int64, error) {
-	result, total, err := dao.AdminDao{}.ListWithPage(p)
+	result, total, err := adminDao.ListWithPage(p)
 	if err != nil {
 		levelLog("查询失败")
 		return nil, 0, err
@@ -37,7 +36,7 @@ func (a AdminService) ListWithPage(p simpletool.Page) ([]models.Admin, int64, er
 }
 
 func (a AdminService) ForgetPassword(req request.ForgetPwdReq) error {
-	_, err := dao.AdminDao{}.SelectByUsernameAndEmail(req.Username, req.Email)
+	_, err := adminDao.SelectByUsernameAndEmail(req.Username, req.Email)
 	if err != nil {
 		levelLog("查询管理员失败")
 		return err
@@ -48,7 +47,7 @@ func (a AdminService) ForgetPassword(req request.ForgetPwdReq) error {
 		levelLog("新密码加密失败")
 		return err
 	}
-	err = dao.AccountDao{}.ChangePassword(req.Username, string(pwd))
+	err = accountDao.ChangePassword(req.Username, string(pwd))
 	if err != nil {
 		levelLog("修改密码错误")
 		return err
