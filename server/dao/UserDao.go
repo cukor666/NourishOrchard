@@ -6,7 +6,7 @@ import (
 	"server/models"
 )
 
-func (u UserDao) Insert(user models.User) (uint, bool) {
+func (ud *UserDao) Insert(user models.User) (uint, bool) {
 	tx := mysqlDB.Create(&user)
 	if tx.Error != nil {
 		return 0, false
@@ -14,7 +14,7 @@ func (u UserDao) Insert(user models.User) (uint, bool) {
 	return user.ID, true
 }
 
-func (u UserDao) GetUId(username string) (id uint, err error) {
+func (ud *UserDao) GetUId(username string) (id uint, err error) {
 	var um models.User
 	err = mysqlDB.Table(um.TableName()).
 		Where("username = ?", username).
@@ -23,7 +23,7 @@ func (u UserDao) GetUId(username string) (id uint, err error) {
 }
 
 // SelectByUsername 通过username查询查询用户
-func (u UserDao) SelectByUsername(username string) (user models.User, err error) {
+func (ud *UserDao) SelectByUsername(username string) (user models.User, err error) {
 	err = mysqlDB.Model(&user).Where("username = ?", username).Take(&user).Error
 	if err != nil {
 		return models.User{}, err
@@ -32,7 +32,7 @@ func (u UserDao) SelectByUsername(username string) (user models.User, err error)
 }
 
 // Update 更新用户信息
-func (u UserDao) Update(user models.User) (models.User, error) {
+func (ud *UserDao) Update(user models.User) (models.User, error) {
 	err := mysqlDB.Model(&user).Omit("id", "username").
 		Where("username = ?", user.Username).Updates(&user).Error
 	if err != nil {
@@ -42,7 +42,7 @@ func (u UserDao) Update(user models.User) (models.User, error) {
 }
 
 // ListWithPage 查询普通用户列表，分页查询
-func (u UserDao) ListWithPage(p simpletool.Page, user models.User) (result []models.User, total int64, err error) {
+func (ud *UserDao) ListWithPage(p simpletool.Page, user models.User) (result []models.User, total int64, err error) {
 	id, username, name, gender, phone, address, _ := user.SetZero()
 	user.ID = id
 	tx := mysqlDB.Model(&user).Where(&user).
@@ -62,7 +62,7 @@ func (u UserDao) ListWithPage(p simpletool.Page, user models.User) (result []mod
 }
 
 // DeleteByUsername 根据账号删除用户信息
-func (u UserDao) DeleteByUsername(username string) (user models.User, err error) {
+func (ud *UserDao) DeleteByUsername(username string) (user models.User, err error) {
 	tx := mysqlDB.Begin()
 	err = tx.Model(&models.User{}).Where("username = ?", username).Take(&user).Error
 	if err != nil {
@@ -93,7 +93,7 @@ func (u UserDao) DeleteByUsername(username string) (user models.User, err error)
 }
 
 // LogoutListWithPage 查询注销用户列表，带有分页查询
-func (u UserDao) LogoutListWithPage(p simpletool.Page, logoutUser models.LogoutUser) (result []models.LogoutUser, total int64, err error) {
+func (ud *UserDao) LogoutListWithPage(p simpletool.Page, logoutUser models.LogoutUser) (result []models.LogoutUser, total int64, err error) {
 	id, username, name, gender, phone, address, _ := logoutUser.SetZero()
 	logoutUser.ID = id
 	tx := mysqlDB.Model(&logoutUser).Where(&logoutUser).
@@ -113,7 +113,7 @@ func (u UserDao) LogoutListWithPage(p simpletool.Page, logoutUser models.LogoutU
 }
 
 // RecoverUser 恢复用户信息
-func (u UserDao) RecoverUser(username string) (user models.User, err error) {
+func (ud *UserDao) RecoverUser(username string) (user models.User, err error) {
 	tx := mysqlDB.Begin()
 	err = tx.Model(&models.LogoutUser{}).Where("username = ?", username).Take(&user).Error
 	if err != nil {
@@ -152,7 +152,7 @@ func (u UserDao) RecoverUser(username string) (user models.User, err error) {
 }
 
 // RemoveUser 彻底删除用户
-func (u UserDao) RemoveUser(id uint, username string) (user models.LogoutUser, err error) {
+func (ud *UserDao) RemoveUser(id uint, username string) (user models.LogoutUser, err error) {
 	tx := mysqlDB.Begin()
 	err = tx.Model(&models.LogoutUser{}).
 		Where("id = ?", id).Where("username = ?", username).Delete(&user).Error
@@ -173,7 +173,7 @@ func (u UserDao) RemoveUser(id uint, username string) (user models.LogoutUser, e
 }
 
 // SelectByUsernameAndPhone 通过账号和电话查找用户信息
-func (u UserDao) SelectByUsernameAndPhone(username, phone string) (user models.User, err error) {
+func (ud *UserDao) SelectByUsernameAndPhone(username, phone string) (user models.User, err error) {
 	err = mysqlDB.Model(&models.User{}).Where("username = ? AND phone = ?", username, phone).Take(&user).Error
 	if err != nil {
 		levelLog(fmt.Sprintf("查询用户失败, user = %v", user))

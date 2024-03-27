@@ -10,7 +10,7 @@ import (
 
 // Insert
 // / 添加账户
-func (a AccountDao) Insert(account models.Account, user models.User) (uint, bool) {
+func (ad *AccountDao) Insert(account models.Account, user models.User) (uint, bool) {
 	// 开启事务
 	tx := mysqlDB.Begin()
 	// 将数据插入到account表中
@@ -35,7 +35,7 @@ func (a AccountDao) Insert(account models.Account, user models.User) (uint, bool
 }
 
 // GetCountByUsername 检验账号存不存在
-func (a AccountDao) GetCountByUsername(username string, promise int) (cnt int64) {
+func (ad *AccountDao) GetCountByUsername(username string, promise int) (cnt int64) {
 	err := mysqlDB.Model(&models.Account{}).Where("username = ? AND promise = ?", username, promise).Count(&cnt).Error
 	if err != nil {
 		levelLog("获取数量失败")
@@ -45,7 +45,7 @@ func (a AccountDao) GetCountByUsername(username string, promise int) (cnt int64)
 }
 
 // Get 根据账号获取账号信息
-func (a AccountDao) Get(username string, promise int) (result models.Account, err error) {
+func (ad *AccountDao) Get(username string, promise int) (result models.Account, err error) {
 	err = mysqlDB.Model(&models.Account{}).
 		Where("username = ? AND promise = ?", username, promise).
 		First(&result).Error
@@ -53,7 +53,7 @@ func (a AccountDao) Get(username string, promise int) (result models.Account, er
 }
 
 // Exit 退出登录，删除redis中的token
-func (a AccountDao) Exit(username string) (err error) {
+func (ad *AccountDao) Exit(username string) (err error) {
 	var (
 		tokenKey   = "token:" + username
 		accountKey = []string{
@@ -89,7 +89,7 @@ func (a AccountDao) Exit(username string) (err error) {
 }
 
 // GetPassword 根据账号获取数据库中的密码
-func (a AccountDao) GetPassword(username string) (password string, err error) {
+func (ad *AccountDao) GetPassword(username string) (password string, err error) {
 	err = mysqlDB.Model(&models.Account{}).Select("password").
 		Where("username = ?", username).Take(&password).Error
 	if err != nil {
@@ -100,7 +100,7 @@ func (a AccountDao) GetPassword(username string) (password string, err error) {
 }
 
 // ChangePassword 修改密码
-func (a AccountDao) ChangePassword(username, password string) (err error) {
+func (ad *AccountDao) ChangePassword(username, password string) (err error) {
 	err = mysqlDB.Model(&models.Account{}).Where("username = ?", username).Update("password", password).Error
 	if err != nil {
 		levelLog(fmt.Sprintf("用户%s更新密码失败", username))

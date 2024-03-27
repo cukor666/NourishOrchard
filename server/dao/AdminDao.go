@@ -6,7 +6,7 @@ import (
 	"server/models"
 )
 
-func (a AdminDao) GetUId(username string) (id uint, err error) {
+func (ad *AdminDao) GetUId(username string) (id uint, err error) {
 	var am models.Admin
 	err = mysqlDB.Table(am.TableName()).
 		Where("username = ?", username).
@@ -14,7 +14,7 @@ func (a AdminDao) GetUId(username string) (id uint, err error) {
 	return
 }
 
-func (a AdminDao) SelectByUsername(username string) (admin models.Admin, err error) {
+func (ad *AdminDao) SelectByUsername(username string) (admin models.Admin, err error) {
 	err = mysqlDB.Model(&admin).Where("username = ?", username).Take(&admin).Error
 	if err != nil {
 		return models.Admin{}, err
@@ -23,7 +23,7 @@ func (a AdminDao) SelectByUsername(username string) (admin models.Admin, err err
 }
 
 // Update 更新管理员信息
-func (a AdminDao) Update(admin models.Admin) (models.Admin, error) {
+func (ad *AdminDao) Update(admin models.Admin) (models.Admin, error) {
 	err := mysqlDB.Model(&admin).Omit("id", "username").Where("username = ?", admin.Username).Updates(&admin).Error
 	if err != nil {
 		return models.Admin{}, err
@@ -32,7 +32,7 @@ func (a AdminDao) Update(admin models.Admin) (models.Admin, error) {
 }
 
 // ListWithPage 查询管理员接口
-func (a AdminDao) ListWithPage(p simpletool.Page) (result []models.Admin, total int64, err error) {
+func (ad *AdminDao) ListWithPage(p simpletool.Page) (result []models.Admin, total int64, err error) {
 	tx := mysqlDB.Model(&models.Admin{}).Count(&total)
 	err = tx.Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
 	if err != nil {
@@ -43,7 +43,7 @@ func (a AdminDao) ListWithPage(p simpletool.Page) (result []models.Admin, total 
 }
 
 // SelectByUsernameAndEmail 根据账号和邮箱查找管理员
-func (a AdminDao) SelectByUsernameAndEmail(username, email string) (admin models.Admin, err error) {
+func (ad *AdminDao) SelectByUsernameAndEmail(username, email string) (admin models.Admin, err error) {
 	err = mysqlDB.Model(&models.Admin{}).Where("username = ? AND email = ?", username, email).Take(&admin).Error
 	if err != nil {
 		levelLog(fmt.Sprintf("查询管理员失败，admin = %v", admin))

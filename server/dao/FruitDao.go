@@ -8,7 +8,7 @@ import (
 )
 
 // List 水果列表
-func (f FruitDao) List(p simpletool.Page, fruit models.Fruit) (result []models.Fruit, total int64, err error) {
+func (fd *FruitDao) List(p simpletool.Page, fruit models.Fruit) (result []models.Fruit, total int64, err error) {
 	id, name, water, sugar, life, origin, supplierId := fruit.SetZero()
 	fruit.ID, fruit.Water, fruit.Sugar, fruit.ShelfLife, fruit.SupplierId = id, water, sugar, life, supplierId
 	tx := mysqlDB.Model(&fruit).Where(&fruit).
@@ -25,7 +25,7 @@ func (f FruitDao) List(p simpletool.Page, fruit models.Fruit) (result []models.F
 }
 
 // Detail 水果详情
-func (f FruitDao) Detail(id int) (res response.FruitDetailResponse, err error) {
+func (fd *FruitDao) Detail(id int) (res response.FruitDetailResponse, err error) {
 	var fm models.Fruit
 	var sm models.Supplier
 	err = mysqlDB.Table(fmt.Sprintf("%s f", fm.TableName())).
@@ -41,7 +41,7 @@ func (f FruitDao) Detail(id int) (res response.FruitDetailResponse, err error) {
 }
 
 // Insert 插入水果信息
-func (f FruitDao) Insert(fruit models.Fruit) error {
+func (fd *FruitDao) Insert(fruit models.Fruit) error {
 	err := mysqlDB.Model(&models.Fruit{}).Create(&fruit).Error
 	if err != nil {
 		levelLog("插入水果信息失败")
@@ -51,7 +51,7 @@ func (f FruitDao) Insert(fruit models.Fruit) error {
 }
 
 // Delete 根据Id删除水果信息
-func (f FruitDao) Delete(id int) (fruit models.Fruit, err error) {
+func (fd *FruitDao) Delete(id int) (fruit models.Fruit, err error) {
 	tx := mysqlDB.Model(&fruit).Where("id = ?", id).Take(&fruit)
 	err = tx.Error
 	if err != nil {
@@ -67,7 +67,7 @@ func (f FruitDao) Delete(id int) (fruit models.Fruit, err error) {
 }
 
 // Update 更新水果信息
-func (f FruitDao) Update(fruit models.Fruit) error {
+func (fd *FruitDao) Update(fruit models.Fruit) error {
 	err := mysqlDB.Model(&models.Fruit{}).Where("id = ?", fruit.ID).Omit("id").Updates(&fruit).Error
 	if err != nil {
 		levelLog("更新失败")

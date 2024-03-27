@@ -7,7 +7,7 @@ import (
 	mc "server/models/code"
 )
 
-func (e EmployeeDao) GetUId(username string) (id uint, err error) {
+func (ed *EmployeeDao) GetUId(username string) (id uint, err error) {
 	var em models.Employee
 	err = mysqlDB.Table(em.TableName()).
 		Where("username = ?", username).
@@ -16,7 +16,7 @@ func (e EmployeeDao) GetUId(username string) (id uint, err error) {
 }
 
 // SelectByUsername 根据账户名查询员工信息
-func (e EmployeeDao) SelectByUsername(username string) (emp models.Employee, err error) {
+func (ed *EmployeeDao) SelectByUsername(username string) (emp models.Employee, err error) {
 	err = mysqlDB.Model(&emp).Where("username = ?", username).Take(&emp).Error
 	if err != nil {
 		return models.Employee{}, err
@@ -25,7 +25,7 @@ func (e EmployeeDao) SelectByUsername(username string) (emp models.Employee, err
 }
 
 // Update 更新员工信息
-func (e EmployeeDao) Update(employee models.Employee) (models.Employee, error) {
+func (ed *EmployeeDao) Update(employee models.Employee) (models.Employee, error) {
 	err := mysqlDB.Model(&employee).Omit("id", "username").
 		Where("username = ?", employee.Username).Updates(&employee).Error
 	if err != nil {
@@ -35,7 +35,7 @@ func (e EmployeeDao) Update(employee models.Employee) (models.Employee, error) {
 }
 
 // ListWithPage 查询员工列表，带有分页
-func (e EmployeeDao) ListWithPage(p simpletool.Page, employee models.Employee) (result []models.Employee, total int64, err error) {
+func (ed *EmployeeDao) ListWithPage(p simpletool.Page, employee models.Employee) (result []models.Employee, total int64, err error) {
 	id, username, name, phone, position, salary := employee.SetZero()
 	employee.ID = id
 	employee.Salary = salary
@@ -57,7 +57,7 @@ func (e EmployeeDao) ListWithPage(p simpletool.Page, employee models.Employee) (
 }
 
 // SelectByUsernameAndPhone 通过账号和电话查找员工信息
-func (e EmployeeDao) SelectByUsernameAndPhone(username, phone string) (employee models.Employee, err error) {
+func (ed *EmployeeDao) SelectByUsernameAndPhone(username, phone string) (employee models.Employee, err error) {
 	err = mysqlDB.Model(&models.Employee{}).Where("username = ? AND phone = ?", username, phone).Take(&employee).Error
 	if err != nil {
 		levelLog(fmt.Sprintf("查找员工失败, employee = %v", employee))
@@ -67,7 +67,7 @@ func (e EmployeeDao) SelectByUsernameAndPhone(username, phone string) (employee 
 }
 
 // Promotion 晋升管理员
-func (e EmployeeDao) Promotion(username, name, email, mark string) error {
+func (ed *EmployeeDao) Promotion(username, name, email, mark string) error {
 	tx := mysqlDB.Begin()
 	a := models.Admin{
 		Username: username,
