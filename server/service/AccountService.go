@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"regexp"
 	"server/common/levellog"
+	"server/dao/pwdmg"
 	"server/models"
 	"server/utils"
 	"server/utils/pwdtool"
@@ -42,7 +43,7 @@ func (a AccountService) Exit(username string) error {
 // ChangePassword 修改密码
 func (a AccountService) ChangePassword(username, oldPassword, newPassword string) error {
 	// 从数据库中获取原密码
-	password, err := accountDao.GetPassword(username)
+	password, err := pwdmg.GetPassword(username)
 	if err != nil {
 		levellog.Service("获取密码失败")
 		return err
@@ -58,7 +59,7 @@ func (a AccountService) ChangePassword(username, oldPassword, newPassword string
 		levellog.Service(fmt.Sprintf("对密码加密失败, newPassword = %s", newPassword))
 		return err
 	}
-	err = accountDao.ChangePassword(username, string(newPwd))
+	err = pwdmg.ChangePassword(username, string(newPwd))
 	if err != nil {
 		levellog.Service("修改密码失败")
 		return err

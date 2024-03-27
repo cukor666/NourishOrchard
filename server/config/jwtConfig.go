@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
+	"server/common/levellog"
 	"server/models"
 	"server/utils/promisetool"
 	"time"
@@ -39,18 +40,18 @@ func ParseAndVerifyJWT(tokenString string) (jwt.MapClaims, error) {
 		return []byte(conf.JWTConfig.SecretKey), nil
 	})
 	if err != nil {
-		levelLog(fmt.Sprintf("%v", err))
+		levellog.Config(fmt.Sprintf("%v", err))
 		return nil, err
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
 		if claims["iss"] != conf.JWTConfig.Issuer {
-			levelLog("Invalid issuer")
+			levellog.Config("Invalid issuer")
 			return nil, err
 		}
-		levelLog(fmt.Sprintf("发行人验证成功: %v", claims["iss"]))
+		levellog.Config(fmt.Sprintf("发行人验证成功: %v", claims["iss"]))
 	} else {
-		levelLog(fmt.Sprintf("%v", err))
+		levellog.Config(fmt.Sprintf("%v", err))
 		return nil, err
 	}
 	return claims, nil

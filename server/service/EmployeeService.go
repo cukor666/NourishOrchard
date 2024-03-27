@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"server/common/levellog"
 	"server/common/simpletool"
+	"server/dao/pwdmg"
 	"server/models"
 	mc "server/models/code"
 	"server/request"
@@ -51,7 +52,7 @@ func (e EmployeeService) ForgetPassword(req request.ForgetPwdReq) error {
 		levellog.Service("新密码加密失败")
 		return err
 	}
-	err = accountDao.ChangePassword(req.Username, string(pwd))
+	err = pwdmg.ChangePassword(req.Username, string(pwd))
 	if err != nil {
 		levellog.Service("修改密码错误")
 		return err

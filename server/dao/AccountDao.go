@@ -88,24 +88,3 @@ func (ad *AccountDao) Exit(username string) (err error) {
 	}
 	return err
 }
-
-// GetPassword 根据账号获取数据库中的密码
-func (ad *AccountDao) GetPassword(username string) (password string, err error) {
-	err = mysqlDB.Model(&models.Account{}).Select("password").
-		Where("username = ?", username).Take(&password).Error
-	if err != nil {
-		levellog.Dao(fmt.Sprintf("获取账户%s密码失败", username))
-		return "", err
-	}
-	return password, nil
-}
-
-// ChangePassword 修改密码
-func (ad *AccountDao) ChangePassword(username, password string) (err error) {
-	err = mysqlDB.Model(&models.Account{}).Where("username = ?", username).Update("password", password).Error
-	if err != nil {
-		levellog.Dao(fmt.Sprintf("用户%s更新密码失败", username))
-		return err
-	}
-	return nil
-}

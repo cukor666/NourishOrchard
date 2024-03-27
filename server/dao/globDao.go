@@ -31,6 +31,10 @@ func init() {
 	mysqlDB = open
 }
 
+func GetMySQL() *gorm.DB {
+	return mysqlDB
+}
+
 // GetRedisDB 开放给外部访问redis实例
 func GetRedisDB() *redis.Client {
 	return redisDB

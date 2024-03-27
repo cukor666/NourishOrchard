@@ -13,3 +13,7 @@ func Service(w string) {
 func Dao(w string) {
 	log.Println("dao层：", w)
 }
+
+func Config(w string) {
+	log.Println("config层：", w)
+}
