@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"server/common"
+	"server/common/levellog"
 	"server/config"
 	"server/dao"
 	mc "server/models/code"
@@ -62,7 +63,7 @@ func (l LoginService) Login(req request.LoginRequest) (string, error) {
 	}
 	// 对密码进行处理
 	if !utils.PwdOK(account.Password, req.Password) {
-		levelLog("密码错误")
+		levellog.Service("密码错误")
 		return "", &common.MyError{
 			Code: resc.PasswordFailed,
 			Msg:  "密码错误",
@@ -77,10 +78,10 @@ func (l LoginService) Login(req request.LoginRequest) (string, error) {
 	case mc.ADMIN:
 		uid, err = l.adminLogin(account.Username)
 	default:
-		levelLog("没有定义")
+		levellog.Service("没有定义")
 	}
 	if err != nil {
-		levelLog("获取ID失败")
+		levellog.Service("获取ID失败")
 		return "", &common.MyError{
 			Code: resc.SystemError,
 			Msg:  "账号" + account.Username + "没有对应的ID, promise: " + strconv.Itoa(promise),
@@ -98,14 +99,14 @@ func (l LoginService) Login(req request.LoginRequest) (string, error) {
 	redisDB := dao.GetRedisDB()
 	for k, v := range redisCmd {
 		if err := redisDB.Set(ctx, k, v, 24*time.Hour).Err(); err != nil {
-			levelLog(fmt.Sprintf("存储到redis失败， err：%v", err))
+			levellog.Service(fmt.Sprintf("存储到redis失败， err：%v", err))
 		}
 	}
 
 	// 生成JWT
 	jwtToken, err := config.GenerateJWT(account)
 	if err != nil {
-		levelLog("生成JWT失败")
+		levellog.Service("生成JWT失败")
 		return "", &common.MyError{
 			Code: resc.SystemError,
 			Msg:  "系统错误无法生成JWT",

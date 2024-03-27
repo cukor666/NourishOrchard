@@ -1,7 +1,6 @@
 package service
 
 import (
-	"log"
 	"server/dao"
 )
 
@@ -20,7 +19,3 @@ var (
 	employeeDao dao.EmployeeDao
 	fruitDao    dao.FruitDao
 )
-
-func levelLog(w string) {
-	log.Println("service层：", w)
-}

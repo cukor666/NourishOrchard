@@ -1,6 +1,7 @@
 package service
 
 import (
+	"server/common/levellog"
 	"server/common/simpletool"
 	"server/models"
 	"server/response"
@@ -10,7 +11,7 @@ import (
 func (f FruitService) List(p simpletool.Page, fruit models.Fruit) (fruits []models.Fruit, total int64, err error) {
 	fruits, total, err = fruitDao.List(p, fruit)
 	if err != nil {
-		levelLog("查询水果列表失败")
+		levellog.Service("查询水果列表失败")
 		return nil, 0, err
 	}
 	return fruits, total, nil
@@ -20,7 +21,7 @@ func (f FruitService) List(p simpletool.Page, fruit models.Fruit) (fruits []mode
 func (f FruitService) Detail(id int) (res response.FruitDetailResponse, err error) {
 	res, err = fruitDao.Detail(id)
 	if err != nil {
-		levelLog("查询错误")
+		levellog.Service("查询错误")
 	}
 	return
 }

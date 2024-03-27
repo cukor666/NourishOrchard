@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"regexp"
+	"server/common/levellog"
 	"server/common/simpletool"
 	"server/models"
 	"server/request"
@@ -29,7 +30,7 @@ func (a AdminService) Update(admin models.Admin) error {
 func (a AdminService) ListWithPage(p simpletool.Page) ([]models.Admin, int64, error) {
 	result, total, err := adminDao.ListWithPage(p)
 	if err != nil {
-		levelLog("查询失败")
+		levellog.Service("查询失败")
 		return nil, 0, err
 	}
 	return result, total, nil
@@ -38,18 +39,18 @@ func (a AdminService) ListWithPage(p simpletool.Page) ([]models.Admin, int64, er
 func (a AdminService) ForgetPassword(req request.ForgetPwdReq) error {
 	_, err := adminDao.SelectByUsernameAndEmail(req.Username, req.Email)
 	if err != nil {
-		levelLog("查询管理员失败")
+		levellog.Service("查询管理员失败")
 		return err
 	}
 	// 对新密码加密
 	pwd, err := utils.GetPwd(req.Password)
 	if err != nil {
-		levelLog("新密码加密失败")
+		levellog.Service("新密码加密失败")
 		return err
 	}
 	err = accountDao.ChangePassword(req.Username, string(pwd))
 	if err != nil {
-		levelLog("修改密码错误")
+		levellog.Service("修改密码错误")
 		return err
 	}
 	return nil

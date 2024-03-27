@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"server/common/levellog"
 	"server/models"
 	"server/utils"
 )
@@ -31,7 +32,7 @@ func (a AccountService) Get(username string, promise int) (account models.Accoun
 func (a AccountService) Exit(username string) error {
 	err := accountDao.Exit(username)
 	if err != nil {
-		levelLog("退出失败")
+		levellog.Service("退出失败")
 		return err
 	}
 	return nil
@@ -42,23 +43,23 @@ func (a AccountService) ChangePassword(username, oldPassword, newPassword string
 	// 从数据库中获取原密码
 	password, err := accountDao.GetPassword(username)
 	if err != nil {
-		levelLog("获取密码失败")
+		levellog.Service("获取密码失败")
 		return err
 	}
 	// 将前端传递的密码和数据库中的密码进行比较
 	if !utils.PwdOK(password, oldPassword) {
-		levelLog("前端传递密码与数据库中原密码不一致，拒绝修改密码请求")
+		levellog.Service("前端传递密码与数据库中原密码不一致，拒绝修改密码请求")
 		return errors.New("前端传递密码与数据库中密码不一致")
 	}
 	// 对新密码进行加密
 	newPwd, err := utils.GetPwd(newPassword)
 	if err != nil {
-		levelLog(fmt.Sprintf("对密码加密失败, newPassword = %s", newPassword))
+		levellog.Service(fmt.Sprintf("对密码加密失败, newPassword = %s", newPassword))
 		return err
 	}
 	err = accountDao.ChangePassword(username, string(newPwd))
 	if err != nil {
-		levelLog("修改密码失败")
+		levellog.Service("修改密码失败")
 		return err
 	}
 	return nil

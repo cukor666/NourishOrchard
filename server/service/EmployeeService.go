@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"server/common/levellog"
 	"server/common/simpletool"
 	"server/models"
 	mc "server/models/code"
@@ -31,7 +32,7 @@ func (e EmployeeService) Update(employee models.Employee) error {
 func (e EmployeeService) ListWithPage(p simpletool.Page, employee models.Employee) ([]models.Employee, int64, error) {
 	result, total, err := employeeDao.ListWithPage(p, employee)
 	if err != nil {
-		levelLog("查询失败")
+		levellog.Service("查询失败")
 		return nil, 0, err
 	}
 	return result, total, nil
@@ -41,18 +42,18 @@ func (e EmployeeService) ListWithPage(p simpletool.Page, employee models.Employe
 func (e EmployeeService) ForgetPassword(req request.ForgetPwdReq) error {
 	_, err := employeeDao.SelectByUsernameAndPhone(req.Username, req.Phone)
 	if err != nil {
-		levelLog("查询员工失败")
+		levellog.Service("查询员工失败")
 		return err
 	}
 	// 对新密码加密
 	pwd, err := utils.GetPwd(req.Password)
 	if err != nil {
-		levelLog("新密码加密失败")
+		levellog.Service("新密码加密失败")
 		return err
 	}
 	err = accountDao.ChangePassword(req.Username, string(pwd))
 	if err != nil {
-		levelLog("修改密码错误")
+		levellog.Service("修改密码错误")
 		return err
 	}
 	return nil
@@ -64,12 +65,12 @@ func (e EmployeeService) Promotion(req request.PromotionRequest) error {
 	if cnt == 0 {
 		var am models.Account
 		str := fmt.Sprintf("%s表中无数据username = %s", am.TableName(), req.Username)
-		levelLog(str)
+		levellog.Service(str)
 		return errors.New(str)
 	}
 	err := employeeDao.Promotion(req.Username, req.Name, req.Email, req.Mark)
 	if err != nil {
-		levelLog("晋升管理员失败")
+		levellog.Service("晋升管理员失败")
 		return err
 	}
 	return nil
