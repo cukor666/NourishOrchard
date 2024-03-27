@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-redis/redis/v8"
+	"server/common/levellog"
 	"server/models"
 )
 
@@ -16,19 +17,19 @@ func (ad *AccountDao) Insert(account models.Account, user models.User) (uint, bo
 	// 将数据插入到account表中
 	err := tx.Create(&account).Error
 	if err != nil {
-		levelLog("数据添加到account表失败")
+		levellog.Dao("数据添加到account表失败")
 		tx.Rollback()
 		return 0, false
 	}
 	// 将数据插入到user表中
 	err = tx.Create(&user).Error
 	if err != nil {
-		levelLog("数据添加到user表失败")
+		levellog.Dao("数据添加到user表失败")
 		tx.Rollback()
 		return 0, false
 	}
 	if err = tx.Commit().Error; err != nil {
-		levelLog(fmt.Sprintf("err: %v", err))
+		levellog.Dao(fmt.Sprintf("err: %v", err))
 		return 0, false
 	}
 	return user.ID, true
@@ -38,7 +39,7 @@ func (ad *AccountDao) Insert(account models.Account, user models.User) (uint, bo
 func (ad *AccountDao) GetCountByUsername(username string, promise int) (cnt int64) {
 	err := mysqlDB.Model(&models.Account{}).Where("username = ? AND promise = ?", username, promise).Count(&cnt).Error
 	if err != nil {
-		levelLog("获取数量失败")
+		levellog.Dao("获取数量失败")
 		return 0
 	}
 	return
@@ -68,20 +69,20 @@ func (ad *AccountDao) Exit(username string) (err error) {
 	err = redisDB.Del(ctx, tokenKey).Err()
 	if err != nil {
 		if errors.Is(err, redis.Nil) {
-			levelLog(fmt.Sprintf("键%s不存在", tokenKey))
+			levellog.Dao(fmt.Sprintf("键%s不存在", tokenKey))
 			return err
 		} else {
-			levelLog(fmt.Sprintf("redis出错, err = %v", err))
+			levellog.Dao(fmt.Sprintf("redis出错, err = %v", err))
 			return err
 		}
 	}
 	err = redisDB.Del(ctx, accountKey...).Err()
 	if err != nil {
 		if errors.Is(err, redis.Nil) {
-			levelLog(fmt.Sprintf("键%s不存在", accountKey))
+			levellog.Dao(fmt.Sprintf("键%s不存在", accountKey))
 			return err
 		} else {
-			levelLog(fmt.Sprintf("redis出错，err = %v", err))
+			levellog.Dao(fmt.Sprintf("redis出错，err = %v", err))
 			return err
 		}
 	}
@@ -93,7 +94,7 @@ func (ad *AccountDao) GetPassword(username string) (password string, err error) 
 	err = mysqlDB.Model(&models.Account{}).Select("password").
 		Where("username = ?", username).Take(&password).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("获取账户%s密码失败", username))
+		levellog.Dao(fmt.Sprintf("获取账户%s密码失败", username))
 		return "", err
 	}
 	return password, nil
@@ -103,7 +104,7 @@ func (ad *AccountDao) GetPassword(username string) (password string, err error) 
 func (ad *AccountDao) ChangePassword(username, password string) (err error) {
 	err = mysqlDB.Model(&models.Account{}).Where("username = ?", username).Update("password", password).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("用户%s更新密码失败", username))
+		levellog.Dao(fmt.Sprintf("用户%s更新密码失败", username))
 		return err
 	}
 	return nil

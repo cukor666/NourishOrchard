@@ -2,6 +2,7 @@ package dao
 
 import (
 	"fmt"
+	"server/common/levellog"
 	"server/common/simpletool"
 	"server/models"
 )
@@ -36,7 +37,7 @@ func (ad *AdminDao) ListWithPage(p simpletool.Page) (result []models.Admin, tota
 	tx := mysqlDB.Model(&models.Admin{}).Count(&total)
 	err = tx.Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
 	if err != nil {
-		levelLog("查询管理员列表失败")
+		levellog.Dao("查询管理员列表失败")
 		return nil, 0, err
 	}
 	return result, total, nil
@@ -46,7 +47,7 @@ func (ad *AdminDao) ListWithPage(p simpletool.Page) (result []models.Admin, tota
 func (ad *AdminDao) SelectByUsernameAndEmail(username, email string) (admin models.Admin, err error) {
 	err = mysqlDB.Model(&models.Admin{}).Where("username = ? AND email = ?", username, email).Take(&admin).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("查询管理员失败，admin = %v", admin))
+		levellog.Dao(fmt.Sprintf("查询管理员失败，admin = %v", admin))
 		return models.Admin{}, err
 	}
 	return admin, nil

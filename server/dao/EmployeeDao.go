@@ -2,6 +2,7 @@ package dao
 
 import (
 	"fmt"
+	"server/common/levellog"
 	"server/common/simpletool"
 	"server/models"
 	mc "server/models/code"
@@ -47,10 +48,10 @@ func (ed *EmployeeDao) ListWithPage(p simpletool.Page, employee models.Employee)
 		Where("phone LIKE ?", fmt.Sprintf("%%%s%%", phone)).
 		Where("position LIKE ?", fmt.Sprintf("%%%s%%", position)).
 		Count(&total)
-	levelLog(fmt.Sprintf("total = %d", total))
+	levellog.Dao(fmt.Sprintf("total = %d", total))
 	err = tx.Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
 	if err != nil {
-		levelLog("查询员工信息失败")
+		levellog.Dao("查询员工信息失败")
 		return nil, 0, err
 	}
 	return result, total, nil
@@ -60,7 +61,7 @@ func (ed *EmployeeDao) ListWithPage(p simpletool.Page, employee models.Employee)
 func (ed *EmployeeDao) SelectByUsernameAndPhone(username, phone string) (employee models.Employee, err error) {
 	err = mysqlDB.Model(&models.Employee{}).Where("username = ? AND phone = ?", username, phone).Take(&employee).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("查找员工失败, employee = %v", employee))
+		levellog.Dao(fmt.Sprintf("查找员工失败, employee = %v", employee))
 		return models.Employee{}, err
 	}
 	return employee, nil
@@ -82,14 +83,14 @@ func (ed *EmployeeDao) Promotion(username, name, email, mark string) error {
 	if err != nil {
 		var am models.Account
 		str := fmt.Sprintf("从%s表中更新username = %s的权限失败", am.TableName(), username)
-		levelLog(str)
+		levellog.Dao(str)
 		tx.Rollback()
 		return err
 	}
 
 	err = tx.Model(&models.Admin{}).Create(&a).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("将%v插入到%s表中失败", a, a.TableName()))
+		levellog.Dao(fmt.Sprintf("将%v插入到%s表中失败", a, a.TableName()))
 		tx.Rollback()
 		return err
 	}
@@ -102,7 +103,7 @@ func (ed *EmployeeDao) Promotion(username, name, email, mark string) error {
 
 	if err != nil {
 		var esm models.EmployeeStatus
-		levelLog(fmt.Sprintf("在%s表中修改username = %s失败", esm.TableName(), username))
+		levellog.Dao(fmt.Sprintf("在%s表中修改username = %s失败", esm.TableName(), username))
 		tx.Rollback()
 		return err
 	}

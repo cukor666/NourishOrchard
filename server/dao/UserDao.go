@@ -2,6 +2,7 @@ package dao
 
 import (
 	"fmt"
+	"server/common/levellog"
 	"server/common/simpletool"
 	"server/models"
 )
@@ -52,10 +53,10 @@ func (ud *UserDao) ListWithPage(p simpletool.Page, user models.User) (result []m
 		Where("phone LIKE ?", fmt.Sprintf("%%%s%%", phone)).
 		Where("address LIKE ?", fmt.Sprintf("%%%s%%", address)).
 		Count(&total)
-	levelLog(fmt.Sprintf("total = %d", total))
+	levellog.Dao(fmt.Sprintf("total = %d", total))
 	err = tx.Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
 	if err != nil {
-		levelLog("查询用户列表失败")
+		levellog.Dao("查询用户列表失败")
 		return nil, 0, err
 	}
 	return
@@ -66,25 +67,25 @@ func (ud *UserDao) DeleteByUsername(username string) (user models.User, err erro
 	tx := mysqlDB.Begin()
 	err = tx.Model(&models.User{}).Where("username = ?", username).Take(&user).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("无此用户，username = %s", username))
+		levellog.Dao(fmt.Sprintf("无此用户，username = %s", username))
 		tx.Rollback()
 		return models.User{}, err
 	}
 	err = tx.Model(&models.LogoutUser{}).Create(user).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("将注销用户加入到logout_users表失败，user = %v", user))
+		levellog.Dao(fmt.Sprintf("将注销用户加入到logout_users表失败，user = %v", user))
 		tx.Rollback()
 		return models.User{}, err
 	}
 	err = tx.Model(&models.User{}).Where("username = ?", username).Delete(&models.User{}).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("删除用户失败，username = %s", username))
+		levellog.Dao(fmt.Sprintf("删除用户失败，username = %s", username))
 		tx.Rollback()
 		return models.User{}, err
 	}
 	err = tx.Model(&models.Account{}).Where("username = ?", username).Delete(&models.Account{}).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("从account表中删除数据失败，username = %s", username))
+		levellog.Dao(fmt.Sprintf("从account表中删除数据失败，username = %s", username))
 		tx.Rollback()
 		return models.User{}, err
 	}
@@ -103,10 +104,10 @@ func (ud *UserDao) LogoutListWithPage(p simpletool.Page, logoutUser models.Logou
 		Where("phone LIKE ?", fmt.Sprintf("%%%s%%", phone)).
 		Where("address LIKE ?", fmt.Sprintf("%%%s%%", address)).
 		Count(&total)
-	levelLog(fmt.Sprintf("total = %d", total))
+	levellog.Dao(fmt.Sprintf("total = %d", total))
 	err = tx.Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
 	if err != nil {
-		levelLog("查询注销用户失败")
+		levellog.Dao("查询注销用户失败")
 		return nil, 0, err
 	}
 	return result, total, nil
@@ -117,33 +118,33 @@ func (ud *UserDao) RecoverUser(username string) (user models.User, err error) {
 	tx := mysqlDB.Begin()
 	err = tx.Model(&models.LogoutUser{}).Where("username = ?", username).Take(&user).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("无法从注销用户表中查找到该用户，username = %s", username))
+		levellog.Dao(fmt.Sprintf("无法从注销用户表中查找到该用户，username = %s", username))
 		tx.Rollback()
 		return models.User{}, err
 	}
 	err = tx.Model(&models.User{}).Create(user).Error
 	if err != nil {
-		levelLog("无法将用户信息添加到user表中")
+		levellog.Dao("无法将用户信息添加到user表中")
 		tx.Rollback()
 		return models.User{}, err
 	}
 	var ac models.Account
 	err = tx.Unscoped().Where("username = ?", username).Take(&ac).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("无法从account表中查找到username = %s的记录", username))
+		levellog.Dao(fmt.Sprintf("无法从account表中查找到username = %s的记录", username))
 		tx.Rollback()
 		return models.User{}, err
 	}
 	ac.DeletedAt = nil
 	err = tx.Save(&ac).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("无法在account表中将账号恢复，username = %s", username))
+		levellog.Dao(fmt.Sprintf("无法在account表中将账号恢复，username = %s", username))
 		tx.Rollback()
 		return models.User{}, err
 	}
 	err = tx.Model(&models.LogoutUser{}).Where("username = ?", username).Delete(&models.LogoutUser{}).Error
 	if err != nil {
-		levelLog("无法将用户信息从logout_user表中删除")
+		levellog.Dao("无法将用户信息从logout_user表中删除")
 		tx.Rollback()
 		return models.User{}, err
 	}
@@ -157,14 +158,14 @@ func (ud *UserDao) RemoveUser(id uint, username string) (user models.LogoutUser,
 	err = tx.Model(&models.LogoutUser{}).
 		Where("id = ?", id).Where("username = ?", username).Delete(&user).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("从%s表中删除用户失败, user = %v", user.TableName(), user))
+		levellog.Dao(fmt.Sprintf("从%s表中删除用户失败, user = %v", user.TableName(), user))
 		tx.Rollback()
 		return models.LogoutUser{}, err
 	}
 	err = tx.Model(&models.Account{}).Unscoped().Where("username = ?", username).Delete(&models.Account{}).Error
 	if err != nil {
 		var am models.Account
-		levelLog(fmt.Sprintf("从%s表中删除%s用户失败", am.TableName(), username))
+		levellog.Dao(fmt.Sprintf("从%s表中删除%s用户失败", am.TableName(), username))
 		tx.Rollback()
 		return models.LogoutUser{}, err
 	}
@@ -176,7 +177,7 @@ func (ud *UserDao) RemoveUser(id uint, username string) (user models.LogoutUser,
 func (ud *UserDao) SelectByUsernameAndPhone(username, phone string) (user models.User, err error) {
 	err = mysqlDB.Model(&models.User{}).Where("username = ? AND phone = ?", username, phone).Take(&user).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("查询用户失败, user = %v", user))
+		levellog.Dao(fmt.Sprintf("查询用户失败, user = %v", user))
 		return models.User{}, err
 	}
 	return user, nil

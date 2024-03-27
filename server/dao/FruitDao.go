@@ -2,6 +2,7 @@ package dao
 
 import (
 	"fmt"
+	"server/common/levellog"
 	"server/common/simpletool"
 	"server/models"
 	"server/response"
@@ -15,10 +16,10 @@ func (fd *FruitDao) List(p simpletool.Page, fruit models.Fruit) (result []models
 		Where("name LIKE ?", fmt.Sprintf("%%%s%%", name)).
 		Where("origin LIKE ?", fmt.Sprintf("%%%s%%", origin)).
 		Count(&total)
-	levelLog(fmt.Sprintf("total = %d", total))
+	levellog.Dao(fmt.Sprintf("total = %d", total))
 	err = tx.Limit(p.Size).Offset((p.Num - 1) * p.Size).Find(&result).Error
 	if err != nil {
-		levelLog("查询水果列表失败")
+		levellog.Dao("查询水果列表失败")
 		return nil, 0, err
 	}
 	return result, total, nil
@@ -35,7 +36,7 @@ func (fd *FruitDao) Detail(id int) (res response.FruitDetailResponse, err error)
 		Joins(fmt.Sprintf("JOIN %s s ON f.supplier_id = s.id", sm.TableName())).
 		Where("f.id = ?", id).Take(&res).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("查询失败res = %v", res))
+		levellog.Dao(fmt.Sprintf("查询失败res = %v", res))
 	}
 	return
 }
@@ -44,7 +45,7 @@ func (fd *FruitDao) Detail(id int) (res response.FruitDetailResponse, err error)
 func (fd *FruitDao) Insert(fruit models.Fruit) error {
 	err := mysqlDB.Model(&models.Fruit{}).Create(&fruit).Error
 	if err != nil {
-		levelLog("插入水果信息失败")
+		levellog.Dao("插入水果信息失败")
 		return err
 	}
 	return nil
@@ -55,12 +56,12 @@ func (fd *FruitDao) Delete(id int) (fruit models.Fruit, err error) {
 	tx := mysqlDB.Model(&fruit).Where("id = ?", id).Take(&fruit)
 	err = tx.Error
 	if err != nil {
-		levelLog(fmt.Sprintf("%s表中无%d的数据", fruit.TableName(), id))
+		levellog.Dao(fmt.Sprintf("%s表中无%d的数据", fruit.TableName(), id))
 		return models.Fruit{}, err
 	}
 	err = tx.Model(&fruit).Where("id = ?", id).Delete(&models.Fruit{}).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("无法从%s表中删除%v的数据", fruit.TableName(), fruit))
+		levellog.Dao(fmt.Sprintf("无法从%s表中删除%v的数据", fruit.TableName(), fruit))
 		return models.Fruit{}, err
 	}
 	return fruit, nil
@@ -70,7 +71,7 @@ func (fd *FruitDao) Delete(id int) (fruit models.Fruit, err error) {
 func (fd *FruitDao) Update(fruit models.Fruit) error {
 	err := mysqlDB.Model(&models.Fruit{}).Where("id = ?", fruit.ID).Omit("id").Updates(&fruit).Error
 	if err != nil {
-		levelLog("更新失败")
+		levellog.Dao("更新失败")
 		return err
 	}
 	return nil

@@ -6,7 +6,6 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"log"
 	"server/config"
 )
 
@@ -35,8 +34,4 @@ func init() {
 // GetRedisDB 开放给外部访问redis实例
 func GetRedisDB() *redis.Client {
 	return redisDB
-}
-
-func levelLog(w string) {
-	log.Println("dao层：", w)
 }
