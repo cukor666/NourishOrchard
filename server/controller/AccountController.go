@@ -4,10 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"server/common/levellog"
 	"server/config"
 	cm "server/controller/args/claims"
 	"server/controller/args/header"
-	"server/models"
+	"server/controller/impl"
 	mc "server/models/code"
 	"server/request"
 	"server/response"
@@ -32,58 +33,34 @@ func (ac *AccountController) GetAccount(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
 	// 查询数据库，将对应的账户个人信息返回给前端
 	username := claims[cm.Username]
 	promise := utils.PromiseToInt(claims[cm.Promise].(string))
+	var i acters
 	switch promise {
 	case mc.USER:
-		// 调用UserService
-		user, err := service.UserService{}.Info(username.(string))
-		if err != nil {
-			response.Failed(context, "账号不规范")
-			return
-		}
-		response.Success(context, gin.H{
-			"promise": "user",
-			"data":    user,
-		}, "查询成功")
+		i = &impl.UserImpl{}
 	case mc.EMPLOYEE:
-		// 调用employeeService
-		emp, err := service.EmployeeService{}.Info(username.(string))
-		if err != nil {
-			response.Failed(context, "账号不规范")
-			return
-		}
-		response.Success(context, gin.H{
-			"promise": "employee",
-			"data":    emp,
-		}, "查询成功")
+		i = &impl.EmployeeImpl{}
 	case mc.ADMIN:
-		// 调用adminService
-		admin, err := service.AdminService{}.Info(username.(string))
-		if err != nil {
-			response.Failed(context, "账号不规范")
-			return
-		}
-		response.Success(context, gin.H{
-			"promise": "admin",
-			"data":    admin,
-		}, "查询成功")
+		i = &impl.AdminImpl{}
 	default:
-		levelLog("权限不对")
+		levellog.Controller("权限不对")
 		response.Failed(context, "权限不对")
+		return
 	}
+	i.Info(context, username.(string))
 }
 
 // Update 更新用户个人信息
@@ -105,78 +82,34 @@ func (ac *AccountController) Update(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
 	// 查询数据库，将对应的账户个人信息返回给前端
 	username := claims[cm.Username]
 	promise := utils.PromiseToInt(claims[cm.Promise].(string))
-	var (
-		user     models.User
-		admin    models.Admin
-		employee models.Employee
-	)
+	var i acters
 	switch promise {
 	case mc.USER:
-		err = context.ShouldBindJSON(&user)
-		if err != nil {
-			levelLog("数据绑定失败")
-			response.Failed(context, "数据绑定失败")
-			return
-		}
-		if username != user.Username {
-			levelLog(fmt.Sprintf("前端传递参数与JWT中不一样，拒绝请求, request: %v", user.Username))
-			response.Failed(context, "参数异常，拒绝请求")
-			return
-		}
-		// 调用UserService
-		err = service.UserService{}.Update(user)
+		i = &impl.UserImpl{}
 	case mc.EMPLOYEE:
-		err = context.ShouldBindJSON(&employee)
-		if err != nil {
-			levelLog(fmt.Sprintf("数据绑定失败, emp: %v", employee))
-			response.Failed(context, "数据绑定失败")
-			return
-		}
-		if username != employee.Username {
-			levelLog(fmt.Sprintf("前端传递参数与JWT中不一样，拒绝请求, request: %v", user.Username))
-			response.Failed(context, "参数异常，拒绝请求")
-			return
-		}
-		// 调用employeeService
-		err = service.EmployeeService{}.Update(employee)
+		i = &impl.EmployeeImpl{}
 	case mc.ADMIN:
-		err = context.ShouldBindJSON(&admin)
-		if err != nil {
-			levelLog("数据绑定失败")
-			response.Failed(context, "数据绑定失败")
-			return
-		}
-		if username != admin.Username {
-			levelLog(fmt.Sprintf("前端传递参数与JWT中不一样，拒绝请求, request: %v", admin.Username))
-			response.Failed(context, "参数异常，拒绝请求")
-			return
-		}
-		// 调用adminService
-		err = service.AdminService{}.Update(admin)
+		i = &impl.AdminImpl{}
 	default:
-		levelLog("权限不对")
+		levellog.Controller("权限不对")
 		response.Failed(context, "权限不对")
 		return
 	}
-	if err != nil {
-		response.Failed(context, "更新失败")
-		return
-	}
-	response.Success(context, 0, "更新成功")
+	i.Update(context, username.(string))
 }
 
 // Exit 账号退出登录
@@ -190,14 +123,14 @@ func (ac *AccountController) Exit(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
@@ -208,13 +141,13 @@ func (ac *AccountController) Exit(context *gin.Context) {
 	case mc.USER, mc.ADMIN, mc.EMPLOYEE:
 		err = service.AccountService{}.Exit(username.(string))
 		if err != nil {
-			levelLog("服务器错误退出失败")
+			levellog.Controller("服务器错误退出失败")
 			response.Failed(context, "服务器错误退出失败")
 			return
 		}
 		response.Success(context, username, "退出成功")
 	default:
-		levelLog(fmt.Sprintf("权限不正确，promise: %d", promise))
+		levellog.Controller(fmt.Sprintf("权限不正确，promise: %d", promise))
 		response.Failed(context, "权限不正确")
 		return
 	}
@@ -226,14 +159,14 @@ func (ac *AccountController) ChangePassword(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
@@ -246,7 +179,7 @@ func (ac *AccountController) ChangePassword(context *gin.Context) {
 	var pwd pwdType
 	err = context.ShouldBindJSON(&pwd)
 	if err != nil {
-		levelLog(fmt.Sprintf("绑定前端数据失败, pwd = %v", pwd))
+		levellog.Controller(fmt.Sprintf("绑定前端数据失败, pwd = %v", pwd))
 		response.Failed(context, "参数错误")
 		return
 	}
@@ -254,13 +187,13 @@ func (ac *AccountController) ChangePassword(context *gin.Context) {
 	case mc.USER, mc.ADMIN, mc.EMPLOYEE:
 		err = service.AccountService{}.ChangePassword(username.(string), pwd.OldPassword, pwd.NewPassword)
 		if err != nil {
-			levelLog("服务器错误修改密码失败")
+			levellog.Controller("服务器错误修改密码失败")
 			response.Failed(context, "服务器错误修改密码失败")
 			return
 		}
 		response.Success(context, username, "修改密码成功")
 	default:
-		levelLog(fmt.Sprintf("权限不正确，promise: %d", promise))
+		levellog.Controller(fmt.Sprintf("权限不正确，promise: %d", promise))
 		response.Failed(context, "权限不正确")
 		return
 	}
@@ -275,7 +208,7 @@ func (ac *AccountController) ForgetPassword(context *gin.Context) {
 
 	err = context.ShouldBindJSON(&req)
 	if err != nil {
-		levelLog(fmt.Sprintf("数据绑定失败， req = %v", req))
+		levellog.Controller(fmt.Sprintf("数据绑定失败， req = %v", req))
 		response.Failed(context, "参数错误")
 		return
 	}
@@ -283,7 +216,7 @@ func (ac *AccountController) ForgetPassword(context *gin.Context) {
 	// 校验短信验证码
 	myCode := "1024"
 	if req.Code != myCode {
-		levelLog(fmt.Sprintf("验证码错误应该得到：%s，却得到%s", myCode, req.Code))
+		levellog.Controller(fmt.Sprintf("验证码错误应该得到：%s，却得到%s", myCode, req.Code))
 		response.Failed(context, "验证码错误")
 		return
 	}
@@ -291,17 +224,17 @@ func (ac *AccountController) ForgetPassword(context *gin.Context) {
 	promise := utils.PromiseToInt(req.Promise)
 	switch promise {
 	case mc.USER:
-		err = service.UserService{}.ForgetPassword(req)
+		err = userService.ForgetPassword(req)
 	case mc.EMPLOYEE:
-		err = service.EmployeeService{}.ForgetPassword(req)
+		err = employeeService.ForgetPassword(req)
 	case mc.ADMIN:
-		err = service.AdminService{}.ForgetPassword(req)
+		err = adminService.ForgetPassword(req)
 	default:
-		levelLog("未开放")
+		levellog.Controller("未开放")
 		err = errors.New("权限未开放")
 	}
 	if err != nil {
-		levelLog("服务器错误，忘记密码接口拒绝请求")
+		levellog.Controller("服务器错误，忘记密码接口拒绝请求")
 		response.Failed(context, "服务器错误")
 		return
 	}

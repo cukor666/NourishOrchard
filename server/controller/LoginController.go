@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"server/common"
+	"server/common/levellog"
 	"server/request"
 	"server/response"
 	"server/service"
@@ -35,23 +36,23 @@ func (lc *LoginController) Login(context *gin.Context) {
 		myErr        *common.MyError
 	)
 	if context.ShouldBind(&loginRequest) != nil {
-		levelLog("绑定失败")
+		levellog.Controller("绑定失败")
 		response.Failed(context, "参数错误")
 		return
 	}
 	ok := lc.validation(loginRequest)
 	if !ok {
-		levelLog("参数校验不通过")
+		levellog.Controller("参数校验不通过")
 		response.Failed(context, "参数校验不通过")
 		return
 	}
 	// 登录业务
 	token, err := service.LoginService{}.Login(loginRequest)
 	if errors.As(err, &myErr) {
-		levelLog("登录失败")
+		levellog.Controller("登录失败")
 		response.FailedWithError(context, myErr)
 		return
 	}
-	levelLog(fmt.Sprintf("token: %v", token))
+	levellog.Controller(fmt.Sprintf("token: %v", token))
 	response.Success(context, token, "登录成功")
 }

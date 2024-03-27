@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"server/common/levellog"
 	"server/common/simpletool"
 	"server/config"
 	cm "server/controller/args/claims"
@@ -31,21 +32,21 @@ func (ec *EmployeeController) List(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
 	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise < mc.ADMIN {
-		levelLog("权限不够，无权访问用户列表")
+		levellog.Controller("权限不够，无权访问用户列表")
 		response.Failed(context, "权限不够，无权访问")
 		return
 	}
@@ -56,27 +57,27 @@ func (ec *EmployeeController) List(context *gin.Context) {
 
 	pageSize := context.Query("pageSize")
 	if p.Size, err = strconv.Atoi(pageSize); err != nil {
-		levelLog(fmt.Sprintf("pageSize参数错误，pageSize: %v", p.Size))
+		levellog.Controller(fmt.Sprintf("pageSize参数错误，pageSize: %v", p.Size))
 		response.Failed(context, "pageSize参数错误")
 		return
 	}
 	pageNum := context.Query("pageNum")
 	if p.Num, err = strconv.Atoi(pageNum); err != nil {
-		levelLog(fmt.Sprintf("pageNum参数错误，pageNum: %v", p.Num))
+		levellog.Controller(fmt.Sprintf("pageNum参数错误，pageNum: %v", p.Num))
 		response.Failed(context, "pageNum参数错误")
 		return
 	}
 
 	err = context.ShouldBindQuery(&employee)
 	if err != nil {
-		levelLog(fmt.Sprintf("参数绑定失败, empcode = %v", employee))
+		levellog.Controller(fmt.Sprintf("参数绑定失败, empcode = %v", employee))
 		response.Failed(context, "参数绑定失败")
 		return
 	}
 
 	employees, total, err := service.EmployeeService{}.ListWithPage(p, employee)
 	if err != nil {
-		levelLog("服务器端错误，查询失败")
+		levellog.Controller("服务器端错误，查询失败")
 		response.Failed(context, "服务器端错误，查询失败")
 		return
 	}
@@ -106,21 +107,21 @@ func (ec *EmployeeController) Update(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
 	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise < mc.ADMIN {
-		levelLog("权限不够，更新用户信息")
+		levellog.Controller("权限不够，更新用户信息")
 		response.Failed(context, "权限不够，无权操作")
 		return
 	}
@@ -129,14 +130,14 @@ func (ec *EmployeeController) Update(context *gin.Context) {
 	)
 	err = context.ShouldBindJSON(&employee)
 	if err != nil {
-		levelLog("前端参数绑定失败")
+		levellog.Controller("前端参数绑定失败")
 		response.Failed(context, "参数绑定失败")
 		return
 	}
-	levelLog(fmt.Sprintf("employee: %v", employee))
+	levellog.Controller(fmt.Sprintf("employee: %v", employee))
 	err = service.EmployeeService{}.Update(employee)
 	if err != nil {
-		levelLog("更新失败")
+		levellog.Controller("更新失败")
 		response.Failed(context, "系统错误更新失败")
 		return
 	}
@@ -149,14 +150,14 @@ func (ec *EmployeeController) Promotion(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
@@ -164,7 +165,7 @@ func (ec *EmployeeController) Promotion(context *gin.Context) {
 	reqPromise := utils.PromiseToInt(claims[cm.Promise].(string))
 	account, err := service.AccountService{}.Get(reqUsername, reqPromise)
 	if err != nil {
-		levelLog("获取账号信息失败")
+		levellog.Controller("获取账号信息失败")
 		response.Failed(context, "获取账号信息失败")
 		return
 	}
@@ -172,20 +173,20 @@ func (ec *EmployeeController) Promotion(context *gin.Context) {
 	var req request.PromotionRequest
 	err = context.ShouldBindJSON(&req)
 	if err != nil {
-		levelLog(fmt.Sprintf("数据绑定失败, promotionReq = %v", req))
+		levellog.Controller(fmt.Sprintf("数据绑定失败, promotionReq = %v", req))
 		response.Failed(context, "数据绑定失败")
 		return
 	}
 
 	if !utils.PwdOK(account.Password, req.Password) {
-		levelLog(fmt.Sprintf("请求账号%s密码错误，拒绝请求", reqUsername))
+		levellog.Controller(fmt.Sprintf("请求账号%s密码错误，拒绝请求", reqUsername))
 		response.Failed(context, "密码错误")
 		return
 	}
 
 	err = service.EmployeeService{}.Promotion(req)
 	if err != nil {
-		levelLog("晋升管理员失败")
+		levellog.Controller("晋升管理员失败")
 		response.Failed(context, "晋升管理员失败")
 		return
 	}

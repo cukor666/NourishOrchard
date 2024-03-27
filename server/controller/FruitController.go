@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"server/common/levellog"
 	"server/common/simpletool"
 	"server/config"
 	cm "server/controller/args/claims"
@@ -21,14 +22,14 @@ func (fc *FruitController) List(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	_, err = config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
@@ -41,14 +42,14 @@ func (fc *FruitController) List(context *gin.Context) {
 	err1 := context.ShouldBindQuery(&p)
 	err2 := context.ShouldBindQuery(&fruit)
 	if err1 != nil || err2 != nil {
-		levelLog("绑定参数解构错误")
+		levellog.Controller("绑定参数解构错误")
 		response.Failed(context, "参数错误")
 		return
 	}
 
 	fruits, total, err := service.FruitService{}.List(p, fruit)
 	if err != nil {
-		levelLog(fmt.Sprintf("查询水果列表失败，fruits = %v", fruits))
+		levellog.Controller(fmt.Sprintf("查询水果列表失败，fruits = %v", fruits))
 		response.Failed(context, "查询水果列表失败")
 		return
 	}
@@ -64,27 +65,27 @@ func (fc *FruitController) Detail(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	_, err = config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
 
 	id, err := strconv.Atoi(context.Query("id"))
 	if err != nil {
-		levelLog("转换失败")
+		levellog.Controller("转换失败")
 		response.Failed(context, "转换失败")
 		return
 	}
 	res, err := service.FruitService{}.Detail(id)
 	if err != nil {
-		levelLog("水果详情请求接口错误")
+		levellog.Controller("水果详情请求接口错误")
 		response.Failed(context, "水果详情请求接口错误")
 		return
 	}
@@ -98,14 +99,14 @@ func (fc *FruitController) Insert(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
@@ -113,24 +114,24 @@ func (fc *FruitController) Insert(context *gin.Context) {
 	var fruit models.Fruit
 	switch promise {
 	case mc.USER:
-		levelLog(fmt.Sprintf("权限不够，当前权限为%d", promise))
+		levellog.Controller(fmt.Sprintf("权限不够，当前权限为%d", promise))
 		response.Failed(context, "权限不够")
 	case mc.EMPLOYEE, mc.ADMIN:
 		err = context.ShouldBindJSON(&fruit)
 		if err != nil {
-			levelLog("绑定数据失败")
+			levellog.Controller("绑定数据失败")
 			response.Failed(context, "绑定数据失败")
 			return
 		}
 		err = service.FruitService{}.Insert(fruit)
 		if err != nil {
-			levelLog("添加水果失败")
+			levellog.Controller("添加水果失败")
 			response.Failed(context, "添加水果失败")
 			return
 		}
 		response.Success(context, 0, "添加成功")
 	default:
-		levelLog(fmt.Sprintf("未知权限%d", promise))
+		levellog.Controller(fmt.Sprintf("未知权限%d", promise))
 		response.Failed(context, "未知权限")
 	}
 }
@@ -141,38 +142,38 @@ func (fc *FruitController) Delete(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
 	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	switch promise {
 	case mc.USER:
-		levelLog("权限不够")
+		levellog.Controller("权限不够")
 		response.Failed(context, "权限不够")
 	case mc.EMPLOYEE, mc.ADMIN:
 		id, err := strconv.Atoi(context.Query("id"))
 		if err != nil {
-			levelLog("获取id失败")
+			levellog.Controller("获取id失败")
 			response.Failed(context, "参数错误")
 			return
 		}
 		fruit, err := service.FruitService{}.Delete(id)
 		if err != nil {
-			levelLog("删除失败")
+			levellog.Controller("删除失败")
 			response.Failed(context, "系统错误删除失败")
 			return
 		}
 		response.Success(context, fruit, "删除成功")
 	default:
-		levelLog("未知权限")
+		levellog.Controller("未知权限")
 		response.Failed(context, "未知权限")
 	}
 }
@@ -183,14 +184,14 @@ func (fc *FruitController) Update(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
@@ -198,24 +199,24 @@ func (fc *FruitController) Update(context *gin.Context) {
 	var fruit models.Fruit
 	switch promise {
 	case mc.USER:
-		levelLog("权限不够")
+		levellog.Controller("权限不够")
 		response.Failed(context, "权限不够")
 	case mc.EMPLOYEE, mc.ADMIN:
 		err = context.ShouldBindJSON(&fruit)
 		if err != nil {
-			levelLog(fmt.Sprintf("数据绑定失败fruit = %v", fruit))
+			levellog.Controller(fmt.Sprintf("数据绑定失败fruit = %v", fruit))
 			response.Failed(context, "参数错误")
 			return
 		}
 		err = service.FruitService{}.Update(fruit)
 		if err != nil {
-			levelLog("更新失败")
+			levellog.Controller("更新失败")
 			response.Failed(context, "更新失败")
 			return
 		}
 		response.Success(context, 0, "更新成功")
 	default:
-		levelLog("未知权限")
+		levellog.Controller("未知权限")
 		response.Failed(context, "未知权限")
 	}
 }

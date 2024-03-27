@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"server/common/levellog"
 	"server/common/simpletool"
 	"server/config"
 	cm "server/controller/args/claims"
@@ -38,21 +39,21 @@ func (uc *UserController) List(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
 	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise <= mc.USER {
-		levelLog("权限不够，无权访问用户列表")
+		levellog.Controller("权限不够，无权访问用户列表")
 		response.Failed(context, "权限不够，无权访问")
 		return
 	}
@@ -66,13 +67,13 @@ func (uc *UserController) List(context *gin.Context) {
 	// 获取分页的参数
 	pageSize := context.Query("pageSize")
 	if p.Size, err = strconv.Atoi(pageSize); err != nil {
-		levelLog(fmt.Sprintf("pageSize参数错误, pageSize: %v", p.Size))
+		levellog.Controller(fmt.Sprintf("pageSize参数错误, pageSize: %v", p.Size))
 		response.Failed(context, "pageSize参数错误")
 		return
 	}
 	pageNum := context.Query("pageNum")
 	if p.Num, err = strconv.Atoi(pageNum); err != nil {
-		levelLog(fmt.Sprintf("pageNum参数错误, pageNum参数错误: %v", p.Num))
+		levellog.Controller(fmt.Sprintf("pageNum参数错误, pageNum参数错误: %v", p.Num))
 		response.Failed(context, "pageNum参数错误")
 		return
 	}
@@ -80,14 +81,14 @@ func (uc *UserController) List(context *gin.Context) {
 	// 获取查询用户的参数
 	err = context.ShouldBindQuery(&user)
 	if err != nil {
-		levelLog(fmt.Sprintf("获取用户参数失败, user: %v", user))
+		levellog.Controller(fmt.Sprintf("获取用户参数失败, user: %v", user))
 		response.Failed(context, "获取用户相关参数失败")
 		return
 	}
 
 	users, total, err := service.UserService{}.List(p, user)
 	if err != nil {
-		levelLog("服务端错误，查询失败")
+		levellog.Controller("服务端错误，查询失败")
 		response.Failed(context, "服务端错误，查询失败")
 		return
 	}
@@ -118,21 +119,21 @@ func (uc *UserController) Update(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
 	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise < mc.ADMIN {
-		levelLog("权限不够，更新用户信息")
+		levellog.Controller("权限不够，更新用户信息")
 		response.Failed(context, "权限不够，无权操作")
 		return
 	}
@@ -141,14 +142,14 @@ func (uc *UserController) Update(context *gin.Context) {
 	)
 	err = context.ShouldBindJSON(&user)
 	if err != nil {
-		levelLog("前端数据绑定失败")
+		levellog.Controller("前端数据绑定失败")
 		response.Failed(context, "数据绑定失败")
 		return
 	}
-	levelLog(fmt.Sprintf("user: %v", user))
+	levellog.Controller(fmt.Sprintf("user: %v", user))
 	err = service.UserService{}.Update(user)
 	if err != nil {
-		levelLog("更新失败")
+		levellog.Controller("更新失败")
 		response.Failed(context, "系统错误更新失败")
 		return
 	}
@@ -161,40 +162,40 @@ func (uc *UserController) Delete(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
 	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise < mc.ADMIN {
-		levelLog("权限不够，更新用户信息")
+		levellog.Controller("权限不够，更新用户信息")
 		response.Failed(context, "权限不够，无权操作")
 		return
 	}
 
 	username := context.Query("username")
 	if username == "" {
-		levelLog("参数错误")
+		levellog.Controller("参数错误")
 		response.Failed(context, "参数错误")
 		return
 	}
 	ok := valid.Username(username)
 	if !ok {
-		levelLog("账号校验失败")
+		levellog.Controller("账号校验失败")
 		response.Failed(context, "参数校验失败")
 		return
 	}
 	deleteUser, err := service.UserService{}.DeleteUser(username)
 	if err != nil {
-		levelLog(fmt.Sprintf("删除用户信息时出错，%v", err))
+		levellog.Controller(fmt.Sprintf("删除用户信息时出错，%v", err))
 		response.Failed(context, "删除失败")
 		return
 	}
@@ -218,21 +219,21 @@ func (uc *UserController) LogoutList(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
 	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise <= mc.USER {
-		levelLog("权限不够，无权访问用户列表")
+		levellog.Controller("权限不够，无权访问用户列表")
 		response.Failed(context, "权限不够，无权访问")
 		return
 	}
@@ -245,27 +246,27 @@ func (uc *UserController) LogoutList(context *gin.Context) {
 
 	pageSize := context.Query("pageSize")
 	if p.Size, err = strconv.Atoi(pageSize); err != nil {
-		levelLog(fmt.Sprintf("pageSize参数错误, pageSize: %v", p.Size))
+		levellog.Controller(fmt.Sprintf("pageSize参数错误, pageSize: %v", p.Size))
 		response.Failed(context, "pageSize参数错误")
 		return
 	}
 	pageNum := context.Query("pageNum")
 	if p.Num, err = strconv.Atoi(pageNum); err != nil {
-		levelLog(fmt.Sprintf("pageNum参数错误, pageNum参数错误: %v", p.Num))
+		levellog.Controller(fmt.Sprintf("pageNum参数错误, pageNum参数错误: %v", p.Num))
 		response.Failed(context, "pageNum参数错误")
 		return
 	}
 
 	err = context.ShouldBindQuery(&logoutUser)
 	if err != nil {
-		levelLog(fmt.Sprintf("获取注销用户参数失败, logoutUser: %v", logoutUser))
+		levellog.Controller(fmt.Sprintf("获取注销用户参数失败, logoutUser: %v", logoutUser))
 		response.Failed(context, "获取注销用户参数失败")
 		return
 	}
 
 	users, total, err := service.UserService{}.LogoutList(p, logoutUser)
 	if err != nil {
-		levelLog("服务端错误，查询失败")
+		levellog.Controller("服务端错误，查询失败")
 		response.Failed(context, "服务端错误，查询失败")
 		return
 	}
@@ -290,21 +291,21 @@ func (uc *UserController) RecoverUser(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
 	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise < mc.ADMIN {
-		levelLog("权限不够，更新用户信息")
+		levellog.Controller("权限不够，更新用户信息")
 		response.Failed(context, "权限不够，无权操作")
 		return
 	}
@@ -315,19 +316,19 @@ func (uc *UserController) RecoverUser(context *gin.Context) {
 	var req tempRequest
 	err = context.ShouldBindJSON(&req)
 	if err != nil {
-		levelLog(fmt.Sprintf("参数绑定失败，req = %v", req))
+		levellog.Controller(fmt.Sprintf("参数绑定失败，req = %v", req))
 		response.Failed(context, "参数绑定失败")
 		return
 	}
 	ok := valid.Username(req.Username)
 	if !ok {
-		levelLog("账号校验失败")
+		levellog.Controller("账号校验失败")
 		response.Failed(context, "参数校验失败")
 		return
 	}
 	user, err := service.UserService{}.RecoverUser(req.Username)
 	if err != nil {
-		levelLog(fmt.Sprintf("恢复用户信息失败，user = %v", user))
+		levellog.Controller(fmt.Sprintf("恢复用户信息失败，user = %v", user))
 		response.Failed(context, "恢复用户信息失败")
 		return
 	}
@@ -349,21 +350,21 @@ func (uc *UserController) RemoveUser(context *gin.Context) {
 	authorization := context.GetHeader(header.Authorization)
 	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
 	if err != nil {
-		levelLog("获取token失败，请检查token是否过期")
+		levellog.Controller("获取token失败，请检查token是否过期")
 		response.Failed(context, "获取token失败，请检查token是否过期")
 		return
 	}
 	// 解析token，或token里面的内容
 	claims, err := config.ParseAndVerifyJWT(token)
 	if err != nil {
-		levelLog("解析token失败")
+		levellog.Controller("解析token失败")
 		response.Failed(context, "解析token失败")
 		return
 	}
 	// 获取请求方的权限，如果是普通用户权限则无权访问
 	promise := utils.PromiseToInt(claims[cm.Promise].(string))
 	if promise < mc.ADMIN {
-		levelLog("权限不够，无权访问用户列表")
+		levellog.Controller("权限不够，无权访问用户列表")
 		response.Failed(context, "权限不够，无权访问")
 		return
 	}
@@ -376,14 +377,14 @@ func (uc *UserController) RemoveUser(context *gin.Context) {
 
 	err = context.ShouldBindQuery(&req)
 	if err != nil {
-		levelLog(fmt.Sprintf("参数绑定失败， req = %v", req))
+		levellog.Controller(fmt.Sprintf("参数绑定失败， req = %v", req))
 		response.Failed(context, "参数绑定失败")
 		return
 	}
 
 	err = service.UserService{}.RemoveUser(req.ID, req.Username)
 	if err != nil {
-		levelLog("删除用户失败")
+		levellog.Controller("删除用户失败")
 		response.Failed(context, "删除用户失败")
 		return
 	}

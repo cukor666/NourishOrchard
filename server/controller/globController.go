@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
+	"server/common/levellog"
 	"server/controller/args/header"
 	"server/dao"
 	"server/response"
@@ -38,7 +38,7 @@ func ValidAuthorization(ctx *gin.Context) {
 	username := ctx.GetHeader(header.Username)
 	token, err := GetToken(authorization)
 	if err != nil {
-		levelLog("token校验失败")
+		levellog.Controller("token校验失败")
 		response.Failed(ctx, "token校验失败，请检查token是否过期")
 		ctx.Abort()
 		return
@@ -47,18 +47,18 @@ func ValidAuthorization(ctx *gin.Context) {
 	redisDB := dao.GetRedisDB()
 	redisToken, err := redisDB.Get(context.Background(), "token:"+username).Result()
 	if err != nil {
-		levelLog("从redis中获取token失败")
+		levellog.Controller("从redis中获取token失败")
 		response.Failed(ctx, "从数据库中获取token失败")
 		ctx.Abort()
 		return
 	}
 	if token != redisToken {
-		levelLog("前端传递token与redis中不一致")
+		levellog.Controller("前端传递token与redis中不一致")
 		response.FailedWithCode(ctx, resc.TokenError, "无效的token")
 		ctx.Abort()
 		return
 	}
-	levelLog("token校验通过")
+	levellog.Controller("token校验通过")
 	ctx.Next()
 }
 
@@ -67,12 +67,8 @@ func GetToken(authorization string) (token string, err error) {
 	// 获取token
 	split := strings.Split(authorization, " ")
 	if len(split) != 2 {
-		levelLog("获取token失败")
+		levellog.Controller("获取token失败")
 		return "", errors.New(fmt.Sprintf("获取token失败"))
 	}
 	return split[1], nil
-}
-
-func levelLog(w string) {
-	log.Println("controller层：", w)
 }
