@@ -7,6 +7,6 @@ type EmployeeStatus struct {
 	Mark     string `json:"mark" form:"mark"`
 }
 
-func (e EmployeeStatus) TableName() string {
+func (e *EmployeeStatus) TableName() string {
 	return "employee_status"
 }

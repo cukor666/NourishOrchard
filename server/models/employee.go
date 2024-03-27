@@ -9,7 +9,7 @@ type Employee struct {
 	Salary   int    `json:"salary" form:"salary"`
 }
 
-func (e Employee) TableName() string {
+func (e *Employee) TableName() string {
 	return "employee"
 }
 

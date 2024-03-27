@@ -14,6 +14,6 @@ type Account struct {
 	DeletedAt *gorm.DeletedAt `json:"deletedAt" gorm:"index" form:"deletedAt"`
 }
 
-func (a Account) TableName() string {
+func (a *Account) TableName() string {
 	return "account"
 }

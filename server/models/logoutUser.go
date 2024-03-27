@@ -12,7 +12,7 @@ type LogoutUser struct {
 	Birthday time.Time `json:"birthday" form:"birthday"`
 }
 
-func (l LogoutUser) TableName() string {
+func (l *LogoutUser) TableName() string {
 	return "logout_users"
 }
 

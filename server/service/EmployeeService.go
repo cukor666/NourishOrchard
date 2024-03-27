@@ -63,7 +63,8 @@ func (e EmployeeService) ForgetPassword(req request.ForgetPwdReq) error {
 func (e EmployeeService) Promotion(req request.PromotionRequest) error {
 	cnt := dao.AccountDao{}.GetCountByUsername(req.Username, mc.EMPLOYEE)
 	if cnt == 0 {
-		str := fmt.Sprintf("%s表中无数据username = %s", models.Account{}.TableName(), req.Username)
+		var am models.Account
+		str := fmt.Sprintf("%s表中无数据username = %s", am.TableName(), req.Username)
 		levelLog(str)
 		return errors.New(str)
 	}

@@ -8,7 +8,8 @@ import (
 )
 
 func (e EmployeeDao) GetUId(username string) (id uint, err error) {
-	err = mysqlDB.Table(models.Employee{}.TableName()).
+	var em models.Employee
+	err = mysqlDB.Table(em.TableName()).
 		Where("username = ?", username).
 		Select("id").Take(&id).Error
 	return
@@ -79,7 +80,8 @@ func (e EmployeeDao) Promotion(username, name, email, mark string) error {
 		Update("promise", mc.ADMIN).Error
 
 	if err != nil {
-		str := fmt.Sprintf("从%s表中更新username = %s的权限失败", models.Account{}.TableName(), username)
+		var am models.Account
+		str := fmt.Sprintf("从%s表中更新username = %s的权限失败", am.TableName(), username)
 		levelLog(str)
 		tx.Rollback()
 		return err
@@ -99,7 +101,8 @@ func (e EmployeeDao) Promotion(username, name, email, mark string) error {
 	}).Error
 
 	if err != nil {
-		levelLog(fmt.Sprintf("在%s表中修改username = %s失败", models.EmployeeStatus{}.TableName(), username))
+		var esm models.EmployeeStatus
+		levelLog(fmt.Sprintf("在%s表中修改username = %s失败", esm.TableName(), username))
 		tx.Rollback()
 		return err
 	}

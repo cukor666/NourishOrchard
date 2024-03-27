@@ -7,7 +7,8 @@ import (
 )
 
 func (a AdminDao) GetUId(username string) (id uint, err error) {
-	err = mysqlDB.Table(models.Admin{}.TableName()).
+	var am models.Admin
+	err = mysqlDB.Table(am.TableName()).
 		Where("username = ?", username).
 		Select("id").Take(&id).Error
 	return

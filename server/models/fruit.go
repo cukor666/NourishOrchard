@@ -10,7 +10,7 @@ type Fruit struct {
 	SupplierId int    `json:"supplierId" form:"supplierId"`
 }
 
-func (f Fruit) TableName() string {
+func (f *Fruit) TableName() string {
 	return "fruits"
 }
 

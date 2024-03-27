@@ -26,11 +26,13 @@ func (f FruitDao) List(p simpletool.Page, fruit models.Fruit) (result []models.F
 
 // Detail 水果详情
 func (f FruitDao) Detail(id int) (res response.FruitDetailResponse, err error) {
-	err = mysqlDB.Table(fmt.Sprintf("%s f", models.Fruit{}.TableName())).
+	var fm models.Fruit
+	var sm models.Supplier
+	err = mysqlDB.Table(fmt.Sprintf("%s f", fm.TableName())).
 		Select("f.id fId", "f.`name` fName", "f.water fWater", "f.sugar fSugar",
 			"f.shelf_life fShelfLife", "f.origin fOrigin", "s.id sId", "s.`name` sName",
 			"s.address sAddress", "s.contact_person sContactPerson", "s.phone sPhone", "s.reputation sReputation").
-		Joins(fmt.Sprintf("JOIN %s s ON f.supplier_id = s.id", models.Supplier{}.TableName())).
+		Joins(fmt.Sprintf("JOIN %s s ON f.supplier_id = s.id", sm.TableName())).
 		Where("f.id = ?", id).Take(&res).Error
 	if err != nil {
 		levelLog(fmt.Sprintf("查询失败res = %v", res))

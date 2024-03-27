@@ -7,6 +7,6 @@ type Admin struct {
 	Email    string `json:"email" form:"email"`
 }
 
-func (a Admin) TableName() string {
+func (a *Admin) TableName() string {
 	return "admin"
 }

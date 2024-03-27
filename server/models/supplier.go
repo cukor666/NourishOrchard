@@ -10,6 +10,6 @@ type Supplier struct {
 	Reputation    int    `json:"reputation" form:"reputation"`
 }
 
-func (s Supplier) TableName() string {
+func (s *Supplier) TableName() string {
 	return "suppliers"
 }

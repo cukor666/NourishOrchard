@@ -15,7 +15,8 @@ func (u UserDao) Insert(user models.User) (uint, bool) {
 }
 
 func (u UserDao) GetUId(username string) (id uint, err error) {
-	err = mysqlDB.Table(models.User{}.TableName()).
+	var um models.User
+	err = mysqlDB.Table(um.TableName()).
 		Where("username = ?", username).
 		Select("id").Take(&id).Error
 	return
@@ -162,7 +163,8 @@ func (u UserDao) RemoveUser(id uint, username string) (user models.LogoutUser, e
 	}
 	err = tx.Model(&models.Account{}).Unscoped().Where("username = ?", username).Delete(&models.Account{}).Error
 	if err != nil {
-		levelLog(fmt.Sprintf("从%s表中删除%s用户失败", models.Account{}.TableName(), username))
+		var am models.Account
+		levelLog(fmt.Sprintf("从%s表中删除%s用户失败", am.TableName(), username))
 		tx.Rollback()
 		return models.LogoutUser{}, err
 	}

@@ -12,7 +12,7 @@ type User struct {
 	Birthday time.Time `json:"birthday" form:"birthday"`
 }
 
-func (u User) TableName() string {
+func (u *User) TableName() string {
 	return "users"
 }
 
