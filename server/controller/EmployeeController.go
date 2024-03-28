@@ -164,7 +164,7 @@ func (ec *EmployeeController) Promotion(context *gin.Context) {
 	}
 	reqUsername := claims[cm.Username].(string)
 	reqPromise := promisetool.ToInt(claims[cm.Promise].(string))
-	account, err := service.AccountService{}.Get(reqUsername, reqPromise)
+	account, err := accountService.Get(reqUsername, reqPromise)
 	if err != nil {
 		levellog.Controller("获取账号信息失败")
 		response.Failed(context, "获取账号信息失败")

@@ -12,7 +12,6 @@ import (
 	mc "server/models/code"
 	"server/request"
 	"server/response"
-	"server/service"
 	"server/utils/promisetool"
 )
 
@@ -139,7 +138,7 @@ func (ac *AccountController) Exit(context *gin.Context) {
 	promise := promisetool.ToInt(claims[cm.Promise].(string))
 	switch promise {
 	case mc.USER, mc.ADMIN, mc.EMPLOYEE:
-		err = service.AccountService{}.Exit(username.(string))
+		err = accountService.Exit(username.(string))
 		if err != nil {
 			levellog.Controller("服务器错误退出失败")
 			response.Failed(context, "服务器错误退出失败")
@@ -185,7 +184,7 @@ func (ac *AccountController) ChangePassword(context *gin.Context) {
 	}
 	switch promise {
 	case mc.USER, mc.ADMIN, mc.EMPLOYEE:
-		err = service.AccountService{}.ChangePassword(username.(string), pwd.OldPassword, pwd.NewPassword)
+		err = accountService.ChangePassword(username.(string), pwd.OldPassword, pwd.NewPassword)
 		if err != nil {
 			levellog.Controller("服务器错误修改密码失败")
 			response.Failed(context, "服务器错误修改密码失败")

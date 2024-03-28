@@ -17,3 +17,7 @@ func Dao(w string) {
 func Config(w string) {
 	log.Println("config层：", w)
 }
+
+func Valid(w string) {
+	log.Println("valid层：", w)
+}

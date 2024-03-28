@@ -6,19 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"server/common"
 	"server/common/levellog"
+	"server/controller/spliterr"
 	"server/request"
 	"server/response"
-	"server/service"
-	"server/utils/promisetool"
 )
-
-// 登录参数校验
-func (lc *LoginController) validation(req request.LoginRequest) bool {
-	if req.Username == "" || req.Password == "" || promisetool.ToInt(req.Promise) == 0 {
-		return false
-	}
-	return true
-}
 
 // Login 登录接口
 /**
@@ -34,20 +25,19 @@ func (lc *LoginController) Login(context *gin.Context) {
 	var (
 		loginRequest request.LoginRequest
 		myErr        *common.MyError
+		err          error
 	)
-	if context.ShouldBind(&loginRequest) != nil {
-		levellog.Controller("绑定失败")
-		response.Failed(context, "参数错误")
+	if err = context.ShouldBind(&loginRequest); err != nil {
+		levellog.Controller(spliterr.GetErrMsg(err.Error()))
+		response.Failed(context, "参数校验失败")
 		return
 	}
-	ok := lc.validation(loginRequest)
-	if !ok {
-		levellog.Controller("参数校验不通过")
-		response.Failed(context, "参数校验不通过")
-		return
-	}
+
+	levellog.Controller("登录成功")
+	response.Success(context, 0, "登录成功")
+
 	// 登录业务
-	token, err := service.LoginService{}.Login(loginRequest)
+	token, err := loginService.Login(loginRequest)
 	if errors.As(err, &myErr) {
 		levellog.Controller("登录失败")
 		response.FailedWithError(context, myErr)

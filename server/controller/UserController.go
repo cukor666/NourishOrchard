@@ -8,12 +8,12 @@ import (
 	"server/config"
 	cm "server/controller/args/claims"
 	"server/controller/args/header"
+	"server/controller/spliterr"
 	"server/models"
 	mc "server/models/code"
 	"server/response"
 	"server/service"
 	"server/utils/promisetool"
-	"server/utils/valid"
 	"strconv"
 )
 
@@ -181,19 +181,20 @@ func (uc *UserController) Delete(context *gin.Context) {
 		return
 	}
 
-	username := context.Query("username")
-	if username == "" {
-		levellog.Controller("参数错误")
-		response.Failed(context, "参数错误")
+	type reqStruct struct {
+		Username string `form:"username" binding:"required,username"`
+	}
+
+	var req reqStruct
+	err = context.ShouldBindQuery(&req)
+	if err != nil {
+		str := spliterr.GetErrMsg(fmt.Sprintf("参数错误, err: %s", err.Error()))
+		levellog.Controller(str)
+		response.Failed(context, str)
 		return
 	}
-	ok := valid.Username(username)
-	if !ok {
-		levellog.Controller("账号校验失败")
-		response.Failed(context, "参数校验失败")
-		return
-	}
-	deleteUser, err := service.UserService{}.DeleteUser(username)
+
+	deleteUser, err := service.UserService{}.DeleteUser(req.Username)
 	if err != nil {
 		levellog.Controller(fmt.Sprintf("删除用户信息时出错，%v", err))
 		response.Failed(context, "删除失败")
@@ -311,22 +312,18 @@ func (uc *UserController) RecoverUser(context *gin.Context) {
 	}
 
 	type tempRequest struct {
-		Username string `json:"username"`
+		Username string `json:"username" binding:"required,username"`
 	}
 	var req tempRequest
 	err = context.ShouldBindJSON(&req)
 	if err != nil {
-		levellog.Controller(fmt.Sprintf("参数绑定失败，req = %v", req))
-		response.Failed(context, "参数绑定失败")
+		str := spliterr.GetErrMsg(fmt.Sprintf("参数绑定失败，err: %s", err.Error()))
+		levellog.Controller(str)
+		response.Failed(context, str)
 		return
 	}
-	ok := valid.Username(req.Username)
-	if !ok {
-		levellog.Controller("账号校验失败")
-		response.Failed(context, "参数校验失败")
-		return
-	}
-	user, err := service.UserService{}.RecoverUser(req.Username)
+
+	user, err := userService.RecoverUser(req.Username)
 	if err != nil {
 		levellog.Controller(fmt.Sprintf("恢复用户信息失败，user = %v", user))
 		response.Failed(context, "恢复用户信息失败")

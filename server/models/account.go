@@ -6,7 +6,7 @@ import (
 )
 
 type Account struct {
-	Username  string          `json:"username" gorm:"primarykey" form:"username"`
+	Username  string          `json:"username" gorm:"primarykey" form:"username" binding:"required"`
 	Password  string          `json:"password" form:"password"`
 	Promise   int             `json:"promise" form:"promise"`
 	CreatedAt time.Time       `json:"createdAt" form:"createdAt"`
