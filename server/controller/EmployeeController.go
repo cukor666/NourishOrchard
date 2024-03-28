@@ -8,6 +8,7 @@ import (
 	"server/config"
 	cm "server/controller/args/claims"
 	"server/controller/args/header"
+	"server/controller/spliterr"
 	"server/models"
 	mc "server/models/code"
 	"server/request"
@@ -175,7 +176,9 @@ func (ec *EmployeeController) Promotion(context *gin.Context) {
 	err = context.ShouldBindJSON(&req)
 	if err != nil {
 		levellog.Controller(fmt.Sprintf("数据绑定失败, promotionReq = %v", req))
-		response.Failed(context, "数据绑定失败")
+		msg := spliterr.GetErrMsg(err.Error())
+		levellog.Controller(fmt.Sprintf("err: %s", msg))
+		response.Failed(context, msg)
 		return
 	}
 

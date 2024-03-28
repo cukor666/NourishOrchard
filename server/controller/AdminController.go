@@ -8,11 +8,10 @@ import (
 	"server/config"
 	cm "server/controller/args/claims"
 	"server/controller/args/header"
+	"server/controller/spliterr"
 	mc "server/models/code"
 	"server/response"
-	"server/service"
 	"server/utils/promisetool"
-	"strconv"
 )
 
 // List 查询管理员列表
@@ -49,19 +48,17 @@ func (ad *AdminController) List(context *gin.Context) {
 		return
 	}
 	var p simpletool.Page
-	pageSize := context.Query("pageSize")
-	if p.Size, err = strconv.Atoi(pageSize); err != nil {
-		levellog.Controller(fmt.Sprintf("pageSize参数错误，pageSize: %v", p.Size))
-		response.Failed(context, "pageSize参数错误")
+
+	err = context.ShouldBindQuery(&p)
+	if err != nil {
+		msg := spliterr.GetErrMsg(err.Error())
+		w := fmt.Sprintf("参数校验失败, err: %s", msg)
+		levellog.Controller(w)
+		response.Failed(context, w)
 		return
 	}
-	pageNum := context.Query("pageNum")
-	if p.Num, err = strconv.Atoi(pageNum); err != nil {
-		levellog.Controller(fmt.Sprintf("pageNum参数错误，pageNum: %v", p.Num))
-		response.Failed(context, "pageNum参数错误")
-		return
-	}
-	admins, total, err := service.AdminService{}.ListWithPage(p)
+
+	admins, total, err := adminService.ListWithPage(p)
 	if err != nil {
 		levellog.Controller("服务器端错误，查询失败")
 		response.Failed(context, "服务器端错误")

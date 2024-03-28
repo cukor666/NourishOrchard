@@ -6,7 +6,7 @@ import (
 	mc "server/models/code"
 	"server/request"
 	"server/response"
-	"server/utils"
+	"server/utils/gentool"
 	"server/utils/promisetool"
 	"server/utils/pwdtool"
 )
@@ -33,7 +33,7 @@ func (r RegisterService) deconstruct(req request.RegisterRequest) (models.Accoun
 // Register 用户注册业务
 func (r RegisterService) Register(req request.RegisterRequest) (response.RegisterResponse, bool) {
 	account, user := r.deconstruct(req)
-	username := utils.GenUsername()
+	username := gentool.GenUsername()
 	user.Username = username
 	account.Username = username
 	password, err := pwdtool.GetPwd(account.Password)

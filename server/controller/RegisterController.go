@@ -4,15 +4,11 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"server/common/levellog"
+	"server/controller/spliterr"
 	"server/request"
 	"server/response"
 	"server/service"
 )
-
-// 数据校验
-func (rc *RegisterController) validation(rg request.RegisterRequest) bool {
-	return len(rg.Name) >= 2 && len(rg.Name) <= 20 && len(rg.Password) >= 3 && len(rg.Password) <= 20
-}
 
 // Register 注册
 /**
@@ -29,24 +25,16 @@ body: application/json
 }
 */
 func (rc *RegisterController) Register(context *gin.Context) {
-	var (
-		registerRequest  request.RegisterRequest
-		registerResponse response.RegisterResponse
-	)
-	if context.ShouldBind(&registerRequest) != nil {
-		levellog.Controller("绑定参数失败")
+	var registerRequest request.RegisterRequest
+	if err := context.ShouldBindJSON(&registerRequest); err != nil {
+		msg := spliterr.GetErrMsg(err.Error())
+		levellog.Controller(fmt.Sprintf("绑定参数失败, err: %s", msg))
 		response.Failed(context, "绑定参数失败")
 		return
 	}
-	levellog.Controller("绑定成功")
-	levellog.Controller(fmt.Sprintf("%v", registerRequest))
-	ok := rc.validation(registerRequest)
-	if !ok {
-		response.Failed(context, "参数错误")
-		return
-	}
+
 	// 数据校验通过，交给业务层
-	registerResponse, ok = service.RegisterService{}.Register(registerRequest)
+	registerResponse, ok := service.RegisterService{}.Register(registerRequest)
 	if !ok {
 		levellog.Controller("注册失败")
 		response.FailedWithCode(context, 500, "注册失败")

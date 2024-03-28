@@ -64,29 +64,26 @@ func (uc *UserController) List(context *gin.Context) {
 		user models.User
 	)
 
-	// 获取分页的参数
-	pageSize := context.Query("pageSize")
-	if p.Size, err = strconv.Atoi(pageSize); err != nil {
-		levellog.Controller(fmt.Sprintf("pageSize参数错误, pageSize: %v", p.Size))
-		response.Failed(context, "pageSize参数错误")
-		return
-	}
-	pageNum := context.Query("pageNum")
-	if p.Num, err = strconv.Atoi(pageNum); err != nil {
-		levellog.Controller(fmt.Sprintf("pageNum参数错误, pageNum参数错误: %v", p.Num))
-		response.Failed(context, "pageNum参数错误")
+	err = context.ShouldBindQuery(&p)
+	if err != nil {
+		msg := spliterr.GetErrMsg(err.Error())
+		w := fmt.Sprintf("分页参数校验失败, err: %s", msg)
+		levellog.Controller(w)
+		response.Failed(context, w)
 		return
 	}
 
 	// 获取查询用户的参数
 	err = context.ShouldBindQuery(&user)
 	if err != nil {
-		levellog.Controller(fmt.Sprintf("获取用户参数失败, user: %v", user))
-		response.Failed(context, "获取用户相关参数失败")
+		msg := spliterr.GetErrMsg(err.Error())
+		w := fmt.Sprintf("获取用户参数失败, err: %s", msg)
+		levellog.Controller(w)
+		response.Failed(context, w)
 		return
 	}
 
-	users, total, err := service.UserService{}.List(p, user)
+	users, total, err := userService.List(p, user)
 	if err != nil {
 		levellog.Controller("服务端错误，查询失败")
 		response.Failed(context, "服务端错误，查询失败")
@@ -367,15 +364,16 @@ func (uc *UserController) RemoveUser(context *gin.Context) {
 	}
 
 	type reqType struct {
-		ID       uint   `json:"id" form:"id"`
-		Username string `json:"username" form:"username"`
+		ID       uint   `json:"id" form:"id" binding:"required,gt=0"`
+		Username string `json:"username" form:"username" binding:"required,username"`
 	}
 	var req reqType
 
 	err = context.ShouldBindQuery(&req)
 	if err != nil {
-		levellog.Controller(fmt.Sprintf("参数绑定失败， req = %v", req))
-		response.Failed(context, "参数绑定失败")
+		w := spliterr.GetErrMsg(err.Error())
+		levellog.Controller(fmt.Sprintf("参数校验失败，err: %s", w))
+		response.Failed(context, fmt.Sprintf("参数校验失败，err: %s", w))
 		return
 	}
 

@@ -9,6 +9,7 @@ import (
 	cm "server/controller/args/claims"
 	"server/controller/args/header"
 	"server/controller/impl"
+	"server/controller/spliterr"
 	mc "server/models/code"
 	"server/request"
 	"server/response"
@@ -172,16 +173,18 @@ func (ac *AccountController) ChangePassword(context *gin.Context) {
 	username := claims[cm.Username]
 	promise := promisetool.ToInt(claims[cm.Promise].(string))
 	type pwdType struct {
-		OldPassword string `json:"oldPassword" form:"oldPassword"`
-		NewPassword string `json:"newPassword" form:"newPassword"`
+		OldPassword string `json:"oldPassword" binding:"required,min=3,max=20"`
+		NewPassword string `json:"newPassword" binding:"required,min=3,max=20"`
 	}
 	var pwd pwdType
 	err = context.ShouldBindJSON(&pwd)
 	if err != nil {
-		levellog.Controller(fmt.Sprintf("绑定前端数据失败, pwd = %v", pwd))
-		response.Failed(context, "参数错误")
+		str := spliterr.GetErrMsg(fmt.Sprintf("校验前端数据失败, err: %s", err.Error()))
+		levellog.Controller(str)
+		response.Failed(context, str)
 		return
 	}
+
 	switch promise {
 	case mc.USER, mc.ADMIN, mc.EMPLOYEE:
 		err = accountService.ChangePassword(username.(string), pwd.OldPassword, pwd.NewPassword)
@@ -207,8 +210,9 @@ func (ac *AccountController) ForgetPassword(context *gin.Context) {
 
 	err = context.ShouldBindJSON(&req)
 	if err != nil {
-		levellog.Controller(fmt.Sprintf("数据绑定失败， req = %v", req))
-		response.Failed(context, "参数错误")
+		str := spliterr.GetErrMsg(err.Error())
+		levellog.Controller(fmt.Sprintf("数据绑定失败， err: %s", str))
+		response.Failed(context, str)
 		return
 	}
 
@@ -234,7 +238,7 @@ func (ac *AccountController) ForgetPassword(context *gin.Context) {
 	}
 	if err != nil {
 		levellog.Controller("服务器错误，忘记密码接口拒绝请求")
-		response.Failed(context, "服务器错误")
+		response.Failed(context, "服务器错误，忘记密码接口拒绝请求")
 		return
 	}
 	response.Success(context, 0, "忘记密码更改密码成功")
