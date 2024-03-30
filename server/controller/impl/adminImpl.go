@@ -6,7 +6,7 @@ import (
 	"server/common/levellog"
 	"server/models"
 	"server/response"
-	"server/service"
+	"server/service/adminsvc"
 )
 
 type AdminImpl struct{}
@@ -24,7 +24,7 @@ func (a *AdminImpl) Update(ctx *gin.Context, username string) {
 		response.Failed(ctx, "参数异常，拒绝请求")
 		return
 	}
-	err = service.AdminService{}.Update(admin)
+	err = adminsvc.Update(admin)
 	if err != nil {
 		levellog.Controller("更新失败")
 		response.Failed(ctx, "更新失败")
@@ -34,7 +34,7 @@ func (a *AdminImpl) Update(ctx *gin.Context, username string) {
 }
 
 func (a *AdminImpl) Info(ctx *gin.Context, username string) {
-	admin, err := service.AdminService{}.Info(username)
+	admin, err := adminsvc.Info(username)
 	if err != nil {
 		response.Failed(ctx, "账号不规范")
 		return

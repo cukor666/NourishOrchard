@@ -6,7 +6,7 @@ import (
 	"server/common/levellog"
 	"server/models"
 	"server/response"
-	"server/service"
+	"server/service/usersvc"
 )
 
 type UserImpl struct{}
@@ -24,7 +24,7 @@ func (ui *UserImpl) Update(ctx *gin.Context, username string) {
 		response.Failed(ctx, "参数异常，拒绝请求")
 		return
 	}
-	err = service.UserService{}.Update(user)
+	err = usersvc.Update(user)
 	if err != nil {
 		levellog.Controller("更新失败")
 		response.Failed(ctx, "更新失败")
@@ -34,7 +34,7 @@ func (ui *UserImpl) Update(ctx *gin.Context, username string) {
 }
 
 func (ui *UserImpl) Info(ctx *gin.Context, username string) {
-	user, err := service.UserService{}.Info(username)
+	user, err := usersvc.Info(username)
 	if err != nil {
 		response.Failed(ctx, "账号不规范")
 		return
