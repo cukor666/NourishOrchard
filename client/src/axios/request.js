@@ -1,9 +1,9 @@
 import axios from "axios";
-import {baseURL_pro} from "@/config/api.js"
+import {baseURL_dev, baseURL_pro} from "@/config/api.js"
 
 const request = axios.create({
-    // baseURL: baseURL_dev,
-    baseURL: baseURL_pro,
+    baseURL: baseURL_dev,
+    // baseURL: baseURL_pro,
     timeout: 5000,
 });
 

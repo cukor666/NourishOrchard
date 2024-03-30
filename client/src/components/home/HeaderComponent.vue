@@ -100,6 +100,7 @@ import {useTagsStore} from "@/stores/tags.js";
 import {storeToRefs} from "pinia";
 import {useLocalKey} from "@/hooks/common/useLocalKey.js";
 import {useSessionKey} from "@/hooks/common/useSessionKey.js";
+import {ActGet, ChPwd, Exit} from "@/api/account/account-api.js";
 
 const {NourishAccount, NourishToken, NourishPromise} = useLocalKey()
 const sessionKey = useSessionKey()
@@ -211,7 +212,7 @@ const updateUser = () => {
 // 获取数据并打开信息对话框
 const selfInfo = () => {
   // 向后端请求数据
-  request.get('/account/get').then(res => {
+  request.get(ActGet).then(res => {
     if (res.code === 200) {
       let v = res.data
       if (v.promise === "user") {
@@ -273,7 +274,7 @@ const changePwd = () => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
-    request.put('/account/change-password', {
+    request.put(ChPwd, {
       oldPassword: oldPassword.value,
       newPassword: password.value
     }).then(res => {
@@ -297,7 +298,7 @@ const exitDialogVisible = ref(false)
 const exit = async () => {
   // 先向后端发送删除token的请求，然后再删除前端的storage
   try {
-    let res = await request.get('/account/exit')
+    let res = await request.get(Exit)
     if (res.code === 200) {
       ElMessage({message: res.data + '退出成功', type: 'success'})
     } else {

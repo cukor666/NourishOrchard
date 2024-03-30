@@ -71,6 +71,7 @@ import {useRouter} from 'vue-router'
 import request from '@/axios/request'
 import {ElMessage} from 'element-plus';
 import {useValid} from '@/hooks/common/useValid';
+import {Register} from "@/api/register/register-api.js";
 
 const router = useRouter()
 
@@ -152,7 +153,7 @@ const register = () => {
 
   dialogVisible.value = true
 
-  request.post('/register', {...user}).then(res => {
+  request.post(Register, {...user}).then(res => {
     console.log(res);
     account.value = res.data.username
     dialogVisible.value = true

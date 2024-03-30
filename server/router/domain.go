@@ -1,8 +1,8 @@
 package router
 
-const (
-	DomainDev = "http://localhost:5173" // 本地前端的ip端口
-	DomainPro = "http://175.178.49.78"
-)
-
-var domains = [...]string{DomainDev, DomainPro}
+var domains = [...]string{
+	"http://localhost:5173",
+	"http://175.178.49.78:8090",
+	"http://cukor.cn:8090",
+	"https://cukor.cn:8090",
+}

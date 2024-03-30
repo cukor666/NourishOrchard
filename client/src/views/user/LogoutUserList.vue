@@ -48,6 +48,7 @@ import {ElMessage} from "element-plus";
 import {useSearch} from "@/hooks/list/logout-user/useSearch.js"
 import {useTable} from "@/hooks/list/logout-user/useTable.js";
 import {usePage} from "@/hooks/list/logout-user/usePage.js";
+import {LogoutUserList} from "@/api/logout-user/logout-user-api.js";
 
 const {searchDialogV, searchUser, changeSearchDialog, closeSearchDialog, findUser} = useSearch()
 const userList = ref([{...searchUser.value}])
@@ -84,7 +85,7 @@ onMounted(async () => {
   if (users === null || userInfoUpdated.value === "true") {
     // 从服务器端获取
     try {
-      let res = await request.get('/user/logout-list', {
+      let res = await request.get(LogoutUserList, {
         params: {
           pageSize: pageSize.value,
           pageNum: currentPage.value

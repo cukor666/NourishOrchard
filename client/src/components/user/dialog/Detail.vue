@@ -50,6 +50,7 @@ import {reactive, ref} from "vue";
 import {useValid} from "@/hooks/common/useValid.js";
 import {ElMessageBox, ElMessage} from "element-plus";
 import request from "@/axios/request.js";
+import {UserUpdate} from "@/api/user/user-api.js";
 
 let props = defineProps({
   detailDialogV: Boolean,
@@ -102,7 +103,7 @@ const update = () => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    request.put('/user/update', {
+    request.put(UserUpdate, {
       ...props.user
     }).then(res => {
       if (res.code === 200) {

@@ -46,6 +46,7 @@ import router from "@/router/index.js";
 import {useValid} from "@/hooks/common/useValid.js";
 import {ElMessage} from "element-plus";
 import request from "@/axios/request.js";
+import {ForgetPwd} from "@/api/login/login-api.js";
 
 
 const user = reactive({
@@ -116,7 +117,7 @@ const update = async () => {
     }
   }
   try {
-    let res = await request.put('/forget-password', {
+    let res = await request.put(ForgetPwd, {
       ...user,
       username: user.account
     })

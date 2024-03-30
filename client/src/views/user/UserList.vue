@@ -53,6 +53,7 @@ import {useSearch} from "@/hooks/list/user/useSearch.js"
 import {useDetail} from "@/hooks/list/user/useDetail.js";
 import {usePage} from "@/hooks/list/user/usePage.js";
 import {useTable} from "@/hooks/list/user/useTable.js";
+import {UserList} from "@/api/user/user-api.js";
 
 const {searchDialogV, searchUser, changeSearchDialog, closeSearchDialog, findUser} = useSearch()
 const userList = ref([{...searchUser.value}])
@@ -89,7 +90,7 @@ onMounted(async () => {
   if (users === null || userInfoUpdated.value === "true") {
     // 从服务器端获取
     try {
-      let res = await request.get('/user/list', {
+      let res = await request.get(UserList, {
         params: {
           pageSize: pageSize.value,
           pageNum: currentPage.value

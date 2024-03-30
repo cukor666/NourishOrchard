@@ -48,6 +48,7 @@ import {onMounted, ref} from "vue";
 import request from "@/axios/request.js";
 import {ElMessage} from "element-plus";
 import Detail from "@/components/employee/dialog/Detail.vue";
+import {EmpList} from "@/api/emp/emp-api.js";
 
 const searchDialogV = ref(false)
 
@@ -69,7 +70,7 @@ const pageSizes = ref([3, 6, 10])
 
 onMounted(async () => {
   try {
-    let res = await request.get('/employee/list', {
+    let res = await request.get(EmpList, {
       params: {
         pageSize: pageSize.value,
         pageNum: currentPage.value,

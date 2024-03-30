@@ -44,6 +44,7 @@ import Vcode from "vue3-puzzle-vcode";
 import request from '@/axios/request'
 import {useLocalKey} from "@/hooks/common/useLocalKey.js";
 import {useSessionKey} from "@/hooks/common/useSessionKey.js";
+import {Login} from "@/api/login/login-api.js";
 
 const router = useRouter()
 
@@ -75,7 +76,7 @@ const onSuccess = () => {
   user.account = user.account.trim()
 
   // 使用axios校验后端
-  request.post('/login', {
+  request.post(Login, {
     ...user,
     username: user.account
   }).then(res => {    // 后端校验通过则登录到主页

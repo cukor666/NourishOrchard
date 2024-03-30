@@ -17,6 +17,7 @@ import (
 
 // 注册路由
 func register(r *gin.Engine) {
+	api := r.Group("/api")
 	var wg sync.WaitGroup
 
 	wg.Add(1)
@@ -25,9 +26,9 @@ func register(r *gin.Engine) {
 			levellog.Router("基接口注册完毕")
 			wg.Done()
 		}()
-		r.POST("/register", regctrl.Register)             // 注册
-		r.POST("/login", loginctrl.Login)                 // 登录
-		r.PUT("/forget-password", actctrl.ForgetPassword) // 忘记密码
+		api.POST("/register", regctrl.Register)             // 注册
+		api.POST("/login", loginctrl.Login)                 // 登录
+		api.PUT("/forget-password", actctrl.ForgetPassword) // 忘记密码
 	}()
 
 	wg.Add(1)
@@ -38,7 +39,7 @@ func register(r *gin.Engine) {
 		}()
 		// 账户管理
 		// 内部处理不同权限的功能调用
-		accountGroup := r.Group("/account", controller.ValidAuthorization)
+		accountGroup := api.Group("/account", controller.ValidAuthorization)
 		{
 			accountGroup.GET("/get", actctrl.GetAccount)                 // 获取个人信息
 			accountGroup.PUT("/update", actctrl.Update)                  // 更新个人信息
@@ -54,7 +55,7 @@ func register(r *gin.Engine) {
 			wg.Done()
 		}()
 		// 用户管理
-		userGroup := r.Group("/user", controller.ValidAuthorization)
+		userGroup := api.Group("/user", controller.ValidAuthorization)
 		{
 			userGroup.GET("/list", userctrl.List)        // 用户列表
 			userGroup.PUT("/update", userctrl.Update)    // 更新用户信息
@@ -69,7 +70,7 @@ func register(r *gin.Engine) {
 			wg.Done()
 		}()
 		// 注销用户管理
-		logoutUserGroup := r.Group("/user/logout", controller.ValidAuthorization)
+		logoutUserGroup := api.Group("/user/logout", controller.ValidAuthorization)
 		{
 			logoutUserGroup.GET("/list", lgtuserctrl.LogoutList)      // 注销用户列表
 			logoutUserGroup.POST("/recover", lgtuserctrl.RecoverUser) // 恢复用户信息
@@ -84,7 +85,7 @@ func register(r *gin.Engine) {
 			wg.Done()
 		}()
 		// 员工管理
-		employeeGroup := r.Group("/employee", controller.ValidAuthorization)
+		employeeGroup := api.Group("/employee", controller.ValidAuthorization)
 		{
 			employeeGroup.GET("/list", empctrl.List)           // 员工列表
 			employeeGroup.PUT("/update", empctrl.Update)       // 更新员工信息
@@ -99,7 +100,7 @@ func register(r *gin.Engine) {
 			wg.Done()
 		}()
 		// 管理员管理
-		adminGroup := r.Group("/admin", controller.ValidAuthorization)
+		adminGroup := api.Group("/admin", controller.ValidAuthorization)
 		{
 			adminGroup.GET("/list", adminctrl.List) // 管理员列表
 		}
@@ -112,7 +113,7 @@ func register(r *gin.Engine) {
 			wg.Done()
 		}()
 		// 水果管理
-		fruitGroup := r.Group("/fruit", controller.ValidAuthorization)
+		fruitGroup := api.Group("/fruit", controller.ValidAuthorization)
 		{
 			fruitGroup.GET("/list", fruitctrl.List)     // 水果列表
 			fruitGroup.GET("/detail", fruitctrl.Detail) // 水果详情
