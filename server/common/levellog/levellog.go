@@ -21,3 +21,7 @@ func Config(w string) {
 func Valid(w string) {
 	log.Println("valid层：", w)
 }
+
+func Router(w string) {
+	log.Println("router层：", w)
+}
