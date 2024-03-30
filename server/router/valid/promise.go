@@ -6,8 +6,12 @@ import (
 	"server/utils/promisetool"
 )
 
-var PromiseValid validator.Func = func(fl validator.FieldLevel) bool {
-	promise := fl.Field().Interface().(string)
+func PromiseValid(fl validator.FieldLevel) bool {
+	promise := fl.Field().String()
+	return PromiseValidString(promise)
+}
+
+func PromiseValidString(promise string) bool {
 	p := promisetool.ToInt(promise)
 	switch p {
 	case mc.USER, mc.EMPLOYEE, mc.ADMIN:

@@ -6,8 +6,12 @@ import (
 	"server/common/levellog"
 )
 
-var UsernameValid validator.Func = func(fl validator.FieldLevel) bool {
-	username := fl.Field().Interface().(string)
+func UsernameValid(fl validator.FieldLevel) bool {
+	username := fl.Field().String()
+	return UsernameValidString(username)
+}
+
+func UsernameValidString(username string) bool {
 	matched, err := regexp.MatchString("CZKJ\\d+", username)
 	if err != nil {
 		levellog.Valid(err.Error())

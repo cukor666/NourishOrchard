@@ -1,6 +1,7 @@
 package adminsvc
 
 import (
+	"errors"
 	"server/common/levellog"
 	"server/dao/admindao"
 	"server/dao/pwdmg"
@@ -11,8 +12,8 @@ import (
 func ForgetPassword(req request.ForgetPwdReq) error {
 	_, err := admindao.SelectByUsernameAndEmail(req.Username, req.Email)
 	if err != nil {
-		levellog.Service("查询管理员失败")
-		return err
+		levellog.Service("查询管理员失败, 无该管理员")
+		return errors.New("查询管理员失败, 无该管理员")
 	}
 	// 对新密码加密
 	pwd, err := pwdtool.GetPwd(req.Password)

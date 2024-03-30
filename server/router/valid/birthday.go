@@ -5,8 +5,12 @@ import (
 	"time"
 )
 
-var BirthdayValid validator.Func = func(fl validator.FieldLevel) bool {
+func BirthdayValid(fl validator.FieldLevel) bool {
 	birthday := fl.Field().Interface().(time.Time)
+	return BirthdayValidTime(birthday)
+}
+
+func BirthdayValidTime(birthday time.Time) bool {
 	age := time.Now().Year() - birthday.Year()
 	return age >= 18
 }

@@ -15,6 +15,7 @@ import (
 	"server/response"
 	"server/service/usersvc"
 	"server/utils/promisetool"
+	"sync"
 )
 
 // List 查询用户列表 要求分页查询，并将列表按id倒序
@@ -64,22 +65,46 @@ func List(context *gin.Context) {
 		user models.User
 	)
 
-	err = context.ShouldBindQuery(&p)
-	if err != nil {
-		msg := spliterr.GetErrMsg(err.Error())
-		w := fmt.Sprintf("分页参数校验失败, err: %s", msg)
-		levellog.Controller(w)
-		response.Failed(context, w)
-		return
-	}
+	var wg sync.WaitGroup
+	wg.Add(2)
+	passChan := make(chan bool, 2)
+
+	// 获取分页参数
+	go func() {
+		defer wg.Done()
+		err = context.ShouldBindQuery(&p)
+		if err != nil {
+			msg := spliterr.GetErrMsg(err.Error())
+			w := fmt.Sprintf("分页参数校验失败, err: %s", msg)
+			levellog.Controller(w)
+			passChan <- false
+			context.Abort()
+			return
+		}
+		passChan <- true
+	}()
 
 	// 获取查询用户的参数
-	err = context.ShouldBindQuery(&user)
-	if err != nil {
-		msg := spliterr.GetErrMsg(err.Error())
-		w := fmt.Sprintf("获取用户参数失败, err: %s", msg)
-		levellog.Controller(w)
-		response.Failed(context, w)
+	go func() {
+		defer wg.Done()
+		err = context.ShouldBindQuery(&user)
+		if err != nil {
+			msg := spliterr.GetErrMsg(err.Error())
+			w := fmt.Sprintf("获取用户参数失败, err: %s", msg)
+			levellog.Controller(w)
+			passChan <- false
+			context.Abort()
+			return
+		}
+		passChan <- true
+	}()
+
+	wg.Wait()
+	g1 := <-passChan
+	g2 := <-passChan
+	if !g1 || !g2 {
+		levellog.Controller("参数校验失败")
+		response.Failed(context, "参数错误")
 		return
 	}
 

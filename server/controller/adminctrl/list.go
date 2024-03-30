@@ -10,10 +10,12 @@ import (
 	cm "server/controller/args/claims"
 	"server/controller/args/header"
 	"server/controller/spliterr"
+	"server/models"
 	mc "server/models/code"
 	"server/response"
 	"server/service/adminsvc"
 	"server/utils/promisetool"
+	"sync"
 )
 
 // List 查询管理员列表
@@ -49,18 +51,53 @@ func List(context *gin.Context) {
 		response.Failed(context, "权限不够，无权访问")
 		return
 	}
-	var p simpletool.Page
 
-	err = context.ShouldBindQuery(&p)
-	if err != nil {
-		msg := spliterr.GetErrMsg(err.Error())
-		w := fmt.Sprintf("参数校验失败, err: %s", msg)
-		levellog.Controller(w)
-		response.Failed(context, w)
+	var (
+		p     simpletool.Page
+		admin models.Admin
+		wg    sync.WaitGroup
+	)
+	errChan := make(chan error, 2)
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		err = context.ShouldBindQuery(&p)
+		if err != nil {
+			msg := spliterr.GetErrMsg(err.Error())
+			w := fmt.Sprintf("参数校验失败, err: %s", msg)
+			levellog.Controller(w)
+			errChan <- err
+			context.Abort()
+			return
+		}
+		errChan <- nil
+	}()
+
+	go func() {
+		defer wg.Done()
+		err = context.ShouldBindQuery(&admin)
+		if err != nil {
+			msg := spliterr.GetErrMsg(err.Error())
+			w := fmt.Sprintf("参数校验失败, err: %s", msg)
+			levellog.Controller(w)
+			errChan <- err
+			context.Abort()
+			return
+		}
+		errChan <- nil
+	}()
+
+	wg.Wait()
+	err1 := <-errChan
+	err2 := <-errChan
+	if err1 != nil || err2 != nil {
+		levellog.Controller("参数错误")
+		response.Failed(context, "参数错误")
 		return
 	}
 
-	admins, total, err := adminsvc.ListWithPage(p)
+	admins, total, err := adminsvc.ListWithPage(p, admin)
 	if err != nil {
 		levellog.Controller("服务器端错误，查询失败")
 		response.Failed(context, "服务器端错误")

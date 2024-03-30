@@ -19,6 +19,7 @@ func (ui *UserImpl) Update(ctx *gin.Context, username string) {
 		response.Failed(ctx, "数据绑定失败")
 		return
 	}
+	// username是JWT中的username
 	if username != user.Username {
 		levellog.Controller(fmt.Sprintf("前端传递参数与JWT中不一样，拒绝请求, request: %v", user.Username))
 		response.Failed(ctx, "参数异常，拒绝请求")

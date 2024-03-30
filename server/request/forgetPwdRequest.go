@@ -6,5 +6,5 @@ type ForgetPwdReq struct {
 	Phone    string `json:"phone" form:"phone"`
 	Email    string `json:"email" form:"email"`
 	Code     string `json:"code" form:"code" binding:"required"`
-	Password string `json:"password" form:"password" binding:"required"`
+	Password string `json:"password" form:"password" binding:"required,min=3,max=20"`
 }

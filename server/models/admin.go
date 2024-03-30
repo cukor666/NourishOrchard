@@ -10,3 +10,9 @@ type Admin struct {
 func (a *Admin) TableName() string {
 	return "admin"
 }
+
+func (a *Admin) SetZero() (id uint, username, name, email string) {
+	id, username, name, email = a.ID, a.Username, a.Name, a.Email
+	a.ID, a.Username, a.Name, a.Email = 0, "", "", ""
+	return
+}
