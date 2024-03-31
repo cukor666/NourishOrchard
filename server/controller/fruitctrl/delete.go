@@ -1,6 +1,7 @@
 package fruitctrl
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"server/common/levellog"
 	"server/config"
@@ -41,6 +42,12 @@ func Delete(context *gin.Context) {
 		if err != nil {
 			levellog.Controller("获取id失败")
 			response.Failed(context, "参数错误")
+			return
+		}
+		if id <= 0 {
+			w := fmt.Sprintf("id参数校验不通过，id = %d", id)
+			levellog.Valid(w)
+			response.Failed(context, w)
 			return
 		}
 		fruit, err := fruitsvc.Delete(id)

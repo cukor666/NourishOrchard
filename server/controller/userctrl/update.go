@@ -8,8 +8,8 @@ import (
 	"server/controller"
 	cm "server/controller/args/claims"
 	"server/controller/args/header"
-	"server/models"
 	mc "server/models/code"
+	"server/request"
 	"server/response"
 	"server/service/usersvc"
 	"server/utils/promisetool"
@@ -55,18 +55,19 @@ func Update(context *gin.Context) {
 		return
 	}
 	var (
-		user models.User
+		user request.UpdateUserReq
 	)
 	err = context.ShouldBindJSON(&user)
 	if err != nil {
-		levellog.Controller("前端数据绑定失败")
-		response.Failed(context, "数据绑定失败")
+		w := fmt.Sprintf("前端数据绑定失败, err: %s", err.Error())
+		levellog.Controller(w)
+		response.Failed(context, w)
 		return
 	}
 	levellog.Controller(fmt.Sprintf("user: %v", user))
-	err = usersvc.Update(user)
+	err = usersvc.Update(user.ToUser())
 	if err != nil {
-		levellog.Controller("更新失败")
+		levellog.Controller(fmt.Sprintf("更新失败, err: %s", err.Error()))
 		response.Failed(context, "系统错误更新失败")
 		return
 	}

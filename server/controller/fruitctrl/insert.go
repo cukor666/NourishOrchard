@@ -8,8 +8,8 @@ import (
 	"server/controller"
 	cm "server/controller/args/claims"
 	"server/controller/args/header"
-	"server/models"
 	mc "server/models/code"
+	"server/request"
 	"server/response"
 	"server/service/fruitsvc"
 	"server/utils/promisetool"
@@ -33,7 +33,7 @@ func Insert(context *gin.Context) {
 		return
 	}
 	promise := promisetool.ToInt(claims[cm.Promise].(string))
-	var fruit models.Fruit
+	var fruit request.FruitInsertReq
 	switch promise {
 	case mc.USER:
 		levellog.Controller(fmt.Sprintf("权限不够，当前权限为%d", promise))
@@ -41,11 +41,12 @@ func Insert(context *gin.Context) {
 	case mc.EMPLOYEE, mc.ADMIN:
 		err = context.ShouldBindJSON(&fruit)
 		if err != nil {
-			levellog.Controller("绑定数据失败")
-			response.Failed(context, "绑定数据失败")
+			w := fmt.Sprintf("绑定数据失败, err: %s", err.Error())
+			levellog.Controller(w)
+			response.Failed(context, w)
 			return
 		}
-		err = fruitsvc.Insert(fruit)
+		err = fruitsvc.Insert(fruit.ToFruit())
 		if err != nil {
 			levellog.Controller("添加水果失败")
 			response.Failed(context, "添加水果失败")

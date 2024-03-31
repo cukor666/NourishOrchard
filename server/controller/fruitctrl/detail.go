@@ -1,6 +1,7 @@
 package fruitctrl
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"server/common/levellog"
 	"server/config"
@@ -8,7 +9,6 @@ import (
 	"server/controller/args/header"
 	"server/response"
 	"server/service/fruitsvc"
-	"strconv"
 )
 
 // Detail 水果详情
@@ -29,13 +29,20 @@ func Detail(context *gin.Context) {
 		return
 	}
 
-	id, err := strconv.Atoi(context.Query("id"))
+	type reqStruct struct {
+		ID uint `form:"id" binding:"required,gt=0"`
+	}
+
+	var req reqStruct
+	err = context.ShouldBindQuery(&req)
 	if err != nil {
-		levellog.Controller("转换失败")
-		response.Failed(context, "转换失败")
+		w := fmt.Sprintf("参数校验失败，err: %s", err.Error())
+		levellog.Controller(w)
+		response.Failed(context, w)
 		return
 	}
-	res, err := fruitsvc.Detail(id)
+
+	res, err := fruitsvc.Detail(int(req.ID))
 	if err != nil {
 		levellog.Controller("水果详情请求接口错误")
 		response.Failed(context, "水果详情请求接口错误")

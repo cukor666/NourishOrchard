@@ -63,9 +63,9 @@ func List(context *gin.Context) {
 	var (
 		p    simpletool.Page
 		user models.User
+		wg   sync.WaitGroup
 	)
 
-	var wg sync.WaitGroup
 	wg.Add(2)
 	passChan := make(chan bool, 2)
 

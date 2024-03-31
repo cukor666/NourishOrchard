@@ -8,11 +8,12 @@ import (
 	"server/controller"
 	cm "server/controller/args/claims"
 	"server/controller/args/header"
-	"server/models"
 	mc "server/models/code"
+	"server/request"
 	"server/response"
 	"server/service/fruitsvc"
 	"server/utils/promisetool"
+	"sync"
 )
 
 // Update 更新水果接口
@@ -33,7 +34,7 @@ func Update(context *gin.Context) {
 		return
 	}
 	promise := promisetool.ToInt(claims[cm.Promise].(string))
-	var fruit models.Fruit
+	var fruit request.FruitUpdateReq
 	switch promise {
 	case mc.USER:
 		levellog.Controller("权限不够")
@@ -41,11 +42,20 @@ func Update(context *gin.Context) {
 	case mc.EMPLOYEE, mc.ADMIN:
 		err = context.ShouldBindJSON(&fruit)
 		if err != nil {
-			levellog.Controller(fmt.Sprintf("数据绑定失败fruit = %v", fruit))
-			response.Failed(context, "参数错误")
+			w := fmt.Sprintf("数据绑定失败, err: %s", err.Error())
+			levellog.Controller(w)
+			response.Failed(context, w)
 			return
 		}
-		err = fruitsvc.Update(fruit)
+		// 自定义参数校验
+		ok := validData(fruit)
+		if !ok {
+			levellog.Controller("参数校验失败，请检查参数")
+			response.Failed(context, "参数校验失败请检查参数")
+			return
+		}
+
+		err = fruitsvc.Update(fruit.ToFruit())
 		if err != nil {
 			levellog.Controller("更新失败")
 			response.Failed(context, "更新失败")
@@ -56,4 +66,54 @@ func Update(context *gin.Context) {
 		levellog.Controller("未知权限")
 		response.Failed(context, "未知权限")
 	}
+}
+
+func validData(req request.FruitUpdateReq) bool {
+	defer func() {
+		if err := recover(); err != nil {
+			levellog.Controller(fmt.Sprintf("自定义校验时出错，可能是goroutine的问题, err: %v", err))
+		}
+	}()
+	const goNum = 6
+	oks := [goNum]bool{}
+	var wg sync.WaitGroup
+	wg.Add(goNum)
+	go func() {
+		defer wg.Done()
+		oks[0] = validName(req.Name)
+	}()
+
+	go func() {
+		defer wg.Done()
+		oks[1] = validWater(req.Water)
+	}()
+
+	go func() {
+		defer wg.Done()
+		oks[2] = validSugar(req.Sugar)
+	}()
+
+	go func() {
+		defer wg.Done()
+		oks[3] = validShelfLife(req.ShelfLife)
+	}()
+
+	go func() {
+		defer wg.Done()
+		oks[4] = validOrigin(req.Origin)
+	}()
+
+	go func() {
+		defer wg.Done()
+		oks[5] = validSupplierId(req.SupplierId)
+	}()
+
+	wg.Wait()
+
+	for _, ok := range oks {
+		if !ok {
+			return false
+		}
+	}
+	return true
 }
