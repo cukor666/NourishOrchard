@@ -14,7 +14,7 @@ import (
 	"server/response"
 	"server/service/lgtusersvc"
 	"server/utils/promisetool"
-	"strconv"
+	"sync"
 )
 
 // LogoutList 查询注销用户列表 要求分页查询，并将列表按id倒序
@@ -57,25 +57,43 @@ func LogoutList(context *gin.Context) {
 	var (
 		p          simpletool.Page
 		logoutUser models.LogoutUser
+		wg         sync.WaitGroup
 	)
+	passChan := make(chan bool, 2)
+	wg.Add(2)
 
-	pageSize := context.Query("pageSize")
-	if p.Size, err = strconv.Atoi(pageSize); err != nil {
-		levellog.Controller(fmt.Sprintf("pageSize参数错误, pageSize: %v", p.Size))
-		response.Failed(context, "pageSize参数错误")
-		return
-	}
-	pageNum := context.Query("pageNum")
-	if p.Num, err = strconv.Atoi(pageNum); err != nil {
-		levellog.Controller(fmt.Sprintf("pageNum参数错误, pageNum参数错误: %v", p.Num))
-		response.Failed(context, "pageNum参数错误")
-		return
-	}
+	go func() {
+		defer wg.Done()
+		err = context.ShouldBindQuery(&p)
+		if err != nil {
+			w := fmt.Sprintf("参数page校验不通过, err: %s", err.Error())
+			levellog.Controller(w)
+			passChan <- false
+			context.Abort()
+			return
+		}
+		passChan <- true
+	}()
 
-	err = context.ShouldBindQuery(&logoutUser)
-	if err != nil {
-		levellog.Controller(fmt.Sprintf("获取注销用户参数失败, logoutUser: %v", logoutUser))
-		response.Failed(context, "获取注销用户参数失败")
+	go func() {
+		defer wg.Done()
+		err = context.ShouldBindQuery(&logoutUser)
+		if err != nil {
+			levellog.Controller(fmt.Sprintf("获取注销用户参数失败, logoutUser: %v", logoutUser))
+			passChan <- false
+			context.Abort()
+			return
+		}
+		passChan <- true
+	}()
+
+	wg.Wait()
+	pass1 := <-passChan
+	pass2 := <-passChan
+	if !pass1 || !pass2 {
+		w := "参数校验不通过，请检查参数"
+		levellog.Controller(w)
+		response.Failed(context, w)
 		return
 	}
 

@@ -49,10 +49,10 @@ func RecoverUser(context *gin.Context) {
 		return
 	}
 
-	type tempRequest struct {
+	type tempReq struct {
 		Username string `json:"username" binding:"required,username"`
 	}
-	var req tempRequest
+	var req tempReq
 	err = context.ShouldBindJSON(&req)
 	if err != nil {
 		str := spliterr.GetErrMsg(fmt.Sprintf("参数绑定失败，err: %s", err.Error()))
