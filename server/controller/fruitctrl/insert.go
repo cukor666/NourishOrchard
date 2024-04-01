@@ -9,7 +9,6 @@ import (
 	cm "server/controller/args/claims"
 	"server/controller/args/header"
 	mc "server/models/code"
-	"server/request"
 	"server/response"
 	"server/service/fruitsvc"
 	"server/utils/promisetool"
@@ -33,7 +32,7 @@ func Insert(context *gin.Context) {
 		return
 	}
 	promise := promisetool.ToInt(claims[cm.Promise].(string))
-	var fruit request.FruitInsertReq
+	var fruit FruitInsertReq
 	switch promise {
 	case mc.USER:
 		levellog.Controller(fmt.Sprintf("权限不够，当前权限为%d", promise))

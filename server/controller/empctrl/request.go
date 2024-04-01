@@ -1,13 +1,13 @@
-package request
+package empctrl
 
 import "server/models"
 
 type UpdateEmpReq struct {
 	Username string `json:"username" binding:"required,username"`
-	Name     string `json:"name,omitempty" binding:"min=2,max=20"`
-	Phone    string `json:"phone,omitempty" binding:"phone"`
-	Position string `json:"position,omitempty" binding:"empPosition"`
-	Salary   int    `json:"salary,omitempty" binding:"gte=3000,lte=30000"`
+	Name     string `json:"name" binding:"omitempty,min=2,max=20"`
+	Phone    string `json:"phone" binding:"omitempty,phone"`
+	Position string `json:"position" binding:"omitempty,empPosition"`
+	Salary   int    `json:"salary" binding:"omitempty,gte=3000,lte=30000"`
 }
 
 func (ueq *UpdateEmpReq) ToEmp() models.Employee {

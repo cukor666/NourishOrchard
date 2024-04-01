@@ -9,7 +9,6 @@ import (
 	cm "server/controller/args/claims"
 	"server/controller/args/header"
 	mc "server/models/code"
-	"server/request"
 	"server/response"
 	"server/service/fruitsvc"
 	"server/utils/promisetool"
@@ -34,7 +33,7 @@ func Update(context *gin.Context) {
 		return
 	}
 	promise := promisetool.ToInt(claims[cm.Promise].(string))
-	var fruit request.FruitUpdateReq
+	var fruit FruitUpdateReq
 	switch promise {
 	case mc.USER:
 		levellog.Controller("权限不够")
@@ -68,7 +67,7 @@ func Update(context *gin.Context) {
 	}
 }
 
-func validData(req request.FruitUpdateReq) bool {
+func validData(req FruitUpdateReq) bool {
 	defer func() {
 		if err := recover(); err != nil {
 			levellog.Controller(fmt.Sprintf("自定义校验时出错，可能是goroutine的问题, err: %v", err))

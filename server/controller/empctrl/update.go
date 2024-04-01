@@ -9,7 +9,6 @@ import (
 	cm "server/controller/args/claims"
 	"server/controller/args/header"
 	mc "server/models/code"
-	"server/request"
 	"server/response"
 	"server/service/empsvc"
 	"server/utils/promisetool"
@@ -54,7 +53,7 @@ func Update(context *gin.Context) {
 		return
 	}
 	var (
-		employee request.UpdateEmpReq
+		employee UpdateEmpReq
 	)
 	err = context.ShouldBindJSON(&employee)
 	if err != nil {
