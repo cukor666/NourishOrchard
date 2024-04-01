@@ -43,5 +43,9 @@ func RegisterValid(ctx *gin.Context) {
 		if err := v.RegisterValidation("empPosition", valid.EmpPosition); err != nil {
 			panic(err)
 		}
+
+		if err := v.RegisterValidation("address", valid.AddressValid); err != nil {
+			panic(err)
+		}
 	}
 }

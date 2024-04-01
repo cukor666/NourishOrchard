@@ -3,7 +3,9 @@ package controller
 import (
 	"context"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 	"server/common/levellog"
+	"server/config"
 	"server/controller/args/header"
 	"server/dao"
 	"server/response"
@@ -38,4 +40,24 @@ func ValidAuthorization(ctx *gin.Context) {
 	}
 	levellog.Controller("token校验通过")
 	ctx.Next()
+}
+
+// ValidAuth 权限校验
+func ValidAuth(context *gin.Context) (claims jwt.MapClaims, err error) {
+	// 解析token
+	authorization := context.GetHeader(header.Authorization)
+	token, err := GetToken(authorization) // 能走到这一步说明已经校验过了，所以这里不需要再进行校验
+	if err != nil {
+		levellog.Controller("获取token失败，请检查token是否过期")
+		response.Failed(context, "获取token失败，请检查token是否过期")
+		return
+	}
+	// 解析token，或token里面的内容
+	claims, err = config.ParseAndVerifyJWT(token)
+	if err != nil {
+		levellog.Controller("解析token失败")
+		response.Failed(context, "解析token失败")
+		return nil, err
+	}
+	return claims, nil
 }

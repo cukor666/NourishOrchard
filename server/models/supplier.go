@@ -13,3 +13,9 @@ type Supplier struct {
 func (s *Supplier) TableName() string {
 	return "suppliers"
 }
+
+func (s *Supplier) SetZero() (id int64, name, address, contactPerson, phone string, reputation int) {
+	id, name, address, contactPerson, phone, reputation = s.ID, s.Name, s.Address, s.ContactPerson, s.Phone, s.Reputation
+	s.ID, s.Name, s.Address, s.ContactPerson, s.Phone, s.Reputation = 0, "", "", "", "", 0
+	return
+}

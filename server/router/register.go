@@ -11,7 +11,7 @@ import (
 func register(r *gin.Engine) {
 	api := r.Group("/api")
 	wg := new(sync.WaitGroup)
-	wg.Add(7)
+	wg.Add(8)
 
 	go routes.BaseRoutes(api, wg)
 	go routes.ActRoutes(api, wg)
@@ -20,6 +20,7 @@ func register(r *gin.Engine) {
 	go routes.EmpRoutes(api, wg)
 	go routes.AdminRoutes(api, wg)
 	go routes.FruitRoutes(api, wg)
+	go routes.SupplierRoutes(api, wg)
 
 	wg.Wait()
 	levellog.Router("全部接口注册完毕")
