@@ -11,7 +11,7 @@
  Target Server Version : 80031 (8.0.31)
  File Encoding         : 65001
 
- Date: 14/03/2024 15:44:41
+ Date: 02/04/2024 23:34:36
 */
 
 SET NAMES utf8mb4;
@@ -30,7 +30,7 @@ CREATE TABLE `account`  (
   `deleted_at` datetime NULL DEFAULT NULL COMMENT '删除时间',
   PRIMARY KEY (`username`) USING BTREE,
   UNIQUE INDEX `username`(`username` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of account
@@ -85,7 +85,7 @@ CREATE TABLE `admin`  (
   `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '管理员邮箱',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `username`(`username` ASC) USING BTREE COMMENT '账号'
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of admin
@@ -108,7 +108,7 @@ CREATE TABLE `employee`  (
   `salary` int NULL DEFAULT NULL COMMENT '薪资',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `username`(`username` ASC) USING BTREE COMMENT '账号'
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of employee
@@ -143,7 +143,7 @@ CREATE TABLE `employee_status`  (
   `status` tinyint NOT NULL COMMENT '状态，0离职，1在职，2调离',
   `mark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注，离职原因，正常在岗，调离原因调离去向',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of employee_status
@@ -181,13 +181,53 @@ CREATE TABLE `fruits`  (
   `origin` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '来源，产地',
   `supplier_id` bigint NULL DEFAULT NULL COMMENT '供应商ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 43 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of fruits
 -- ----------------------------
 INSERT INTO `fruits` VALUES (1, '砂糖桔', 90, 80, 15, '广西百色', 1);
 INSERT INTO `fruits` VALUES (2, '沃柑', 80, 90, 15, '广西南宁武鸣', 2);
+INSERT INTO `fruits` VALUES (3, '香蕉', 74, 18, 7, '海南省海口市龙华区', 3);
+INSERT INTO `fruits` VALUES (4, '橙子', 87, 9, 30, '江西省南昌市东湖区', 4);
+INSERT INTO `fruits` VALUES (5, '柠檬', 89, 3, 40, '云南省昆明市五华区', 5);
+INSERT INTO `fruits` VALUES (6, '草莓', 91, 5, 5, '四川省成都市武侯区', 6);
+INSERT INTO `fruits` VALUES (7, '葡萄', 81, 16, 7, '新疆维吾尔自治区乌鲁木齐市天山区', 7);
+INSERT INTO `fruits` VALUES (8, '菠萝', 86, 10, 3, '广东省广州市越秀区', 8);
+INSERT INTO `fruits` VALUES (9, '樱桃', 82, 13, 20, '河北省石家庄市长安区', 9);
+INSERT INTO `fruits` VALUES (10, '猕猴桃', 83, 9, 30, '湖北省武汉市江岸区', 6);
+INSERT INTO `fruits` VALUES (11, '芒果', 83, 14, 4, '广西壮族自治区南宁市青秀区', 10);
+INSERT INTO `fruits` VALUES (12, '杏子', 86, 4, 20, '甘肃省兰州市城关区', 8);
+INSERT INTO `fruits` VALUES (13, '桃子', 89, 8, 5, '陕西省西安市新城区', 13);
+INSERT INTO `fruits` VALUES (14, '梨', 92, 6, 30, '河南省郑州市中原区', 14);
+INSERT INTO `fruits` VALUES (15, '西瓜', 92, 6, 7, '甘肃省张掖市甘州区', 8);
+INSERT INTO `fruits` VALUES (16, '哈密瓜', 90, 8, 20, '新疆维吾尔自治区哈密市伊州区', 1);
+INSERT INTO `fruits` VALUES (17, '柿子', 81, 18, 30, '山西省太原市小店区', 17);
+INSERT INTO `fruits` VALUES (18, '椰子', 47, 6, 50, '海南省三亚市天涯区', 2);
+INSERT INTO `fruits` VALUES (19, '橄榄', 80, 1, 180, '广东省深圳市福田区', 3);
+INSERT INTO `fruits` VALUES (20, '杨梅', 85, 8, 3, '浙江省杭州市上城区', 11);
+INSERT INTO `fruits` VALUES (21, '枣子', 21, 18, 365, '宁夏回族自治区银川市兴庆区', 6);
+INSERT INTO `fruits` VALUES (22, '苹果', 85, 10, 30, '山东省济南市历下区', 2);
+INSERT INTO `fruits` VALUES (23, '荔枝', 82, 16, 5, '广东省广州市海珠区', 1);
+INSERT INTO `fruits` VALUES (24, '龙眼', 82, 15, 7, '福建省福州市鼓楼区', 2);
+INSERT INTO `fruits` VALUES (25, '柚子', 91, 2, 30, '广东省梅州市梅江区', 3);
+INSERT INTO `fruits` VALUES (26, '蓝莓', 85, 10, 7, '江苏省南京市玄武区', 4);
+INSERT INTO `fruits` VALUES (27, '黑莓', 88, 5, 3, '浙江省宁波市海曙区', 5);
+INSERT INTO `fruits` VALUES (28, '石榴', 83, 13, 30, '山西省大同市城区', 6);
+INSERT INTO `fruits` VALUES (29, '木瓜', 88, 8, 5, '海南省三亚市吉阳区', 7);
+INSERT INTO `fruits` VALUES (30, '榴莲', 65, 17, 7, '广东省深圳市罗湖区', 8);
+INSERT INTO `fruits` VALUES (31, '火龙果', 87, 8, 15, '广东省珠海市香洲区', 9);
+INSERT INTO `fruits` VALUES (32, '百香果', 83, 11, 20, '广西壮族自治区桂林市秀峰区', 10);
+INSERT INTO `fruits` VALUES (33, '山楂', 86, 9, 7, '河北省邯郸市邯山区', 11);
+INSERT INTO `fruits` VALUES (34, '杨桃', 91, 4, 20, '广东省佛山市禅城区', 12);
+INSERT INTO `fruits` VALUES (35, '柿子', 81, 18, 30, '山西省太原市小店区', 13);
+INSERT INTO `fruits` VALUES (36, '椰子', 47, 6, 50, '海南省三亚市天涯区', 14);
+INSERT INTO `fruits` VALUES (37, '橄榄', 80, 1, 180, '广东省深圳市福田区', 15);
+INSERT INTO `fruits` VALUES (38, '杨梅', 85, 8, 3, '浙江省杭州市上城区', 16);
+INSERT INTO `fruits` VALUES (39, '枣子', 21, 18, 365, '宁夏回族自治区银川市兴庆区', 17);
+INSERT INTO `fruits` VALUES (40, '桂圆', 79, 15, 365, '广东省东莞市莞城区', 18);
+INSERT INTO `fruits` VALUES (41, '蔬菜', 95, 2, 7, '江苏省苏州市姑苏区', 19);
+INSERT INTO `fruits` VALUES (42, '莲雾', 83, 7, 7, '福建省厦门市思明区', 20);
 
 -- ----------------------------
 -- Table structure for inventory
@@ -203,11 +243,32 @@ CREATE TABLE `inventory`  (
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `deleted_at` datetime NULL DEFAULT NULL COMMENT '删除时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of inventory
 -- ----------------------------
+INSERT INTO `inventory` VALUES (1, 1, 3000, 3, 1, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (2, 2, 2000, 1, 1, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (3, 3, 2500, 2, 2, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (4, 4, 3000, 3, 3, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (5, 5, 1500, 4, 4, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (6, 6, 3500, 5, 5, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (7, 7, 4000, 6, 6, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (8, 8, 4500, 7, 7, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (9, 9, 5000, 8, 8, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (10, 10, 5500, 9, 9, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (11, 11, 6000, 10, 10, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (12, 12, 6500, 11, 1, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (13, 13, 7000, 12, 2, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (14, 14, 7500, 13, 3, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (15, 15, 8000, 14, 4, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (16, 16, 8500, 1, 5, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (17, 17, 9000, 2, 6, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (18, 18, 9500, 3, 7, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (19, 19, 10000, 4, 8, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (20, 20, 10500, 5, 9, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
+INSERT INTO `inventory` VALUES (21, 21, 11000, 6, 10, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
 
 -- ----------------------------
 -- Table structure for logout_users
@@ -223,7 +284,7 @@ CREATE TABLE `logout_users`  (
   `birthday` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '生日',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `username`(`username` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of logout_users
@@ -253,7 +314,7 @@ CREATE TABLE `orders`  (
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `deleted_at` datetime NULL DEFAULT NULL COMMENT '删除时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of orders
@@ -273,7 +334,7 @@ CREATE TABLE `purchase`  (
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `deleted_at` datetime NULL DEFAULT NULL COMMENT '删除时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of purchase
@@ -291,11 +352,31 @@ CREATE TABLE `suppliers`  (
   `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '联系电话',
   `reputation` int NULL DEFAULT NULL COMMENT '信誉',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of suppliers
 -- ----------------------------
+INSERT INTO `suppliers` VALUES (1, '广东深圳星灿有限公司', '广东省深圳市龙华区简上村', '钟航飞', '13789035512', 99);
+INSERT INTO `suppliers` VALUES (2, '鲜果缘有限公司', '广东省深圳市福田区', '何蓝', '13100102030', 89);
+INSERT INTO `suppliers` VALUES (3, '甜蜜果园有限公司', '广西壮族自治区桂林市七星区', '姚冬梅', '13212345678', 87);
+INSERT INTO `suppliers` VALUES (4, '果香天地有限公司', '海南省三亚市天涯区', '孟浩然', '13398765432', 91);
+INSERT INTO `suppliers` VALUES (5, '绿意盎然有限公司', '云南省昆明市五华区', '赵晓风', '13401020304', 88);
+INSERT INTO `suppliers` VALUES (6, '丰收农庄有限公司', '福建省厦门市思明区', '李白云', '13599887766', 90);
+INSERT INTO `suppliers` VALUES (7, '翠绿园艺有限公司', '江西省南昌市西湖区', '王翠花', '13611223344', 86);
+INSERT INTO `suppliers` VALUES (8, '新鲜直供有限公司', '贵州省贵阳市南明区', '张小凡', '13777665544', 85);
+INSERT INTO `suppliers` VALUES (9, '丰年农产品有限公司', '湖南省长沙市芙蓉区', '刘星月', '13866554433', 92);
+INSERT INTO `suppliers` VALUES (10, '翠花农业有限公司', '广东省珠海市香洲区', '周莹', '18500112233', 86);
+INSERT INTO `suppliers` VALUES (11, '盛世果蔬有限公司', '江苏省苏州市姑苏区', '吴梦', '18200223344', 88);
+INSERT INTO `suppliers` VALUES (12, '天然农产品有限公司', '浙江省温州市鹿城区', '陈思', '15200334455', 87);
+INSERT INTO `suppliers` VALUES (13, '绿色家园有限公司', '福建省泉州市丰泽区', '林峰', '18500445566', 89);
+INSERT INTO `suppliers` VALUES (14, '丰硕农庄有限公司', '湖南省衡阳市石鼓区', '黄蓉', '18200556677', 90);
+INSERT INTO `suppliers` VALUES (15, '碧波农产有限公司', '广东省东莞市南城区', '罗燕', '18500667788', 85);
+INSERT INTO `suppliers` VALUES (16, '绿茵果蔬有限公司', '江苏省扬州市广陵区', '黄继光', '18200778899', 87);
+INSERT INTO `suppliers` VALUES (17, '天然绿色有限公司', '浙江省绍兴市越城区', '孙悦', '15200889911', 86);
+INSERT INTO `suppliers` VALUES (18, '丰硕农业有限公司', '湖北省宜昌市西陵区', '李波', '18500991122', 88);
+INSERT INTO `suppliers` VALUES (19, '绿色食品有限公司', '四川省成都市武侯区', '张薇', '18200112233', 90);
+INSERT INTO `suppliers` VALUES (20, '新鲜农庄有限公司', '云南省大理白族自治州', '王小明', '15200223344', 89);
 
 -- ----------------------------
 -- Table structure for users
@@ -311,7 +392,7 @@ CREATE TABLE `users`  (
   `birthday` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '生日',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `username`(`username` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of users
@@ -338,10 +419,19 @@ CREATE TABLE `warehouse`  (
   `capacity` float NULL DEFAULT NULL COMMENT '仓库容量',
   `status` int NULL DEFAULT 0 COMMENT '仓库状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of warehouse
 -- ----------------------------
+INSERT INTO `warehouse` VALUES (1, '广西壮族自治区百色市', 10000, 0);
+INSERT INTO `warehouse` VALUES (2, '广东省汕头市', 12000, 1);
+INSERT INTO `warehouse` VALUES (3, '海南省海口市', 15000, 0);
+INSERT INTO `warehouse` VALUES (4, '福建省泉州市', 8000, 1);
+INSERT INTO `warehouse` VALUES (5, '江西省南昌市', 9500, 0);
+INSERT INTO `warehouse` VALUES (6, '湖南省长沙市', 11000, 1);
+INSERT INTO `warehouse` VALUES (7, '贵州省贵阳市', 13000, 0);
+INSERT INTO `warehouse` VALUES (8, '云南省昆明市', 14000, 1);
+INSERT INTO `warehouse` VALUES (9, '四川省成都市', 16000, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;

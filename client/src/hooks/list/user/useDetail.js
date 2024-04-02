@@ -14,9 +14,7 @@ export function useDetail() {
         address: "",
         birthday: ""
     })
-    const userInfoUpdated = computed(() => {
-        return sessionStorage.getItem(NourishUserInfoUpdated) || "false"
-    })
+
     const closeDetailDialog = () => {
         detailDialogV.value = false
     }
@@ -26,6 +24,6 @@ export function useDetail() {
     }
 
     return {
-        detailDialogV, user, userInfoUpdated, closeDetailDialog, updateUser
+        detailDialogV, user, closeDetailDialog, updateUser
     }
 }

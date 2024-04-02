@@ -1,10 +1,11 @@
 import request from "@/axios/request.js";
 import {ElMessage} from "element-plus";
+import {UserDelete, UserList} from "@/api/user/user-api.js";
 
 export function useTable(userList, pageSize, currentPage, total) {
     const updateList = async (searchUser) => {
         try {
-            let res = await request.get('/user/list', {
+            let res = await request.get(UserList, {
                 params: {
                     pageSize: pageSize.value,
                     pageNum: currentPage.value,
@@ -32,7 +33,7 @@ export function useTable(userList, pageSize, currentPage, total) {
 
     const deleteUser = async (item) => {
         try {
-            let res = await request.delete('/user/delete', {
+            let res = await request.delete(UserDelete, {
                 params: {
                     username: item.username
                 }
@@ -42,7 +43,7 @@ export function useTable(userList, pageSize, currentPage, total) {
             } else {
                 ElMessage({message: '删除失败', type: 'error'})
             }
-            res = await request.get('/user/list', {
+            res = await request.get(UserList, {
                 params: {
                     pageSize: pageSize.value,
                     pageNum: currentPage.value

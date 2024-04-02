@@ -1,6 +1,7 @@
 import request from "@/axios/request.js";
 import {ElMessage} from "element-plus";
 import {useSessionKey} from "@/hooks/common/useSessionKey.js";
+import {LogoutUserList, LogoutUserRecover, LogoutUserRemove} from "@/api/logout-user/logout-user-api.js";
 
 const {NourishLogoutUserTotal, NourishLogoutUserList, NourishLogoutUserInfoUpdated} = useSessionKey()
 
@@ -8,7 +9,7 @@ export function useTable(userList, pageSize, currentPage, total) {
     // 更新用户列表
     const updateList = async (searchUser) => {
         try {
-            let res = await request.get('/user/logout-list', {
+            let res = await request.get(LogoutUserList, {
                 params: {
                     pageSize: pageSize.value,
                     pageNum: currentPage.value,
@@ -32,7 +33,7 @@ export function useTable(userList, pageSize, currentPage, total) {
     // 恢复用户
     const recoverUser = async (item) => {
         try {
-            let res = await request.post('/user/recover', {
+            let res = await request.post(LogoutUserRecover, {
                 username: item.username
             })
             if (res.code === 200) {
@@ -41,7 +42,7 @@ export function useTable(userList, pageSize, currentPage, total) {
             } else {
                 ElMessage({message: '恢复用户失败', type: 'error'})
             }
-            res = await request.get('/user/logout-list', {
+            res = await request.get(LogoutUserList, {
                 params: {
                     pageSize: pageSize.value,
                     pageNum: currentPage.value
@@ -68,7 +69,7 @@ export function useTable(userList, pageSize, currentPage, total) {
     const deleteUser = async (item) => {
         console.log(item)
         try {
-            let res = await request.delete('/user/remove', {
+            let res = await request.delete(LogoutUserRemove, {
                 params: {
                     id: item.id,
                     username: item.username

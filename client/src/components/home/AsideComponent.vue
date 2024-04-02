@@ -119,7 +119,7 @@
           </el-icon>
           <span v-if="showItemContent">订单管理</span>
         </template>
-        <el-menu-item index="PurchaseList" @click="gotoOrdersList">
+        <el-menu-item index="OrderList" @click="gotoOrdersList">
           <template #title>
             <span>订单列表</span>
           </template>

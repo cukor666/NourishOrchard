@@ -48,7 +48,6 @@ import {ElMessage} from "element-plus";
 import request from "@/axios/request.js";
 import {ForgetPwd} from "@/api/login/login-api.js";
 
-
 const user = reactive({
   account: '',
   promise: 'user',
@@ -132,7 +131,6 @@ const update = async () => {
     console.error(e)
     ElMessage({message: '服务器端错误', type: 'error'})
   }
-
 }
 
 </script>

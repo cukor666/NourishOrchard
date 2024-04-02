@@ -44,23 +44,21 @@
 <script setup>
 import SearchUser from "@/components/user/SearchUser.vue";
 import Detail from "@/components/user/dialog/Detail.vue";
-
 import {Search} from "@element-plus/icons-vue";
 import {onMounted, ref} from "vue";
 import request from "@/axios/request.js";
 import {ElMessage} from "element-plus";
 import {useSearch} from "@/hooks/list/user/useSearch.js"
 import {useDetail} from "@/hooks/list/user/useDetail.js";
-import {usePage} from "@/hooks/list/user/usePage.js";
+import {usePage} from "@/hooks/list/usePage.js";
 import {useTable} from "@/hooks/list/user/useTable.js";
 import {UserList} from "@/api/user/user-api.js";
 
 const {searchDialogV, searchUser, changeSearchDialog, closeSearchDialog, findUser} = useSearch()
 const userList = ref([{...searchUser.value}])
-const {detailDialogV, user, userInfoUpdated, closeDetailDialog, updateUser} = useDetail()
+const {detailDialogV, user, closeDetailDialog, updateUser} = useDetail()
 const {currentPage, pageSize, pageSizes, total} = usePage()
 const {updateList, showDetail, deleteUser} = useTable(userList, pageSize, currentPage, total)
-
 
 const pageSizeChange = () => {
   updateList(searchUser)
@@ -84,37 +82,27 @@ const deleteLink = (item) => {
 }
 
 onMounted(async () => {
-  // 从sessionStorage中获取，如果没有则访问服务器获取
-  let users = sessionStorage.getItem('nourish-user-list');
-  total.value = Number(sessionStorage.getItem('nourish-user-total'))
-  if (users === null || userInfoUpdated.value === "true") {
-    // 从服务器端获取
-    try {
-      let res = await request.get(UserList, {
-        params: {
-          pageSize: pageSize.value,
-          pageNum: currentPage.value
-        }
-      })
-      if (res.code === 200) {
-        let v = res.data
-        total.value = v.total
-        userList.value = v.users
-        users = JSON.stringify(userList.value)
-        sessionStorage.setItem('nourish-user-list', users)
-        sessionStorage.setItem('nourish-user-total', total.value.toString())
-        sessionStorage.removeItem('nourish-user-info-updated')
-      } else {
-        console.log(res.msg)
-        ElMessage({message: '参数错误', type: 'error'})
+  // 从服务器端获取
+  try {
+    let res = await request.get(UserList, {
+      params: {
+        pageSize: pageSize.value,
+        pageNum: currentPage.value
       }
-    } catch (err) {
-      console.error(err)
-      ElMessage({message: '服务端错误', type: 'error'})
+    })
+    if (res.code === 200) {
+      let v = res.data
+      total.value = v.total
+      userList.value = v.users
+    } else {
+      console.log(res.msg)
+      ElMessage({message: '参数错误', type: 'error'})
     }
-  } else {
-    userList.value = JSON.parse(users);
+  } catch (err) {
+    console.error(err)
+    ElMessage({message: '服务端错误', type: 'error'})
   }
+
 })
 </script>
 

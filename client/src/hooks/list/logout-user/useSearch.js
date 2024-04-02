@@ -1,6 +1,7 @@
 import {ref} from "vue";
 import request from "@/axios/request.js";
 import {ElMessage} from "element-plus";
+import {LogoutUserList} from "@/api/logout-user/logout-user-api.js";
 
 export function useSearch() {
     const searchDialogV = ref(false)
@@ -26,7 +27,7 @@ export function useSearch() {
         searchDialogV.value = false
         // 向服务器端做查询，然后将结果放到userList中
         try {
-            let res = await request.get('/user/logout-list', {
+            let res = await request.get(LogoutUserList, {
                 params: {
                     pageSize: pageSize.value,
                     pageNum: currentPage.value,

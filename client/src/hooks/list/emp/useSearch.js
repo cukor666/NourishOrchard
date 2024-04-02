@@ -1,19 +1,20 @@
+
 import {ref} from "vue";
 import request from "@/axios/request.js";
 import {ElMessage} from "element-plus";
-import {UserList} from "@/api/user/user-api.js";
+import {EmpList} from "@/api/emp/emp-api.js";
 
 export function useSearch() {
     const searchDialogV = ref(false)
-    const searchUser = ref({
+    const searchEmp = ref({
         id: 0,
         username: '',
         name: '',
-        gender: '',
         phone: '',
-        address: '',
-        birthday: ''
+        position: '',
+        salary: 0
     })
+
     const changeSearchDialog = () => {
         searchDialogV.value = true
     }
@@ -21,22 +22,22 @@ export function useSearch() {
         searchDialogV.value = false
     }
 
-    const findUser = async (u, pageSize, currentPage, total, userList) => {
-        searchUser.value = u
-        console.log('searchUser = ', searchUser.value)
+    const findEmp = async (u, pageSize, currentPage, total, empList) => {
+        searchEmp.value = u
+        console.log('searchEmp = ', searchEmp.value)
         searchDialogV.value = false
         // 向服务器端做查询，然后将结果放到userList中
         try {
-            let res = await request.get(UserList, {
+            let res = await request.get(EmpList, {
                 params: {
                     pageSize: pageSize.value,
                     pageNum: currentPage.value,
-                    ...searchUser.value
+                    ...searchEmp.value
                 }
             })
             if (res.code === 200) {
                 total.value = res.data.total
-                userList.value = res.data.users
+                empList.value = res.data.employees
                 ElMessage({message: '查询成功', type: 'success'})
             } else {
                 ElMessage({message: '查询失败', type: 'error'})
@@ -48,6 +49,6 @@ export function useSearch() {
     }
 
     return {
-        searchDialogV, searchUser, changeSearchDialog, closeSearchDialog, findUser
+        searchDialogV, searchEmp, changeSearchDialog, closeSearchDialog, findEmp
     }
 }

@@ -6,7 +6,7 @@
       </el-icon>
       <span style="margin-left: 5px">搜索</span>
     </el-button>
-    <search-employee :search-dialog-v="searchDialogV" @closeDialog="handleCloseDialog"
+    <search-employee :search-dialog-v="searchDialogV" @closeDialog="closeSearchDialog"
                      @search="search"></search-employee>
   </div>
   <el-card style="width: 99%;">
@@ -20,7 +20,7 @@
       <el-table-column fixed="right" label="操作" width="120">
         <template v-slot="scope">
           <el-button link type="primary" size="small" @click="detailInfo(scope.row)">详情</el-button>
-          <el-button link type="primary" size="small" @click="deleteUser(scope.row)">删除</el-button>
+          <el-button link type="primary" size="small" @click="changeEmp(scope.row)">调整</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -49,24 +49,16 @@ import request from "@/axios/request.js";
 import {ElMessage} from "element-plus";
 import Detail from "@/components/employee/dialog/Detail.vue";
 import {EmpList} from "@/api/emp/emp-api.js";
+import {useTable} from "@/hooks/list/emp/useTable.js";
+import {useSearch} from "@/hooks/list/emp/useSearch.js";
+import {usePage} from "@/hooks/list/usePage.js";
 
-const searchDialogV = ref(false)
+const {searchDialogV, searchEmp, changeSearchDialog, closeSearchDialog, findEmp} = useSearch()
+const {currentPage, pageSize, pageSizes, total} = usePage()
+const employeeList = ref([{...searchEmp.value}])
 
-const searchEmployee = ref({
-  id: 0,
-  username: '',
-  name: '',
-  phone: '',
-  position: '',
-  salary: 0
-})
+const { updateList, updateInfo, promotion} = useTable(employeeList, pageSize, currentPage, total)
 
-const employeeList = ref([{...searchEmployee.value}])
-
-const total = ref(0)
-const pageSize = ref(3)
-const currentPage = ref(1)
-const pageSizes = ref([3, 6, 10])
 
 onMounted(async () => {
   try {
@@ -74,7 +66,7 @@ onMounted(async () => {
       params: {
         pageSize: pageSize.value,
         pageNum: currentPage.value,
-        ...searchEmployee.value
+        ...searchEmp.value
       }
     })
     if (res.code === 200) {
@@ -89,16 +81,8 @@ onMounted(async () => {
   }
 })
 
-const changeSearchDialog = () => {
-  searchDialogV.value = true
-}
-
-const handleCloseDialog = () => {
-  searchDialogV.value = false
-}
-
 const search = (emp) => {
-
+  findEmp(emp, pageSize, currentPage, total, employeeList)
 }
 
 const detailDialogV = ref(false)
@@ -116,24 +100,25 @@ const detailInfo = (item) => {
   employee.value = item
 }
 
+const changeEmp = (item) => {
+  console.log('调整员工')
+  console.log(item)
+}
+
 const handleCloseDetailDialog = () => {
   detailDialogV.value = false
 }
 
 const updateEmployee = () => {
-  console.log('hahaha')
-}
-
-const deleteUser = (item) => {
-
+  detailDialogV.value = false
 }
 
 const handleSizeChange = () => {
-
+  updateList(searchEmp)
 }
 
 const handleCurrentChange = () => {
-
+  updateList(searchEmp)
 }
 
 </script>

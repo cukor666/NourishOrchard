@@ -39,15 +39,13 @@
 
 <script setup>
 import SearchUser from "@/components/user/SearchUser.vue";
-
 import {Search} from "@element-plus/icons-vue";
-import {computed, onMounted, ref} from "vue";
+import {onMounted, ref} from "vue";
 import request from "@/axios/request.js";
 import {ElMessage} from "element-plus";
-
 import {useSearch} from "@/hooks/list/logout-user/useSearch.js"
 import {useTable} from "@/hooks/list/logout-user/useTable.js";
-import {usePage} from "@/hooks/list/logout-user/usePage.js";
+import {usePage} from "@/hooks/list/usePage.js";
 import {LogoutUserList} from "@/api/logout-user/logout-user-api.js";
 
 const {searchDialogV, searchUser, changeSearchDialog, closeSearchDialog, findUser} = useSearch()
@@ -59,13 +57,8 @@ const search = async (u) => {
   findUser(u, pageSize, currentPage, total, userList)
 }
 
-const userInfoUpdated = computed(() => {
-  return sessionStorage.getItem('nourish-logout-user-info-updated') || "false"
-})
-
 const updateUser = () => {
   console.log('执行了更新用户的函数')
-  sessionStorage.setItem('nourish-logout-user-info-updated', "true")
 }
 
 // 改变pageSize
@@ -79,35 +72,24 @@ const handleCurrentChange = () => {
 }
 
 onMounted(async () => {
-  // 从sessionStorage中获取，如果没有则访问服务器获取
-  let users = sessionStorage.getItem('nourish-logout-user-list');
-  total.value = Number(sessionStorage.getItem('nourish-logout-user-total'))
-  if (users === null || userInfoUpdated.value === "true") {
-    // 从服务器端获取
-    try {
-      let res = await request.get(LogoutUserList, {
-        params: {
-          pageSize: pageSize.value,
-          pageNum: currentPage.value
-        }
-      })
-      if (res.code === 200) {
-        let v = res.data
-        total.value = v.total
-        userList.value = v.users
-        users = JSON.stringify(userList.value)
-        sessionStorage.setItem('nourish-logout-user-list', users)
-        sessionStorage.setItem('nourish-logout-user-total', total.value.toString())
-        sessionStorage.removeItem('nourish-logout-user-info-updated')
-      } else {
-        ElMessage({message: '参数错误', type: 'error'})
+  // 从服务器端获取
+  try {
+    let res = await request.get(LogoutUserList, {
+      params: {
+        pageSize: pageSize.value,
+        pageNum: currentPage.value
       }
-    } catch (err) {
-      console.error(err)
-      ElMessage({message: '服务器错误', type: 'error'})
+    })
+    if (res.code === 200) {
+      let v = res.data
+      total.value = v.total
+      userList.value = v.users
+    } else {
+      ElMessage({message: '参数错误', type: 'error'})
     }
-  } else {
-    userList.value = JSON.parse(users);
+  } catch (err) {
+    console.error(err)
+    ElMessage({message: '服务器错误', type: 'error'})
   }
 })
 
