@@ -20,7 +20,7 @@
       <el-table-column fixed="right" label="操作" width="120">
         <template v-slot="scope">
           <el-button link type="primary" size="small" @click="detailInfo(scope.row)">详情</el-button>
-          <el-button link type="primary" size="small" @click="changeEmp(scope.row)">调整</el-button>
+          <el-button link type="primary" size="small" @click="promotionHandle(scope.row)">晋升</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -39,6 +39,26 @@
   <!--员工详情对话框-->
   <detail :detail-dialog-v="detailDialogV" :employee="employee" @closeDialog="handleCloseDetailDialog"
           @update-employee="updateEmployee"></detail>
+
+  <el-dialog v-model="promotionDV" title="晋升管理员">
+    <el-form label-width="100px">
+      <el-form-item label="密码：">
+        <el-input v-model="password" type="password" placeholder="请输入当前登录的管理员密码" />
+      </el-form-item>
+
+      <el-form-item label="邮箱：">
+        <el-input v-model="email" placeholder="请输入晋升管理员的邮箱" />
+      </el-form-item>
+
+      <el-form-item label="备注：">
+        <el-input v-model="mark" placeholder="请输入晋升备注（可选）" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button type="primary" @click="proPwdConfirm">确认</el-button>
+      <el-button @click="cancel">取消</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -100,11 +120,6 @@ const detailInfo = (item) => {
   employee.value = item
 }
 
-const changeEmp = (item) => {
-  console.log('调整员工')
-  console.log(item)
-}
-
 const handleCloseDetailDialog = () => {
   detailDialogV.value = false
 }
@@ -119,6 +134,43 @@ const handleSizeChange = () => {
 
 const handleCurrentChange = () => {
   updateList(searchEmp)
+}
+
+const promotionDV = ref(false)
+const password = ref('')
+const email = ref('')
+const mark = ref('')
+
+const proPwdConfirm = () => {
+  // 从sessionStorage中读取proEmp
+  let proEmpStr = sessionStorage.getItem('proEmp');
+  const proEmp = JSON.parse(proEmpStr)
+
+  let e = {
+    username: proEmp.username,
+    password: password.value,
+    name: proEmp.name,
+    email: email.value,
+    mark: mark.value
+  }
+
+  promotion(e)
+  updateList(searchEmp)
+
+  promotionDV.value = false
+}
+
+const cancel = () => {
+  console.log('点击了取消')
+  password.value = ''
+  promotionDV.value = false
+}
+
+const promotionHandle =  (item) => {
+  promotionDV.value = true
+  // 把item的数据存到sessionStorage中
+  const proEmpStr = JSON.stringify(item);
+  sessionStorage.setItem('proEmp', proEmpStr)
 }
 
 </script>

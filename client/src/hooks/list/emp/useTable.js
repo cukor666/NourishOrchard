@@ -1,6 +1,6 @@
 import request from "@/axios/request.js";
 import {ElMessage} from "element-plus";
-import {EmpList} from "@/api/emp/emp-api.js";
+import {EmpList, EmpPromotion} from "@/api/emp/emp-api.js";
 
 export function useTable(empList, pageSize, currentPage, total) {
     const updateList = async (searchEmp) => {
@@ -29,8 +29,22 @@ export function useTable(empList, pageSize, currentPage, total) {
         console.log('更新员工信息')
     }
 
-    const promotion = () => {
+    const promotion = async (item) => {
         console.log('晋升管理员')
+        console.log(item)
+        try {
+            let res = await request.put(EmpPromotion, {
+                ...item
+            })
+            if (res.code === 200) {
+                ElMessage({message: '晋升成功', type: 'success'})
+            } else {
+                ElMessage({message:'参数错误', type: 'error'})
+            }
+        } catch (e) {
+            console.log(e)
+            ElMessage({message: '晋升失败', type: 'error'})
+        }
     }
 
 
