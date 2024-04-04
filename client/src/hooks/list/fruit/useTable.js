@@ -1,6 +1,7 @@
 import request from "@/axios/request.js";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {FruitDelete, FruitDetail, FruitList} from "@/api/fruit/fruit-api.js";
+import searchFruit from "@/components/fruit/SearchFruit.vue";
 
 export function useTable(fruitList, pageSize, currentPage, total) {
     const updateList = async (searchFruit) => {
@@ -49,7 +50,7 @@ export function useTable(fruitList, pageSize, currentPage, total) {
 
     }
 
-    const deleteFruit = async (item) => {
+    const delConfirm = async (item) => {
         try {
             let res = await request.delete(FruitDelete, {
                 params: {
@@ -58,21 +59,31 @@ export function useTable(fruitList, pageSize, currentPage, total) {
             })
             if (res.code === 200) {
                 ElMessage({message: '删除成功', type: 'success'})
+                // 更新列表
+                updateList(searchFruit)
             } else {
                 ElMessage({message: '删除失败', type: 'error'})
-            }
-            res = await request.get(FruitList, {
-                params: {
-                    pageSize: pageSize.value,
-                    pageNum: currentPage.value
-                }
-            })
-            if (res.code !== 200) {
-                ElMessage({message: '未能及时更新列表，请刷新', type: 'warning'})
             }
         } catch {
             ElMessage({message: '系统错误', type: 'error'})
         }
+    }
+
+    const deleteFruit = async (item) => {
+        // 删之前再次询问一下
+        ElMessageBox.confirm(
+            '您确定要删除该水果信息吗？',
+            'Warning',
+            {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }
+        ).then(() => {
+            delConfirm(item)
+        }).catch(() => {
+            ElMessage({message: '取消删除', type: 'info'})
+        })
     }
 
 

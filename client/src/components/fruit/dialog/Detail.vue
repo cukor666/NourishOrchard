@@ -23,7 +23,7 @@
 
       <!--供应商信息部分-->
       <el-form-item label="供应商id：">
-        <el-input v-model="props.fruit.sId" clearable placeholder="请输入供应商id，例如：74..."/>
+        <el-input v-model.number="props.fruit.sId" clearable placeholder="请输入供应商id，例如：74..."/>
       </el-form-item>
 
       <el-form-item label="供应商名称：">

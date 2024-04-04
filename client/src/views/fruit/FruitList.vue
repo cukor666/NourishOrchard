@@ -1,11 +1,15 @@
 <template>
     <div class="container">
-      <el-button class="search-button" @click="changeSearchDialog">
-        <el-icon>
-          <Search/>
-        </el-icon>
-        <span style="margin-left: 5px">搜索</span>
-      </el-button>
+      <div style="display: flex">
+        <el-button class="search-button" @click="changeSearchDialog">
+          <el-icon>
+            <Search/>
+          </el-icon>
+          <span style="margin-left: 5px">搜索</span>
+        </el-button>
+        <el-button @click="addFruit">添加</el-button>
+      </div>
+
 
       <search-fruit :searchDialogV="searchDialogV" @closeDialog="closeSearchDialog" @search="search"></search-fruit>
 
@@ -42,6 +46,8 @@
       <!--水果详情对话框-->
       <detail :detail-dialog-v="detailDialogV" :fruit="fruit" @closeDialog="closeDetailDialog"
               @updateFruit="updateFruitHandle"></detail>
+      <!--添加水果-->
+      <add :add-fruit-dialog-v="addFruitDialogV" @cancelAddFruit="cancelAddFruit" @closeAddDialog="closeAddDialog"></add>
     </div>
 </template>
 
@@ -58,6 +64,7 @@ import {useTable} from "@/hooks/list/fruit/useTable.js";
 import request from "@/axios/request.js";
 import {ElMessage} from "element-plus";
 import {FruitList} from "@/api/fruit/fruit-api.js";
+import Add from "@/components/fruit/dialog/Add.vue";
 const {searchDialogV, searchFruit, changeSearchDialog, closeSearchDialog, findFruit} = useSearch()
 const {detailDialogV, fruit, closeDetailDialog, updateFruit} = useDetail()
 const {currentPage, pageSize, pageSizes, total} = usePage()
@@ -114,6 +121,22 @@ onMounted(async () => {
   }
 
 })
+
+const addFruitDialogV = ref(false)
+
+const addFruit = () => {
+  console.log('添加水果')
+  addFruitDialogV.value = true
+}
+
+const closeAddDialog = () => {
+  addFruitDialogV.value= false
+  updateList(searchFruit)
+}
+
+const cancelAddFruit = () => {
+  addFruitDialogV.value= false
+}
 
 </script>
 
