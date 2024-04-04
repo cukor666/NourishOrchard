@@ -6,7 +6,9 @@
       </el-icon>
       <span style="margin-left: 5px">搜索</span>
     </el-button>
+
     <search-user :searchDialogV="searchDialogV" @closeDialog="closeSearchDialog" @search="search"></search-user>
+
     <el-card style="width: 99%">
       <el-table :data="userList" stripe style="width: 100%">
         <el-table-column prop="id" label="id" width="50"/>

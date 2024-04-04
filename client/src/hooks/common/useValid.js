@@ -56,10 +56,13 @@ export function useValid(errWord) {
         let maxLen = 50;
         if (name === "") {
             errWord.name = "姓名不能为空";
+            return false
         } else if (name.length > maxLen) {
             errWord.name = "名字不能超过" + maxLen + "个字";
+            return false
         } else {
             errWord.name = "";
+            return true
         }
     };
 

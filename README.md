@@ -6,35 +6,44 @@
 
 项目中文名：滋养果园。
 这个是一个基于Gin+vue3的水果售卖后台管理系统，主要是偏向后台管理系统。
+
+项目站点：[http://cukor.cn:8090](http://cukor.cn:8090)
+
 使用的技术栈如下：
 
 + 数据库：
   + 本地：MySQL8+Redis5
-  + 线上：MySQL5.7+Redis7
+  + 线上：MySQL8+Redis7
   + 软件：Navicat
 
-+ 前端：vue3+elementplus+axois+pinia
++ 前端：
   + 主体框架：Vue3+Js
-  + UI框架：ElementPlus
-  + 前后端通信：Axois
-  + 状态管理：Pinia
-  + CSS预处理器：Scss
+  + 衍生框架：
+    + UI框架：ElementPlus
+    + 前后端通信：Axois
+    + 状态管理：Pinia
+    + CSS预处理器：Scss
   + 构建工具：Vite+Yarn
   + 开发工具：WebStorm+VSCode
-
-+ 后端：Gin+GORM
+  
++ 后端：
   + 主体框架：Gin+Golang
-  + ORM框架：GORM
-  + 加密：JWT+bcrypt
+  + 衍生框架：
+    + ORM框架：GORM
+    + 缓冲数据库：go-redis
+    + 鉴权与加密：JWT+bcrypt（带盐的MD5）
+    + Excel文件框架：Excelize
+    + 配置文件库：yaml
   + 开发工具：Goland+VSCode
-
+  
 + 版本控制：
   + Git+Github Desktop
 
 + 服务器：
   + 商家：腾讯云
-  + 类型：宝塔Linux面板，CentOS
-
+  + 类型：Ubuntu Linux
+  + 项目部署：Docker+Nginx
+  
 + 其他工具：
   + 接口测试：ApiFox
   + 远程连接服务：XShell+XFtp
@@ -42,15 +51,21 @@
 
 ## 架构
 
-后端服务器1.0：Gin目录，已弃用，使用server目录作为后端服务器
+后端1.0：Gin目录，已弃用，使用server目录作为后端服务器
 
-后端服务器2.0：server，主要管理后端业务
+后端2.0：server，主要管理后端业务
 
 前端1.0：vue-project目录，已弃用，并将原来的代码放到vue-project.zip中，使用vue目录作为前端部分。
 
 前端2.0：vue，主要管理前端界面展示部分。使用yarn作为包管理器
 
 内部项目：internal，主要用于管理员和员工信息的数据库注入，和一些系统的配置项。
+
+------
+
+项目最新架构：MVC+DDD
+
+项目的最外层是传统MVC架构，MVC各层内部采用了DDD的架构思想，DDD是“领域驱动设计”的英文简称，其核心思想是将同一类业务代码放到同一个文件夹（包、模块）下进行管理。以便产品与开发之间的相互协作。
 
 ## 构建与部署
 
@@ -94,6 +109,8 @@ yarn build
 > ```
 
 将修改之后的sql文件在服务器的数据库上执行即可将本地的数据同步到线上。
+
+后续改用Ubuntu Linux当做线上服务器，完成项目部署，使用的是docker容器部署的MySQL8和Redis7，所以以上的做法已经不再使用，本地Navicat生成的SQL文件直接在线上的MySQL进行运行即可将数据同步到线上服务器。
 
 ### 后端
 
@@ -140,6 +157,8 @@ const (
 var domains = [...]string{ClientDomain, ClientOnlineDomain}
 
 ```
+
+目前为了方便项目的线上演示，也已经采用允许所有主机能直接访问都后端服务器的方式进行跨域问题的解决。后续考虑采用Nginx的反向代理方式解决跨域请求问题。
 
 3. 执行构建命令
 
@@ -208,3 +227,4 @@ go get -u gorm.io/driver/mysql
 ### 其他
 
 其他请看apifox具体文档。
+

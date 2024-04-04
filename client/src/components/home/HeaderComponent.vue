@@ -139,7 +139,7 @@ const errWord = reactive({
   birthday: '',
   email: '',
   position: '',
-  salary: 0
+  salary: ''
 })
 
 // 表单参数校验
@@ -152,7 +152,7 @@ const {
 const valid = () => {
   if (promise.value === 'user') {
     // 校验用户
-    validName(user.value.name);
+    validName(user.value.name)
     validGender(user.value.gender)
     validPhone(user.value.phone)
     validAddress(user.value.address)
@@ -160,7 +160,6 @@ const valid = () => {
   } else if (promise.value === 'admin') {
     // 校验管理员
     validName(admin.value.name)
-    // todo 校验邮箱
     validEmail(admin.value.email)
   } else if (promise.value === 'employee') {
     validName(employee.value.name)
@@ -194,6 +193,7 @@ const updateUser = () => {
   valid()
   for (const key in errWord) {
     if (errWord[key] !== '') {
+      console.log('type: ', typeof errWord[key])
       ElMessage({message: '用户信息不正确', type: 'error'})
       return
     }
