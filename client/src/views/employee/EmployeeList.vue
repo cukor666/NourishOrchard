@@ -77,7 +77,7 @@ const {searchDialogV, searchEmp, changeSearchDialog, closeSearchDialog, findEmp}
 const {currentPage, pageSize, pageSizes, total} = usePage()
 const employeeList = ref([{...searchEmp.value}])
 
-const { updateList, updateInfo, promotion} = useTable(employeeList, pageSize, currentPage, total)
+const { updateList, promotion} = useTable(employeeList, pageSize, currentPage, total)
 
 
 onMounted(async () => {

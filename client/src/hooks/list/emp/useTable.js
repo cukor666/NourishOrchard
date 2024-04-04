@@ -25,10 +25,6 @@ export function useTable(empList, pageSize, currentPage, total) {
         }
     }
 
-    const updateInfo = () => {
-        console.log('更新员工信息')
-    }
-
     const promotion = async (item) => {
         console.log('晋升管理员')
         console.log(item)
@@ -49,6 +45,6 @@ export function useTable(empList, pageSize, currentPage, total) {
 
 
     return {
-        updateList, updateInfo, promotion
+        updateList, promotion
     }
 }

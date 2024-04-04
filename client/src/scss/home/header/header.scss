@@ -4,7 +4,7 @@
     align-items: center;
     margin-top: 5px;
     background: linear-gradient(to top, #200A3E, #fff);
-    border-radius: 0px 0px 0px 10px;
+    border-radius: 0 0 0 10px;
     color: #eee6e6;
 
     .path__content {
@@ -18,8 +18,7 @@
         .avatar {
             width: 32px;
             height: 32px;
-            background: url('https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/cukorlogo.jpg');
-            background-position: center center;
+            background: url('https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/cukorlogo.jpg') center center;
             background-size: cover;
             border-radius: 50%;
         }
