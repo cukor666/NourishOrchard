@@ -104,7 +104,6 @@ onMounted(async () => {
     console.error(err)
     ElMessage({message: '服务端错误', type: 'error'})
   }
-
 })
 </script>
 

@@ -54,6 +54,7 @@
 <script setup>
 import SearchFruit from "@/components/fruit/SearchFruit.vue";
 import Detail from "@/components/fruit/dialog/Detail.vue";
+import Add from "@/components/fruit/dialog/Add.vue";
 
 import {Search} from "@element-plus/icons-vue";
 import {useSearch} from "@/hooks/list/fruit/useSearch.js";
@@ -64,7 +65,6 @@ import {useTable} from "@/hooks/list/fruit/useTable.js";
 import request from "@/axios/request.js";
 import {ElMessage} from "element-plus";
 import {FruitList} from "@/api/fruit/fruit-api.js";
-import Add from "@/components/fruit/dialog/Add.vue";
 const {searchDialogV, searchFruit, changeSearchDialog, closeSearchDialog, findFruit} = useSearch()
 const {detailDialogV, fruit, closeDetailDialog, updateFruit} = useDetail()
 const {currentPage, pageSize, pageSizes, total} = usePage()
