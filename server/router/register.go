@@ -11,7 +11,7 @@ import (
 func register(r *gin.Engine) {
 	api := r.Group("/api")
 	wg := new(sync.WaitGroup)
-	wg.Add(8)
+	wg.Add(9)
 
 	go routes.BaseRoutes(api, wg)       // 基础路由
 	go routes.ActRoutes(api, wg)        // 账号管理
@@ -21,6 +21,7 @@ func register(r *gin.Engine) {
 	go routes.AdminRoutes(api, wg)      // 管理员管理
 	go routes.FruitRoutes(api, wg)      // 水果管理
 	go routes.SupplierRoutes(api, wg)   // 供应商管理
+	go routes.WarehouseRoutes(api, wg)  // 仓库管理
 
 	wg.Wait()
 	levellog.Router("全部接口注册完毕")
