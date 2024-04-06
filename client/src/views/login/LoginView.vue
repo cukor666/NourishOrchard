@@ -29,7 +29,6 @@
         <el-button type="primary" class="login-button" @click="login">登录</el-button>
         <el-button class="register-button" @click="gotoRegister">去注册</el-button>
       </div>
-
     </div>
   </div>
   <Vcode :show="isShow" @success="onSuccess" @close="isShow = false"/>
@@ -43,6 +42,9 @@ import {ElMessage} from 'element-plus'
 import {useRouter} from 'vue-router'
 import Vcode from "vue3-puzzle-vcode";
 import request from '@/axios/request'
+import {useLocalKey} from "@/hooks/common/useLocalKey.js";
+import {useSessionKey} from "@/hooks/common/useSessionKey.js";
+import {Login} from "@/api/login/login-api.js";
 
 const router = useRouter()
 
@@ -63,6 +65,8 @@ const errWord = reactive({
 
 const {validAccount, validPassword, validPromise} = useValid(errWord)
 const {promiseList} = usePromise()
+const { NourishToken, NourishAccount, NourishPromise } = useLocalKey()
+const sessionKey = useSessionKey()
 
 const onSuccess = () => {
   console.log('验证成功');
@@ -72,16 +76,16 @@ const onSuccess = () => {
   user.account = user.account.trim()
 
   // 使用axios校验后端
-  request.post('/login', {
+  request.post(Login, {
     ...user,
     username: user.account
   }).then(res => {    // 后端校验通过则登录到主页
     if (res.code === 200) {
       let token = res.data
-      localStorage.setItem('nourish-token', token)
-      localStorage.setItem('nourish-account', user.account)
-      localStorage.setItem('nourish-promise', user.promise)
-      sessionStorage.setItem('nourish-promise', user.promise)
+      localStorage.setItem(NourishToken, token)
+      localStorage.setItem(NourishAccount, user.account)
+      localStorage.setItem(NourishPromise, user.promise)
+      sessionStorage.setItem(sessionKey.NourishPromise, user.promise)
       ElMessage({message: '欢迎：' + user.account, type: 'success'})
       router.push({name: 'Root'})
     } else {

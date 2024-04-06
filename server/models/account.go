@@ -6,7 +6,7 @@ import (
 )
 
 type Account struct {
-	Username  string          `json:"username" gorm:"primarykey" form:"username"`
+	Username  string          `json:"username" gorm:"primarykey" form:"username" binding:"required"`
 	Password  string          `json:"password" form:"password"`
 	Promise   int             `json:"promise" form:"promise"`
 	CreatedAt time.Time       `json:"createdAt" form:"createdAt"`
@@ -14,6 +14,6 @@ type Account struct {
 	DeletedAt *gorm.DeletedAt `json:"deletedAt" gorm:"index" form:"deletedAt"`
 }
 
-func (a Account) TableName() string {
+func (a *Account) TableName() string {
 	return "account"
 }

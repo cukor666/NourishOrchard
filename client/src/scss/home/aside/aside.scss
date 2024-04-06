@@ -17,9 +17,8 @@
       $radius: 20px;
       width: 2 * $radius;
       height: 2 * $radius;
-      background: url("https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/cukorlogo.jpg");
       border-radius: 50%;
-      background-position: center center;
+      background: url("https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/cukorlogo.jpg") center center;
       background-size: cover;
     }
 
@@ -53,12 +52,12 @@
 
 @keyframes changeBoxShadow {
   0% {
-    box-shadow: 0px 0px 1px #ee2a2a;
+    box-shadow: 0 0 1px #ee2a2a;
   }
   50% {
-    box-shadow: 0px 1px 3px #ee2a2a;
+    box-shadow: 0 1px 3px #ee2a2a;
   }
   100% {
-    box-shadow: 0px 3px 5px #ee2a2a;
+    box-shadow: 0 3px 5px #ee2a2a;
   }
 }
