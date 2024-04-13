@@ -10,6 +10,7 @@ import (
 )
 
 func ForgetPassword(req request.ForgetPwdReq) error {
+	// 查询管理员是否存在
 	_, err := admindao.SelectByUsernameAndEmail(req.Username, req.Email)
 	if err != nil {
 		levellog.Service("查询管理员失败, 无该管理员")
@@ -21,6 +22,7 @@ func ForgetPassword(req request.ForgetPwdReq) error {
 		levellog.Service("新密码加密失败")
 		return err
 	}
+	// 修改密码
 	err = pwdmg.ChangePassword(req.Username, string(pwd))
 	if err != nil {
 		levellog.Service("修改密码错误")

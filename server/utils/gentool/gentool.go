@@ -10,6 +10,7 @@ const (
 	prefix = "CZKJ"
 )
 
+// GetUsernamePrefix 返回用户名前缀
 func GetUsernamePrefix() string {
 	return prefix
 }
