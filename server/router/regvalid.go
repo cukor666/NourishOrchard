@@ -15,37 +15,25 @@ func RegisterValid(ctx *gin.Context) {
 			levellog.Valid(fmt.Sprintf("校验器异常，err: %v", err))
 		}
 	}()
+
+	// 注册自定义验证器
+	validations := map[string]func(fl validator.FieldLevel) bool{
+		"username":    valid.UsernameValid,
+		"promise":     valid.PromiseValid,
+		"gender":      valid.GenderValid,
+		"phone":       valid.PhoneValid,
+		"birthday":    valid.BirthdayValid,
+		"email":       valid.EmailValid,
+		"empPosition": valid.EmpPosition,
+		"address":     valid.AddressValid,
+	}
+
+	// 注册自定义验证器到gin的binding.Validator
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		if err := v.RegisterValidation("username", valid.UsernameValid); err != nil {
-			panic(err)
-		}
-
-		if err := v.RegisterValidation("promise", valid.PromiseValid); err != nil {
-			panic(err)
-		}
-
-		if err := v.RegisterValidation("gender", valid.GenderValid); err != nil {
-			panic(err)
-		}
-
-		if err := v.RegisterValidation("phone", valid.PhoneValid); err != nil {
-			panic(err)
-		}
-
-		if err := v.RegisterValidation("birthday", valid.BirthdayValid); err != nil {
-			panic(err)
-		}
-
-		if err := v.RegisterValidation("email", valid.EmailValid); err != nil {
-			panic(err)
-		}
-
-		if err := v.RegisterValidation("empPosition", valid.EmpPosition); err != nil {
-			panic(err)
-		}
-
-		if err := v.RegisterValidation("address", valid.AddressValid); err != nil {
-			panic(err)
+		for key, validationFunc := range validations {
+			if err := v.RegisterValidation(key, validationFunc); err != nil {
+				panic(err)
+			}
 		}
 	}
 }

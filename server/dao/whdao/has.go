@@ -11,8 +11,7 @@ import (
 func Has(id int64) bool {
 	db := dao.GetMySQL()
 	cnt := int64(0)
-	err := db.Model(&models.Warehouse{}).Where("id = ?", id).Count(&cnt).Error
-	if err != nil {
+	if err := db.Model(&models.Warehouse{}).Where("id = ?", id).Count(&cnt).Error; err != nil {
 		levellog.Dao("系统错误查询失败")
 		return false
 	}

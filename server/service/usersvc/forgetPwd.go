@@ -4,12 +4,12 @@ import (
 	"server/common/levellog"
 	"server/dao/pwdmg"
 	"server/dao/userdao"
-	"server/request"
+	"server/models"
 	"server/utils/pwdtool"
 )
 
 // ForgetPassword 用户忘记密码
-func ForgetPassword(req request.ForgetPwdReq) (err error) {
+func ForgetPassword(req models.User, password string) (err error) {
 	// 校验数据库是否有该用户并且校验绑定的号码是否正确
 	_, err = userdao.SelectByUsernameAndPhone(req.Username, req.Phone)
 	if err != nil {
@@ -17,7 +17,7 @@ func ForgetPassword(req request.ForgetPwdReq) (err error) {
 		return err
 	}
 	// 对新密码加密
-	pwd, err := pwdtool.GetPwd(req.Password)
+	pwd, err := pwdtool.GetPwd(password)
 	if err != nil {
 		levellog.Service("新密码加密失败")
 		return err

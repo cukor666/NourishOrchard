@@ -8,6 +8,7 @@ import (
 	"sync"
 )
 
+// Inventory 库存管理接口注册
 func Inventory(rg *gin.RouterGroup, wg *sync.WaitGroup) {
 	defer func() {
 		levellog.Router("库存管理接口注册完毕")

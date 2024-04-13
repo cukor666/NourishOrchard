@@ -31,16 +31,14 @@ func Insert(context *gin.Context) {
 func insertHandle(ctx *gin.Context) {
 	var req insertReq
 
-	err := ctx.ShouldBindJSON(&req)
-	if err != nil {
+	if err := ctx.ShouldBindJSON(&req); err != nil {
 		w := fmt.Sprintf("参数校验失败，err: %s", err.Error())
 		levellog.Controller(w)
 		response.Failed(ctx, w)
 		return
 	}
 
-	err = ivtsvc.Insert(req.toInventory())
-	if err != nil {
+	if err := ivtsvc.Insert(req.toInventory()); err != nil {
 		w := fmt.Sprintf("添加失败，err: %s", err.Error())
 		levellog.Controller(w)
 		response.Failed(ctx, w)
