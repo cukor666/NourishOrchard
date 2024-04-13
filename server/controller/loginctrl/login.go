@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"server/common/levellog"
-	"server/controller/spliterr"
 	"server/response"
 	"server/service/loginsvc"
 )
@@ -13,16 +12,18 @@ import (
 func Login(context *gin.Context) {
 	var req loginRequest // 定义登录请求结构
 	if err := context.ShouldBind(&req); err != nil {
-		levellog.Controller(spliterr.GetErrMsg(err.Error()))
-		response.Failed(context, "参数校验失败")
+		w := fmt.Sprintf("参数校验失败: %v", err)
+		levellog.Controller(w)
+		response.Failed(context, w)
 		return
 	}
 
 	// 登录业务
 	token, err := loginsvc.Login(req.toAccount())
 	if err != nil {
-		levellog.Controller("登录失败")
-		response.Failed(context, "登录失败")
+		w := fmt.Sprintf("登录失败: %v", err)
+		levellog.Controller(w)
+		response.Failed(context, w)
 		return
 	}
 	levellog.Controller(fmt.Sprintf("token: %v", token))
