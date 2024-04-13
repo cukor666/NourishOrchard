@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"server/common/levellog"
@@ -31,28 +32,41 @@ func GenerateJWT(account models.Account) (string, error) {
 	return token.SignedString([]byte(conf.JWTConfig.SecretKey))
 }
 
+// parseToken 解析Token
+func parseToken(token *jwt.Token) (interface{}, error) {
+	// 验证签名方法
+	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+	}
+	return []byte(conf.JWTConfig.SecretKey), nil
+}
+
 // ParseAndVerifyJWT 解析和验证JWT
 func ParseAndVerifyJWT(tokenString string) (jwt.MapClaims, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte(conf.JWTConfig.SecretKey), nil
-	})
-	if err != nil {
+	var (
+		token *jwt.Token
+		err   error
+	)
+
+	// 解析Token并验证签名
+	if token, err = jwt.Parse(tokenString, parseToken); err != nil {
 		levellog.Config(fmt.Sprintf("%v", err))
 		return nil, err
 	}
+	// 验证发行人
 	claims, ok := token.Claims.(jwt.MapClaims)
-	if ok && token.Valid {
-		if claims["iss"] != conf.JWTConfig.Issuer {
-			levellog.Config("Invalid issuer")
-			return nil, err
-		}
-		levellog.Config(fmt.Sprintf("发行人验证成功: %v", claims["iss"]))
-	} else {
-		levellog.Config(fmt.Sprintf("%v", err))
+	// 验证Token是否有效
+	if !ok || !token.Valid {
+		err = errors.New("JWT claims验证失败")
+		levellog.Config(fmt.Sprintf("JWT验证失败: %v", err))
 		return nil, err
 	}
+	// 验证发行人
+	if claims["iss"] != conf.JWTConfig.Issuer {
+		levellog.Config("Invalid issuer")
+		err = errors.New("invalid issuer")
+		return nil, err
+	}
+	levellog.Config(fmt.Sprintf("发行人验证成功: %v", claims["iss"]))
 	return claims, nil
 }

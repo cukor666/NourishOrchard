@@ -16,6 +16,7 @@ func RegisterValid(ctx *gin.Context) {
 		}
 	}()
 
+	// 注册自定义验证器
 	validations := map[string]func(fl validator.FieldLevel) bool{
 		"username":    valid.UsernameValid,
 		"promise":     valid.PromiseValid,
@@ -27,6 +28,7 @@ func RegisterValid(ctx *gin.Context) {
 		"address":     valid.AddressValid,
 	}
 
+	// 注册自定义验证器到gin的binding.Validator
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		for key, validationFunc := range validations {
 			if err := v.RegisterValidation(key, validationFunc); err != nil {
