@@ -1,35 +1,30 @@
 package actdao
 
 import (
-	"fmt"
 	"server/common/levellog"
 	"server/dao"
 	"server/models"
 )
 
-// Insert
-// 添加账户
-func Insert(account models.Account, user models.User) (uint, bool) {
-	db := dao.GetMySQL()
+// Insert 添加账户
+func Insert(account models.Account, user models.User) (r models.Account, ok bool) {
 	// 开启事务
-	tx := db.Begin()
+	tx := dao.GetMySQL().Begin()
 	// 将数据插入到account表中
-	err := tx.Create(&account).Error
-	if err != nil {
+	if err := tx.Create(&account).Error; err != nil {
 		levellog.Dao("数据添加到account表失败")
 		tx.Rollback()
-		return 0, false
+		return
 	}
 	// 将数据插入到user表中
-	err = tx.Create(&user).Error
-	if err != nil {
+	if err := tx.Create(&user).Error; err != nil {
 		levellog.Dao("数据添加到user表失败")
 		tx.Rollback()
-		return 0, false
+		return
 	}
-	if err = tx.Commit().Error; err != nil {
-		levellog.Dao(fmt.Sprintf("err: %v", err))
-		return 0, false
-	}
-	return user.ID, true
+	tx.Commit()
+
+	r.Username, r.Promise = account.Username, account.Promise
+	ok = true
+	return
 }
