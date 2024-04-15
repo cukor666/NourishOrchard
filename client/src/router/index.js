@@ -82,13 +82,20 @@ const routes = [
                         path: "/warehouse/warehouse-list",
                         name: "WarehouseList",
                         component: () => import("@/views/warehouse/WarehouseList.vue")
-                    },
-                    {
-                        path: "/warehouse/inventory-list",
-                        name: "InventoryList",
-                        component: () => import("@/views/warehouse/InventoryList.vue")
                     }
                 ]
+            },
+            {
+              path: "/inventory",
+              name: "Inventory",
+              meta: {requireAuth: true, requireAdmin: false},
+              children: [
+                  {
+                      path: "/inventory-list",
+                      name: "InventoryList",
+                      component: () => import("@/views/inventory/InventoryList.vue")
+                  }
+              ]
             },
             {
                 path: "/suppliers",
