@@ -103,18 +103,6 @@ const routes = [
                 ]
             },
             {
-                path: "/purchase",
-                name: "Purchase",
-                meta: {requireAuth: true, requireAdmin: true},
-                children: [
-                    {
-                        path: "/purchase/list",
-                        name: "PurchaseList",
-                        component: () => import("@/views/purchase/PurchaseList.vue")
-                    }
-                ]
-            },
-            {
                 path: "/orders",
                 name: "Orders",
                 meta: {requireAuth: true, requireAdmin: false},

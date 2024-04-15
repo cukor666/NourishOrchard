@@ -99,19 +99,6 @@
           </template>
         </el-menu-item>
       </el-sub-menu>
-      <el-sub-menu index="Purchase">
-        <template #title>
-          <el-icon>
-            <Van/>
-          </el-icon>
-          <span v-if="showItemContent">采购管理</span>
-        </template>
-        <el-menu-item index="PurchaseList" @click="gotoPurchaseList">
-          <template #title>
-            <span>采购列表</span>
-          </template>
-        </el-menu-item>
-      </el-sub-menu>
       <el-sub-menu index="Orders">
         <template #title>
           <el-icon>
@@ -143,7 +130,6 @@ import {useSessionKey} from "@/hooks/common/useSessionKey.js";
 import {useInventory} from "@/hooks/aside/useInventory.js";
 import {useWarehouse} from "@/hooks/aside/useWarehouse.js";
 import {useSuppliers} from "@/hooks/aside/useSuppliers.js";
-import {usePurchase} from "@/hooks/aside/usePurchase.js";
 import {useOrders} from "@/hooks/aside/useOrders.js";
 import {useAbout} from "@/hooks/aside/useAbout.js";
 
@@ -156,7 +142,6 @@ const {gotoFruitList} = useFruit()
 const {gotoWarehouseList} = useWarehouse()
 const {gotoInventoryList} = useInventory()
 const {gotoSuppliersList} = useSuppliers()
-const {gotoPurchaseList} = usePurchase()
 const {gotoOrdersList} = useOrders()
 const {gotoAbout} = useAbout()
 
