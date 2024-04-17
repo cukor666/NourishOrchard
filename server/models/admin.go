@@ -11,6 +11,7 @@ func (a *Admin) TableName() string {
 	return "admin"
 }
 
+// SetZero 设置为初始值，此处可以优化，但是懒得做了
 func (a *Admin) SetZero() (id uint, username, name, email string) {
 	id, username, name, email = a.ID, a.Username, a.Name, a.Email
 	a.ID, a.Username, a.Name, a.Email = 0, "", "", ""

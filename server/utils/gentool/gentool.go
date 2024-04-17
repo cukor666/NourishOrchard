@@ -6,20 +6,11 @@ import (
 	"time"
 )
 
-const (
-	prefix = "CZKJ"
-)
-
-// GetUsernamePrefix 返回用户名前缀
-func GetUsernamePrefix() string {
-	return prefix
-}
-
 // GenUsername 生成唯一账号名
 func GenUsername() string {
 	// 获取当前本地时间戳
 	now := time.Now().Unix()
 	i := strconv.Itoa(rand.Int() % 100)
 	timeStr := strconv.Itoa(int(now))
-	return prefix + i + timeStr
+	return "CZKJ" + i + timeStr
 }

@@ -10,15 +10,17 @@
       <el-button @click="addWarehouse">添加</el-button>
     </div>
 
-
-    <search-warehouse :search-dialog-v="searchDialogV" @closeDialog="closeSearchDialog" @search="search"/>
+    <search-inventory :search-dialog-v="searchDialogV" @closeDialog="closeSearchDialog" @search="search"/>
 
     <el-card style="width: 99%">
-      <el-table :data="warehouseList" stripe style="width: 100%">
+      <el-table :data="inventoryList" stripe style="width: 100%">
         <el-table-column prop="id" label="id" width="50"/>
-        <el-table-column prop="address" label="仓库地址" width="200"/>
-        <el-table-column prop="capacity" label="仓库容量" width="150"/>
-        <el-table-column prop="status" label="仓库状态" width="150"/>
+        <el-table-column prop="commodityId" label="商品id" width="100"/>
+        <el-table-column prop="quantity" label="数量" width="100"/>
+        <el-table-column prop="employeeId" label="员工id" width="100"/>
+        <el-table-column prop="warehouseId" label="仓库id" width="100"/>
+        <el-table-column prop="createdAt" label="创建时间" width="200"/>
+        <el-table-column prop="updatedAt" label="更新时间" width="200"/>
 
         <el-table-column fixed="right" label="操作" width="120">
           <template v-slot="scope">
@@ -39,79 +41,79 @@
                    @current-change="currentPageChange"
     />
 
-    <!--仓库详情弹窗-->
-    <detail :detail-dialog-v="detailDialogV" :warehouse="warehouse" @closeDialog="closeDetailDialog"
-            @updateWarehouse="updateWarehouse"></detail>
+    <!--库存信息详情弹窗-->
+    <detail :detail-dialog-v="detailDialogV" :inventory="inventory" @closeDialog="closeDetailDialog"
+            @updateInventory="updateInventory"></detail>
 
-    <!--添加仓库弹窗-->
-    <add :add-warehouse-dialog-v="addWarehouseDialogV" @cancelAddWarehouse="cancelAddWarehouse"
-     @close="closeAddDialog"></add>
+    <!--添加库存信息弹窗-->
+    <add :add-inventory-dialog-v="addInventoryDialogV" @cancelAddInventory="cancelAddInventory"
+         @closeDialog="closeAddDialog"></add>
   </div>
 </template>
 
 <script setup>
-import SearchWarehouse from "@/components/warehouse/SearchWarehouse.vue";
-import Detail from "@/components/warehouse/dialog/Detail.vue";
-import Add from "@/components/warehouse/dialog/Add.vue";
+import SearchInventory from "@/components/inventory/SearchInventory.vue";
+import Detail from "@/components/inventory/dialog/Detail.vue";
+import Add from "@/components/inventory/dialog/Add.vue";
 
 import {Search} from "@element-plus/icons-vue";
-import {useSearch} from "@/hooks/list/warehouse/useSearch.js"
+import {useSearch} from "@/hooks/list/inventory/useSearch.js"
 import {usePage} from "@/hooks/list/usePage.js";
-import {useTable} from "@/hooks/list/warehouse/useTable.js";
+import {useTable} from "@/hooks/list/inventory/useTable.js";
 import {onMounted, ref} from "vue";
-import {useDetail} from "@/hooks/list/warehouse/useDetail.js";
+import {useDetail} from "@/hooks/list/inventory/useDetail.js";
 import request from "@/axios/request.js";
 import {ElMessage} from "element-plus";
-import {WarehouseList} from "@/api/warehouse/warehouse-api.js";
+import {InventoryList} from "@/api/inventory/inventory-api.js";
 
-const {searchDialogV, searchWarehouse, changeSearchDialog, closeSearchDialog, findWarehouse} = useSearch();
-const warehouseList = ref([{...searchWarehouse.value}])
-const {detailDialogV, warehouse, closeDetailDialog, updateWarehouse} = useDetail()
+const {searchDialogV, searchInventory, changeSearchDialog, closeSearchDialog, findInventory} = useSearch();
+const inventoryList = ref([{...searchInventory.value}])
+const {detailDialogV, inventory, closeDetailDialog, updateInventory} = useDetail()
 const {currentPage, pageSize, pageSizes, total} = usePage()
-const {updateList, showDetail, deleteWarehouse} = useTable(warehouseList, pageSize, currentPage, total)
+const {updateList, showDetail, deleteInventory} = useTable(inventoryList, pageSize, currentPage, total)
 
 const search = (query) => {
-  findWarehouse(query, pageSize, currentPage, total, warehouseList);
+  findInventory(query, pageSize, currentPage, total, inventoryList);
 }
 
 // 详情按钮点击事件
 const detailInfo = (row) => {
-  showDetail(row, detailDialogV, warehouse);
+  showDetail(row, detailDialogV, inventory);
 }
 
 // 删除按钮点击事件
 const deleteLink = (row) => {
-  deleteWarehouse(row);
+  deleteInventory(row);
 }
 
 // 页码改变事件
 const pageSizeChange = () => {
-  updateList(searchWarehouse)
+  updateList(searchInventory)
 }
 
 // 当前页码改变事件
 const currentPageChange = () => {
-  updateList(searchWarehouse)
+  updateList(searchInventory)
 }
 
-const addWarehouseDialogV = ref(false)
+const addInventoryDialogV = ref(false)
 
 const addWarehouse = () => {
-  addWarehouseDialogV.value = true
+  addInventoryDialogV.value = true
 }
 
-const cancelAddWarehouse = () => {
-    addWarehouseDialogV.value = false
+const cancelAddInventory = () => {
+  addInventoryDialogV.value = false
 }
 const closeAddDialog = () => {
-  addWarehouseDialogV.value = false
-  updateList(searchWarehouse)
+  addInventoryDialogV.value = false
+  updateList(searchInventory)
 }
 
 onMounted(async () => {
   // 从服务器端获取
   try {
-    let res = await request.get(WarehouseList, {
+    let res = await request.get(InventoryList, {
       params: {
         pageSize: pageSize.value,
         pageNum: currentPage.value
@@ -120,7 +122,7 @@ onMounted(async () => {
     if (res.code === 200) {
       let v = res.data
       total.value = v.total
-      warehouseList.value = v.warehouses
+      inventoryList.value = v.inventors
     } else {
       console.log(res.msg)
       ElMessage({message: '参数错误', type: 'error'})

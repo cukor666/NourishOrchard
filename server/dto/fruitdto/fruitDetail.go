@@ -1,7 +1,7 @@
-package response
+package fruitdto
 
-// FruitDetailResponse 水果详情响应
-type FruitDetailResponse struct {
+// Detail 水果详情响应
+type Detail struct {
 	FId            int    `json:"fId" gorm:"primarykey;column:fId" form:"fId"`
 	FName          string `json:"fName" gorm:"column:fName" form:"fName"`
 	FWater         int    `json:"fWater" gorm:"column:fWater" form:"fWater"`

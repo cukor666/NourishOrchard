@@ -42,8 +42,7 @@ func listHandle(ctx *gin.Context) {
 
 	go func() {
 		defer wg.Done()
-		err := ctx.ShouldBindQuery(&p)
-		if err != nil {
+		if err := ctx.ShouldBindQuery(&p); err != nil {
 			levellog.Controller("参数page校验不通过")
 			errChan <- err
 			return
@@ -53,8 +52,7 @@ func listHandle(ctx *gin.Context) {
 
 	go func() {
 		defer wg.Done()
-		err := ctx.ShouldBindQuery(&w)
-		if err != nil {
+		if err := ctx.ShouldBindQuery(&w); err != nil {
 			levellog.Controller("参数warehouse校验不通过")
 			errChan <- err
 			return

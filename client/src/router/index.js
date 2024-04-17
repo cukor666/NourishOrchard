@@ -82,13 +82,20 @@ const routes = [
                         path: "/warehouse/warehouse-list",
                         name: "WarehouseList",
                         component: () => import("@/views/warehouse/WarehouseList.vue")
-                    },
-                    {
-                        path: "/warehouse/inventory-list",
-                        name: "InventoryList",
-                        component: () => import("@/views/warehouse/InventoryList.vue")
                     }
                 ]
+            },
+            {
+              path: "/inventory",
+              name: "Inventory",
+              meta: {requireAuth: true, requireAdmin: false},
+              children: [
+                  {
+                      path: "/inventory-list",
+                      name: "InventoryList",
+                      component: () => import("@/views/inventory/InventoryList.vue")
+                  }
+              ]
             },
             {
                 path: "/suppliers",
@@ -99,18 +106,6 @@ const routes = [
                         path: "/suppliers/list",
                         name: "SuppliersList",
                         component: () => import("@/views/suppliers/SuppliersList.vue")
-                    }
-                ]
-            },
-            {
-                path: "/purchase",
-                name: "Purchase",
-                meta: {requireAuth: true, requireAdmin: true},
-                children: [
-                    {
-                        path: "/purchase/list",
-                        name: "PurchaseList",
-                        component: () => import("@/views/purchase/PurchaseList.vue")
                     }
                 ]
             },
