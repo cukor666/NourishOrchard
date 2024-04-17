@@ -21,12 +21,13 @@ func Insert(order models.Order) error {
 		return errors.New("仓库不存在")
 	}
 
-	// 检查订单中的水果信息是否存在，并且库存是否充足
+	// 检查订单中的水果信息是否存在，并且库存是否充足	1吨果蔬大于需要4~5立方米的空间
 	// 如果水果不存在或者库存不足，则返回错误
 	if has := fruitdao.Has(order.CommodityID); !has {
 		return errors.New("水果不存在")
 	}
-	// todo: 这里应该检查库存是否充足，但是暂时先不做
+
+	//order.Quantity * 4
 
 	// 插入订单到数据库
 

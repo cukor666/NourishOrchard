@@ -10,7 +10,7 @@ type Order struct {
 	Title        string         `json:"title" form:"title"`
 	Status       int            `json:"status" form:"status"`
 	CommodityID  int64          `json:"commodityId" form:"commodityId"`
-	Quantity     int            `json:"quantity" form:"quantity"`
+	Quantity     float64        `json:"quantity" form:"quantity"`
 	BuyerID      int64          `json:"buyerId" form:"buyerId"`
 	AdminId      int64          `json:"adminId" form:"adminId"`
 	WarehouseID  int64          `json:"warehouseId" form:"warehouseId"`
