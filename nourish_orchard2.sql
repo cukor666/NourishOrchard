@@ -11,7 +11,7 @@
  Target Server Version : 80031 (8.0.31)
  File Encoding         : 65001
 
- Date: 15/04/2024 18:07:31
+ Date: 17/04/2024 10:48:46
 */
 
 SET NAMES utf8mb4;
@@ -240,7 +240,7 @@ DROP TABLE IF EXISTS `inventory`;
 CREATE TABLE `inventory`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '库存ID',
   `commodity_id` bigint NULL DEFAULT NULL COMMENT '商品ID，水果ID',
-  `quantity` int NULL DEFAULT NULL COMMENT '数量，单位：箱',
+  `quantity` double NULL DEFAULT NULL COMMENT '数量，单位：吨',
   `employee_id` bigint NULL DEFAULT NULL COMMENT '员工ID',
   `warehouse_id` bigint NULL DEFAULT NULL COMMENT '仓库ID',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -252,30 +252,30 @@ CREATE TABLE `inventory`  (
 -- ----------------------------
 -- Records of inventory
 -- ----------------------------
-INSERT INTO `inventory` VALUES (1, 1, 3000, 3, 1, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (2, 2, 2000, 1, 1, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (3, 3, 2500, 2, 2, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (4, 4, 3000, 3, 3, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (5, 5, 1500, 4, 4, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (6, 6, 3500, 5, 5, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (7, 7, 4000, 6, 6, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (8, 8, 4500, 7, 7, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (9, 9, 5000, 8, 8, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (10, 10, 5500, 9, 9, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (11, 11, 6000, 10, 10, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (12, 12, 6500, 11, 1, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (13, 13, 7000, 12, 2, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (14, 14, 7500, 13, 3, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (15, 15, 8000, 14, 4, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (16, 16, 8500, 1, 5, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (17, 17, 9000, 2, 6, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (18, 18, 9500, 3, 7, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (19, 19, 10000, 4, 8, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (20, 20, 10500, 5, 9, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (21, 21, 11000, 6, 10, '2024-04-02 22:56:46', '2024-04-02 22:56:46', NULL);
-INSERT INTO `inventory` VALUES (22, 7, 800, 11, 2, '2024-04-05 22:59:24', '2024-04-06 19:06:10', NULL);
-INSERT INTO `inventory` VALUES (23, 1, 800, 11, 4, '2024-04-05 23:38:12', '2024-04-06 18:21:50', '2024-04-06 18:21:51');
-INSERT INTO `inventory` VALUES (24, 15, 1345, 7, 3, '2024-04-15 12:53:32', '2024-04-15 12:53:32', NULL);
+INSERT INTO `inventory` VALUES (1, 1, 30, 3, 1, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (2, 2, 20, 1, 1, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (3, 3, 25, 2, 2, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (4, 4, 30, 3, 3, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (5, 5, 15, 4, 4, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (6, 6, 35, 5, 5, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (7, 7, 40, 6, 6, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (8, 8, 45, 7, 7, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (9, 9, 50, 8, 8, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (10, 10, 55, 9, 9, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (11, 11, 60, 10, 10, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (12, 12, 65, 11, 1, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (13, 13, 70, 12, 2, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (14, 14, 75, 13, 3, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (15, 15, 80, 14, 4, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (16, 16, 85, 1, 5, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (17, 17, 90, 2, 6, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (18, 18, 95, 3, 7, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (19, 19, 100, 4, 8, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (20, 20, 105, 5, 9, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (21, 21, 110, 6, 10, '2024-04-02 22:56:46', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (22, 7, 8, 11, 2, '2024-04-05 22:59:24', '2024-04-17 10:30:23', NULL);
+INSERT INTO `inventory` VALUES (23, 1, 8, 11, 4, '2024-04-05 23:38:12', '2024-04-17 10:30:23', '2024-04-06 18:21:51');
+INSERT INTO `inventory` VALUES (24, 15, 14, 7, 3, '2024-04-15 12:53:32', '2024-04-17 10:30:23', NULL);
 
 -- ----------------------------
 -- Table structure for logout_users
@@ -310,8 +310,8 @@ CREATE TABLE `orders`  (
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '订单描述',
   `status` int NULL DEFAULT 0 COMMENT '订单状态，0未下单，1已下单，2已出单，3已取消，4已完成',
   `commodity_id` bigint NULL DEFAULT NULL COMMENT '商品ID，水果ID',
-  `quantity` int NULL DEFAULT NULL COMMENT '数量',
-  `buyers_id` bigint NULL DEFAULT NULL COMMENT '买家',
+  `quantity` double NULL DEFAULT NULL COMMENT '数量，单位吨',
+  `buyer_id` bigint NULL DEFAULT NULL COMMENT '买家',
   `admin_id` bigint NULL DEFAULT NULL COMMENT '管理员ID',
   `warehouse_id` int NULL DEFAULT NULL COMMENT '仓库ID',
   `receiver_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '收货人名',
@@ -326,7 +326,7 @@ CREATE TABLE `orders`  (
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
-INSERT INTO `orders` VALUES (1, '甜美西瓜', 0, 4, 100, 13, 2, 3, '黄旭', '广东省深圳市福田区景田地铁A口景蜜水果店', '急需', '2024-04-15 18:07:00', '2024-04-15 18:07:00', NULL);
+INSERT INTO `orders` VALUES (1, '甜美西瓜', 0, 4, 3, 13, 2, 3, '黄旭', '广东省深圳市福田区景田地铁A口景蜜水果店', '急需', '2024-04-15 18:07:00', '2024-04-17 10:31:05', NULL);
 
 -- ----------------------------
 -- Table structure for suppliers
@@ -408,23 +408,24 @@ DROP TABLE IF EXISTS `warehouse`;
 CREATE TABLE `warehouse`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '仓库ID',
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '仓库地址',
-  `capacity` int NULL DEFAULT NULL COMMENT '仓库容量，单位吨',
-  `status` int NULL DEFAULT 0 COMMENT '仓库状态，0表示未满，1表示已满',
+  `capacity` double NULL DEFAULT NULL COMMENT '仓库容量，单位立方米',
+  `remaining` double NULL DEFAULT NULL COMMENT '仓库剩余容量',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of warehouse
 -- ----------------------------
-INSERT INTO `warehouse` VALUES (1, '广西壮族自治区百色市', 1000, 0);
-INSERT INTO `warehouse` VALUES (2, '广东省汕头市', 1200, 1);
-INSERT INTO `warehouse` VALUES (3, '海南省海口市', 1500, 0);
-INSERT INTO `warehouse` VALUES (4, '福建省泉州市', 800, 1);
-INSERT INTO `warehouse` VALUES (5, '江西省南昌市', 960, 0);
-INSERT INTO `warehouse` VALUES (6, '湖南省长沙市', 1100, 1);
-INSERT INTO `warehouse` VALUES (7, '贵州省贵阳市', 1300, 0);
-INSERT INTO `warehouse` VALUES (8, '云南省昆明市', 1400, 1);
-INSERT INTO `warehouse` VALUES (9, '四川省成都市', 1100, 0);
-INSERT INTO `warehouse` VALUES (11, '广东省深圳市', 1000, 0);
+INSERT INTO `warehouse` VALUES (1, '广西壮族自治区百色市', 100.5, 60.2);
+INSERT INTO `warehouse` VALUES (2, '广东省汕头市', 121.7, 80.3);
+INSERT INTO `warehouse` VALUES (3, '海南省海口市', 150, 99.7);
+INSERT INTO `warehouse` VALUES (4, '福建省泉州市', 80, 63.4);
+INSERT INTO `warehouse` VALUES (5, '江西省南昌市', 97.2, 32.4);
+INSERT INTO `warehouse` VALUES (6, '湖南省长沙市', 110.3, 38.2);
+INSERT INTO `warehouse` VALUES (7, '贵州省贵阳市', 130, 50.7);
+INSERT INTO `warehouse` VALUES (8, '云南省昆明市', 140, 75.2);
+INSERT INTO `warehouse` VALUES (9, '四川省成都市', 110, 20);
+INSERT INTO `warehouse` VALUES (11, '广东省深圳市', 103.2, 62.7);
+INSERT INTO `warehouse` VALUES (12, '广西壮族自治区靖西市', 150, 150);
 
 SET FOREIGN_KEY_CHECKS = 1;
