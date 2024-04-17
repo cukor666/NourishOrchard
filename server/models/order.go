@@ -13,7 +13,7 @@ type Order struct {
 	Quantity     int            `json:"quantity" form:"quantity"`
 	BuyerID      int64          `json:"buyerId" form:"buyerId"`
 	AdminId      int64          `json:"adminId" form:"adminId"`
-	WarehouseID  int            `json:"warehouseId" form:"warehouseId"`
+	WarehouseID  int64          `json:"warehouseId" form:"warehouseId"`
 	ReceiverName string         `json:"receiverName" form:"receiverName"`
 	Address      string         `json:"address" form:"address"`
 	Remark       string         `json:"remark" form:"remark"`

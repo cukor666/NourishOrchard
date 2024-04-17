@@ -7,7 +7,7 @@ import (
 	"server/models"
 )
 
-// Has 根据id查找水果信息，有则返回true，否则返回false
+// Has 判断id是否存在
 func Has(id int64) bool {
 	db := dao.GetMySQL()
 	cnt := int64(0)
