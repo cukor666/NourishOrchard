@@ -76,8 +76,8 @@
 1. 修改在axios文件夹下的request.js文件
 
 ```js
-const local = "http://localhost:9000"		// 本地ip
-const server = "http://175.178.49.78:9000"	// 线上ip
+const local = "..."		// 本地ip+port
+const server = "..."	// 线上ip+port
 
 const request = axios.create({
   baseURL: server,	// 选择合适的ip
@@ -119,27 +119,27 @@ yarn build
 ```yaml
 systemConfig:
   host: localhost
-  port: 9000
-  secret: cukor.cn	# 修改
-  issuer: cukor		# 修改
+  port: 000	# 端口
+  secret: ...	# 修改
+  issuer: ...	# 修改
 
 mysql:
   host: localhost
   port: 3306
-  user: root	# 修改为线上服务器数据库的用户名，不一定是root
-  password: cukor	# 修改服务器数据库的密码
+  user: ...	# 修改为线上服务器数据库的用户名，不一定是root
+  password: ...	# 修改服务器数据库的密码
   dbname: nourish_orchard2
   # param: charset=utf8mb4&parseTime=True&loc=Local	# mysql8
   param: charset=utf8&parseTime=True&loc=Local	# mysql5.7
 redis:
   host: localhost
-  port: 6379
-  password:
-  db: 3
+  port: 0
+  password:00
+  db: 0
 
 jwt:
-  secretKey: cukorzhong-secret-key
-  issuer: CukorZhong
+  secretKey: ...
+  issuer: ...
 ```
 
 2. 解决跨域问题
@@ -150,8 +150,8 @@ jwt:
 package router
 
 const (
-	ClientDomain       = "http://localhost:5173" // 本地前端的ip端口
-	ClientOnlineDomain = "http://175.178.49.78"
+	ClientDomain       = "..." // 本地前端的ip端口
+	ClientOnlineDomain = "..."
 )
 
 var domains = [...]string{ClientDomain, ClientOnlineDomain}

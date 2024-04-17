@@ -22,15 +22,16 @@ func register(r *gin.Engine) {
 	// 注册接口
 	routeList := []func(*gin.RouterGroup, *sync.WaitGroup){
 		routes.BaseRoutes,       // 基础路由
-		routes.ActRoutes,        //账户管理
-		routes.UserRoutes,       //用户管理
-		routes.LogoutUserRoutes, //注销用户管理
-		routes.EmpRoutes,        //员工管理
-		routes.AdminRoutes,      //管理员管理
-		routes.FruitRoutes,      //水果管理
-		routes.SupplierRoutes,   //供应商管理
-		routes.WarehouseRoutes,  //仓库管理
-		routes.Inventory,        //库存管理
+		routes.ActRoutes,        // 账户管理
+		routes.UserRoutes,       // 用户管理
+		routes.LogoutUserRoutes, // 注销用户管理
+		routes.EmpRoutes,        // 员工管理
+		routes.AdminRoutes,      // 管理员管理
+		routes.FruitRoutes,      // 水果管理
+		routes.SupplierRoutes,   // 供应商管理
+		routes.WarehouseRoutes,  // 仓库管理
+		routes.Inventory,        // 库存管理
+		routes.OrdersRoutes,     // 订单管理
 	}
 
 	wg.Add(len(routeList))
