@@ -27,3 +27,17 @@ func SelectByUsernameAndPhone(username, phone string) (user models.User, err err
 	}
 	return user, nil
 }
+
+// ExistsById 通过id查询用户是否存在
+func ExistsById(id int64) bool {
+	db := dao.GetMySQL()
+	var count int64
+	err := db.Model(&models.User{}).Where("id = ?", id).Count(&count).Error
+	if err != nil {
+		return false
+	}
+	if count > 0 {
+		return true
+	}
+	return false
+}
