@@ -13,6 +13,7 @@ func Update(inventory models.Inventory) error {
 	tx := dao.GetMySQL().Begin()
 	cnts := [3]int64{}
 
+	// 检查水果是否存在
 	if inventory.CommodityId != 0 {
 		err := tx.Model(&models.Fruit{}).Where("id = ?", inventory.CommodityId).Count(&cnts[0]).Error
 		if err != nil || cnts[0] == 0 {
@@ -23,6 +24,7 @@ func Update(inventory models.Inventory) error {
 		}
 	}
 
+	// 检查员工是否存在
 	if inventory.EmployeeId != 0 {
 		err := tx.Model(&models.Employee{}).Where("id = ?", inventory.EmployeeId).Count(&cnts[1]).Error
 		if err != nil || cnts[1] == 0 {
@@ -33,6 +35,7 @@ func Update(inventory models.Inventory) error {
 		}
 	}
 
+	// 检查仓库是否存在
 	if inventory.WarehouseId != 0 {
 		err := tx.Model(&models.Warehouse{}).Where("id = ?", inventory.WarehouseId).Count(&cnts[2]).Error
 		if err != nil || cnts[2] == 0 {
@@ -43,6 +46,7 @@ func Update(inventory models.Inventory) error {
 		}
 	}
 
+	// 更新库存信息
 	err := tx.Model(&models.Inventory{}).Where("id = ?", inventory.ID).Omit("id").Updates(&inventory).Error
 
 	if err != nil {

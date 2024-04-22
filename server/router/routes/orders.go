@@ -15,6 +15,7 @@ func OrdersRoutes(rg *gin.RouterGroup, wg *sync.WaitGroup) {
 	}()
 	group := rg.Group("/orders", controller.ValidAuthorization)
 	{
-		group.GET("/list", orderctrl.List) // 获取订单列表
+		group.GET("/list", orderctrl.List)   // 获取订单列表
+		group.POST("/add", orderctrl.Insert) // 新增订单
 	}
 }
