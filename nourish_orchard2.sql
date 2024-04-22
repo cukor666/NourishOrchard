@@ -11,7 +11,7 @@
  Target Server Version : 80031 (8.0.31)
  File Encoding         : 65001
 
- Date: 17/04/2024 10:48:46
+ Date: 22/04/2024 14:42:26
 */
 
 SET NAMES utf8mb4;
@@ -312,7 +312,7 @@ CREATE TABLE `orders`  (
   `commodity_id` bigint NULL DEFAULT NULL COMMENT '商品ID，水果ID',
   `quantity` double NULL DEFAULT NULL COMMENT '数量，单位吨',
   `buyer_id` bigint NULL DEFAULT NULL COMMENT '买家',
-  `admin_id` bigint NULL DEFAULT NULL COMMENT '管理员ID',
+  `admin_id` bigint NULL DEFAULT NULL COMMENT '管理员ID，如果等于0则表示还没有管理员接管',
   `warehouse_id` int NULL DEFAULT NULL COMMENT '仓库ID',
   `receiver_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '收货人名',
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '收货地址',
@@ -321,12 +321,13 @@ CREATE TABLE `orders`  (
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `deleted_at` datetime NULL DEFAULT NULL COMMENT '删除时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
-INSERT INTO `orders` VALUES (1, '甜美西瓜', 0, 4, 3, 13, 2, 3, '黄旭', '广东省深圳市福田区景田地铁A口景蜜水果店', '急需', '2024-04-15 18:07:00', '2024-04-17 10:31:05', NULL);
+INSERT INTO `orders` VALUES (1, '甜美西瓜', 0, 4, 3, 13, 2, 3, '黄旭', '广东省深圳市福田区景田地铁A口景蜜水果店', '急需', '2024-04-15 18:07:00', '2024-04-22 11:30:54', '2024-04-22 11:30:54');
+INSERT INTO `orders` VALUES (3, '香甜百香果美味可口', 2, 32, 1.4, 7, 1, 1, '张贤', '广东省广州市天河区高塘石5巷16号', '等不及了', '2024-04-22 11:10:28', '2024-04-22 14:37:45', NULL);
 
 -- ----------------------------
 -- Table structure for suppliers
