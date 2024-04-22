@@ -1,6 +1,6 @@
 <template>
   <el-dialog :model-value="props.addWarehouseDialogV" title="添加仓库" width="500" @close="closeDialog">
-    <el-form label-width="100px">
+    <el-form label-width="120px">
       <el-form-item label="仓库地址：">
         <el-input v-model="warehouse.address" clearable placeholder="请输入仓库地址，如：北京市海淀区中科院物理所"/>
       </el-form-item>
@@ -9,11 +9,8 @@
         <el-input-number v-model.number="warehouse.capacity" :min="0" :max="10000" placeholder="请输入仓库容量，单位：m³"/>
       </el-form-item>
 
-      <el-form-item label="仓库状态：">
-        <el-select v-model="warehouse.status" placeholder="请选择仓库状态">
-          <el-option label="启用" value="0"></el-option>
-          <el-option label="禁用" value="1"></el-option>
-        </el-select>
+      <el-form-item label="仓库剩余容量：">
+        <el-input-number v-model.number="warehouse.remaining" :min="0" :max="10000" placeholder="请输入仓库剩余容量，单位：m³"/>
       </el-form-item>
 
     </el-form>
@@ -38,7 +35,7 @@ let props = defineProps({
 const warehouse = ref({
   address: '',
   capacity: 0,
-  status: 0
+  remaining: 0
 })
 
 const emit = defineEmits(['closeAddDialog', 'cancelAddWarehouse'])

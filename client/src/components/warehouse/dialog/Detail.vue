@@ -10,8 +10,8 @@
       <el-form-item label="容量：">
         <el-input v-model.number="props.warehouse.capacity" />
       </el-form-item>
-      <el-form-item label="状态：">
-        <el-input v-model.number="props.warehouse.status" />
+      <el-form-item label="剩余容量：">
+        <el-input v-model.number="props.warehouse.remaining" />
       </el-form-item>
 
     </el-form>
@@ -37,7 +37,7 @@ let props = defineProps({
       id: 0,
       address: "",
       capacity: 0,
-      status: 0
+      remaining: 0
     }
   }
 })
@@ -66,7 +66,7 @@ const update = () => {
         ElMessage({message: '更新失败', type: 'error'})
       }
     }).catch(err => {
-      log.error(err)
+      console.log(err)
       ElMessage({message: '服务器错误', type: 'error'})
     })
   }).catch(() => {
@@ -74,6 +74,3 @@ const update = () => {
   })
 }
 </script>
-
-<style scoped lang="scss">
-</style>

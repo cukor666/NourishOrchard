@@ -18,7 +18,7 @@
         <el-table-column prop="id" label="id" width="50"/>
         <el-table-column prop="address" label="仓库地址" width="200"/>
         <el-table-column prop="capacity" label="仓库容量" width="150"/>
-        <el-table-column prop="status" label="仓库状态" width="150"/>
+        <el-table-column prop="remaining" label="剩余容量" width="150"/>
 
         <el-table-column fixed="right" label="操作" width="120">
           <template v-slot="scope">

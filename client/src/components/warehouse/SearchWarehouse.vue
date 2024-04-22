@@ -13,11 +13,8 @@
         <el-input v-model.number="warehouse.capacity" type="number" clearable placeholder="请输入容量"/>
       </el-form-item>
 
-      <el-form-item label="仓库状态：">
-        <el-select v-model="warehouse.status" clearable placeholder="请选择仓库状态">
-          <el-option label="启用" value="1"></el-option>
-          <el-option label="禁用" value="0"></el-option>
-        </el-select>
+      <el-form-item label="剩余容量：">
+        <el-input v-model.number="warehouse.remaining" type="number" clearable placeholder="请输入剩余容量"/>
       </el-form-item>
 
     </el-form>

@@ -9,7 +9,7 @@ export function useSearch() {
         id: 0,
         address: '',
         capacity: 0,
-        status: 0
+        remaining: 0
     })
     const changeSearchDialog = () => {
         searchDialogV.value = true

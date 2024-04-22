@@ -6,7 +6,7 @@ export function useDetail() {
         id: 0,
         address: '',
         capacity: 0,
-        status: 0
+        remaining: 0
     })
 
     const closeDetailDialog = () => {
