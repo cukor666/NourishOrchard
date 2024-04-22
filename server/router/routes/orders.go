@@ -18,5 +18,6 @@ func OrdersRoutes(rg *gin.RouterGroup, wg *sync.WaitGroup) {
 		group.GET("/list", orderctrl.List)     // 获取订单列表
 		group.POST("/add", orderctrl.Insert)   // 新增订单
 		group.DELETE("/del", orderctrl.Delete) // 删除订单
+		group.PUT("/update", orderctrl.Update) // 更新订单
 	}
 }
