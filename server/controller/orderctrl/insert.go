@@ -1,6 +1,7 @@
 package orderctrl
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"server/common/levellog"
@@ -33,7 +34,7 @@ func insertHandle(ctx *gin.Context, claims jwt.MapClaims) {
 		req insertReq
 	)
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		levellog.Controller("参数错误")
+		levellog.Controller(fmt.Sprintf("参数错误，err:%s", err.Error()))
 		response.Failed(ctx, "参数错误")
 		return
 	}

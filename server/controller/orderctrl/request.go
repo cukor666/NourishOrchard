@@ -15,13 +15,14 @@ type insertReq struct {
 
 func (r insertReq) toOrder() models.Order {
 	return models.Order{
-		Title:        r.Title,
-		Status:       r.Status,
-		CommodityID:  r.CommodityID,
-		Quantity:     r.Quantity,
-		ReceiverName: r.ReceiverName,
-		Address:      r.Address,
-		Remark:       r.Remark,
+		Title:         r.Title,
+		Status:        r.Status,
+		CommodityID:   r.CommodityID,
+		Quantity:      r.Quantity,
+		ReceiverName:  r.ReceiverName,
+		ReceiverPhone: r.ReceiverPhone,
+		Address:       r.Address,
+		Remark:        r.Remark,
 	}
 }
 
