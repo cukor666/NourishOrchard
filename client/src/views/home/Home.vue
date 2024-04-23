@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="footer">
-
+      <e-charts :option="option3"/>
     </div>
   </div>
 </template>
@@ -22,6 +22,7 @@
 <script setup>
 import {computed, onMounted, ref} from "vue";
 import request from "@/axios/request.js";
+import * as echarts from 'echarts';
 
 const swiper = ref([
   {
@@ -104,6 +105,55 @@ const option2 = computed(() => {
   }
 })
 
+function getVirtualData(year) {
+  const date = +echarts.time.parse(year + '-01-01');
+  const end = +echarts.time.parse(+year + 1 + '-01-01');
+  const dayTime = 3600 * 24 * 1000;
+  const data = [];
+  for (let time = date; time < end; time += dayTime) {
+    data.push([
+      echarts.time.format(time, '{yyyy}-{MM}-{dd}', false),
+      Math.floor(Math.random() * 500)
+    ]);
+  }
+  return data;
+}
+
+const option3 = computed(() => {
+  return {
+    title: {
+      top: 30,
+      left: 'center',
+      text: '订单热力图'
+    },
+    tooltip: {},
+    visualMap: {
+      min: 0,
+      max: 100,
+      type: 'piecewise',
+      orient: 'horizontal',
+      left: 'center',
+      top: 65
+    },
+    calendar: {
+      top: 120,
+      left: 30,
+      right: 30,
+      cellSize: ['auto', 25],
+      range: '2024',
+      itemStyle: {
+        borderWidth: 0.5
+      },
+      yearLabel: { show: false }
+    },
+    series: {
+      type: 'heatmap',
+      coordinateSystem: 'calendar',
+      data: getVirtualData('2024')
+    }
+  }
+})
+
 const getOption1Data = async () => {
   try {
     let res = await request.get('/account/cnt')
@@ -130,7 +180,7 @@ const getOption2Data = async () => {
   }
 }
 
-onMounted( () => {
+onMounted(() => {
   getOption1Data()
   getOption2Data()
 })
@@ -155,6 +205,7 @@ onMounted( () => {
   align-items: center;
   background-color: #e6f3ec;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
 
   .left {
     width: 50%;
@@ -175,11 +226,14 @@ onMounted( () => {
 
 .footer {
   width: 100%;
-  height: 180px;
-  background-color: #eabfbf;
+  height: 300px;
+  background-color: #f6eded;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 20px;
+  padding: 10px;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
 }
 
 img {
