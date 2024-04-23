@@ -6,6 +6,7 @@ const routes = [
         path: "/",
         name: "Root",
         meta: {requireAuth: true, requireAdmin: false},
+        redirect: "/home",
         component: () => import("@/views/Root.vue"),
         children: [
             {

@@ -16,10 +16,11 @@ func FruitRoutes(rg *gin.RouterGroup, wg *sync.WaitGroup) {
 	}()
 	fg := rg.Group("/fruit", controller.ValidAuthorization)
 	{
-		fg.GET("/list", fruitctrl.List)     // 水果列表
-		fg.GET("/detail", fruitctrl.Detail) // 水果详情
-		fg.POST("/add", fruitctrl.Insert)   // 添加水果
-		fg.DELETE("/del", fruitctrl.Delete) // 删除水果
-		fg.PUT("/update", fruitctrl.Update) // 更新水果信息
+		fg.GET("/list", fruitctrl.List)            // 水果列表
+		fg.GET("/detail", fruitctrl.Detail)        // 水果详情
+		fg.POST("/add", fruitctrl.Insert)          // 添加水果
+		fg.DELETE("/del", fruitctrl.Delete)        // 删除水果
+		fg.PUT("/update", fruitctrl.Update)        // 更新水果信息
+		fg.GET("/origin-pie", fruitctrl.OriginPie) // 产地饼图
 	}
 }
