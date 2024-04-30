@@ -21,5 +21,6 @@ func ActRoutes(rg *gin.RouterGroup, wg *sync.WaitGroup) {
 		ag.PUT("/update", actctrl.Update)                  // 更新个人信息
 		ag.GET("/exit", actctrl.Exit)                      // 退出登录
 		ag.PUT("/change-password", actctrl.ChangePassword) // 修改账户密码
+		ag.GET("/cnt", actctrl.Count)                      // 获取账户数量
 	}
 }

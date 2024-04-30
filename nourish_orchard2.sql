@@ -11,7 +11,7 @@
  Target Server Version : 80031 (8.0.31)
  File Encoding         : 65001
 
- Date: 17/04/2024 10:48:46
+ Date: 22/04/2024 16:35:56
 */
 
 SET NAMES utf8mb4;
@@ -308,25 +308,37 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '订单ID',
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '订单描述',
-  `status` int NULL DEFAULT 0 COMMENT '订单状态，0未下单，1已下单，2已出单，3已取消，4已完成',
+  `status` int NULL DEFAULT 0 COMMENT '订单状态，0全部，1待付款，2待发货，3待收货，4已完成，5已取消',
   `commodity_id` bigint NULL DEFAULT NULL COMMENT '商品ID，水果ID',
   `quantity` double NULL DEFAULT NULL COMMENT '数量，单位吨',
   `buyer_id` bigint NULL DEFAULT NULL COMMENT '买家',
-  `admin_id` bigint NULL DEFAULT NULL COMMENT '管理员ID',
+  `admin_id` bigint NULL DEFAULT NULL COMMENT '管理员ID，如果等于0则表示还没有管理员接管',
   `warehouse_id` int NULL DEFAULT NULL COMMENT '仓库ID',
   `receiver_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '收货人名',
+  `receiver_phone` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '收货人联系电话',
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '收货地址',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `deleted_at` datetime NULL DEFAULT NULL COMMENT '删除时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
-INSERT INTO `orders` VALUES (1, '甜美西瓜', 0, 4, 3, 13, 2, 3, '黄旭', '广东省深圳市福田区景田地铁A口景蜜水果店', '急需', '2024-04-15 18:07:00', '2024-04-17 10:31:05', NULL);
+INSERT INTO `orders` VALUES (1, '甜美西瓜', 0, 4, 3, 13, 2, 3, '黄旭', '17289490342', '广东省深圳市福田区景田地铁A口景蜜水果店', '急需', '2024-04-15 18:07:00', '2024-04-22 15:20:31', '2024-04-22 11:30:54');
+INSERT INTO `orders` VALUES (3, '香甜百香果美味可口', 2, 32, 1.4, 7, 1, 1, '张贤', '13711042751', '广东省广州市天河区高塘石5巷16号', '等不及了', '2024-04-22 11:10:28', '2024-04-22 15:58:19', NULL);
+INSERT INTO `orders` VALUES (4, '新鲜草莓美味可口', 1, 6, 2.3, 7, 0, 0, '李明', '13876543210', '上海市浦东新区世纪大道123号', '请尽快发货', '2024-04-22 16:22:38', '2024-04-22 16:34:39', NULL);
+INSERT INTO `orders` VALUES (5, '香脆苹果多汁可口', 5, 12, 0.8, 7, 0, 0, '王小红', '15098765432', '北京市朝阳区建国路789号', '谢谢！', '2024-04-22 16:23:11', '2024-04-22 16:35:20', NULL);
+INSERT INTO `orders` VALUES (6, '甜美木瓜清爽可口', 1, 29, 1, 7, 0, 0, '刘大山', '13712345678', '广西省南宁市青秀区花明路456号', '不要错过了', '2024-04-22 16:24:29', '2024-04-22 16:34:47', NULL);
+INSERT INTO `orders` VALUES (7, '酸甜橙子汁多可口', 2, 4, 1.5, 7, 0, 0, '陈小芳', '13987654321', '湖北省武汉市江汉区中山大道789号', '急需配送', '2024-04-22 16:25:06', '2024-04-22 16:35:09', NULL);
+INSERT INTO `orders` VALUES (8, '浓郁葡萄美味可口', 2, 7, 0.5, 7, 0, 0, '赵明阳', '13654321098', '四川省成都市锦江区春熙路123号', '谢谢您！', '2024-04-22 16:25:41', '2024-04-22 16:35:12', NULL);
+INSERT INTO `orders` VALUES (9, '清新柠檬酸甜可口', 1, 15, 1.2, 7, 0, 0, '李华', '13912345678', '江苏省南京市玄武区紫金山路5号', '请注意保鲜', '2024-04-22 16:32:19', '2024-04-22 16:32:19', NULL);
+INSERT INTO `orders` VALUES (10, '甘甜橙子多汁可口', 3, 22, 0.8, 7, 0, 0, '王丽', '15898765432', '浙江省杭州市西湖区断桥残雪1号', '送货前请电话联系', '2024-04-22 16:32:29', '2024-04-22 16:35:14', NULL);
+INSERT INTO `orders` VALUES (11, '热带芒果香甜可口', 1, 34, 1.5, 7, 0, 0, '张伟', '17612344321', '福建省厦门市思明区鼓浪屿路2号', '急用，请加急处理', '2024-04-22 16:32:36', '2024-04-22 16:32:36', NULL);
+INSERT INTO `orders` VALUES (12, '鲜嫩草莓甜美可口', 4, 6, 1, 7, 0, 0, '赵敏', '13109876543', '四川省重庆市渝中区解放碑23号', '周末到货', '2024-04-22 16:33:08', '2024-04-22 16:35:16', NULL);
+INSERT INTO `orders` VALUES (13, '多汁西瓜清甜可口', 2, 15, 2, 7, 0, 0, '孙悟空', '14785236974', '湖北省武汉市武昌区黄鹤楼5号', '注意不要压坏', '2024-04-22 16:33:33', '2024-04-22 16:35:23', NULL);
 
 -- ----------------------------
 -- Table structure for suppliers
