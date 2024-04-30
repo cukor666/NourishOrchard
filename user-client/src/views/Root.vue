@@ -2,8 +2,8 @@
   <div class="top">
     <div class="welcome">我的水果 你的爱~</div>
     <div class="link">
-      <router-link to="/login">请登录</router-link>
-      <router-link to="/register">注册</router-link>
+      <router-link to="/login">{{username === '' ? '请登录' : username}}</router-link>
+      <a :href="admin_url_dev+'/register'">注册</a>
       <span>|</span>
       <router-link to="/order">我的订单</router-link>
       <span>|</span>
@@ -16,22 +16,37 @@
          alt="logo">
     <div class="tab">
       <router-link to="/home">首页</router-link>
-      <router-link to="#">南方水果</router-link>
-      <router-link to="#">北方水果</router-link>
+      <router-link to="/south">南方水果</router-link>
+      <router-link to="/north">北方水果</router-link>
+      <router-link to="/fruits">全部水果</router-link>
     </div>
-    <input class="search" placeholder="搜索..." v-model="search"  />
+    <input class="search" placeholder="搜索..." v-model="search"/>
   </div>
   <div class="content">
     <router-view></router-view>
+  </div>
+
+  <hr>
+
+  <div class="footer">
+    <div>
+      Coyright © 2023 cukor.cn. All rights reserved. 桂ICP备19003596号-1
+    </div>
+    <div>
+      版权所有 桂ICP备19003596号-1 京公网安备110108020201703
+    </div>
   </div>
 </template>
 
 <script setup>
 
 import {ref} from "vue";
+import {admin_url_dev} from "@/config/api.js"
 
 const count = ref(5)
 const search = ref('')
+const username = ref('')  // 后续从localStorage中获取
+
 </script>
 
 <style scoped lang="scss">
@@ -106,6 +121,24 @@ a {
 .content {
   width: 80%;
   margin: 20px auto 20px auto;
+}
+
+hr {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #9f9c9c;
+
+  div {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+  }
 }
 
 </style>

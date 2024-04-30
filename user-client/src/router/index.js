@@ -18,6 +18,31 @@ const router = createRouter({
           path: '/home',
           name: 'Home',
           component: () => import('@/views/Home.vue')
+        },
+        {
+          path: '/south',
+          name: 'South',
+          component: () => import('@/views/SouthFruit.vue')
+        },
+        {
+          path: '/north',
+          name: 'North',
+          component: () => import('@/views/NorthFruit.vue')
+        },
+        {
+          path: 'fruits',
+          name: 'Fruits',
+          component: () => import('@/views/Fruits.vue')
+        },
+        {
+          path: '/order',
+          name: 'Order',
+          component: () => import('@/views/Order.vue')
+        },
+        {
+          path: '/cart',
+          name: 'Cart',
+          component: () => import('@/views/Cart.vue')
         }
       ]
     }

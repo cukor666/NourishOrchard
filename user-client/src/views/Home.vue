@@ -7,6 +7,7 @@
   </el-carousel>
   <!-- 推荐商品 -->
   <div class="recommend" v-for="item in recommend" :key="item.id">
+    <!-- 左图右文    -->
     <img v-if="item.id % 2 === 1" :src="item.bgImg" alt=""/>
     <div v-if="item.id % 2 === 1" class="info">
       <div class="num" style="text-align: right">0{{ item.id }}</div>
@@ -15,6 +16,7 @@
       <div class="detail" style="margin-left: auto" @click="recommendDetail(item)">查看详情</div>
     </div>
 
+    <!-- 右图左文    -->
     <div v-if="item.id % 2 === 0" class="info">
       <div class="num" style="text-align: left">0{{ item.id }}</div>
       <div class="name" style="text-align: left">{{ item.name }}</div>
@@ -24,16 +26,9 @@
     <img v-if="item.id % 2 === 0" :src="item.bgImg" alt=""/>
   </div>
 
-  <hr>
 
-  <div class="footer">
-    <div>
-      Coyright © 2023 cukor.cn. All rights reserved. 桂ICP备19003596号-1
-    </div>
-    <div>
-      版权所有 桂ICP备19003596号-1 京公网安备110108020201703
-    </div>
-  </div>
+
+
 
 </template>
 
@@ -149,22 +144,8 @@ const recommendDetail = (item) => {
   }
 }
 
-hr {
-  margin-top: 50px;
-  margin-bottom: 50px;
-}
 
-.footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #9f9c9c;
 
-  div {
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 10px;
-  }
-}
+
 
 </style>

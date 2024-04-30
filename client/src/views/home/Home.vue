@@ -27,15 +27,15 @@ import * as echarts from 'echarts';
 const swiper = ref([
   {
     id: 1,
-    img: "https://pic.quanjing.com/u0/p9/QJ6660181509.jpg?x-oss-process=style/794wsy"
+    img: "https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/番石榴.jpg"
   },
   {
     id: 2,
-    img: "https://pic.quanjing.com/bi/0c/QJ6375588182.jpg?x-oss-process=style/794wsy"
+    img: "https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/猕猴桃.jpeg"
   },
   {
     id: 3,
-    img: "https://pic.quanjing.com/gg/us/QJ6520051711.jpg?x-oss-process=style/794wsy"
+    img: "https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/蘋果.png"
   }
 ])
 
