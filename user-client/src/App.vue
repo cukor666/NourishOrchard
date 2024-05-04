@@ -8,4 +8,7 @@
   margin: 0;
   padding: 0;
 }
+body {
+  background: linear-gradient(to top, #fff5e1, transparent);
+}
 </style>

@@ -43,7 +43,7 @@
 import {ref} from "vue";
 import {admin_url_dev} from "@/config/api.js"
 
-const count = ref(5)
+const count = ref(0)
 const search = ref('')
 const username = ref('')  // 后续从localStorage中获取
 
