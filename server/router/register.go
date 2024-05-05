@@ -32,6 +32,7 @@ func register(r *gin.Engine) {
 		routes.WarehouseRoutes,  // 仓库管理
 		routes.Inventory,        // 库存管理
 		routes.OrdersRoutes,     // 订单管理
+		routes.FruitCmdyRoutes,  // 水果商城管理
 	}
 
 	wg.Add(len(routeList))

@@ -12,7 +12,7 @@
   </div>
   <div class="bar">
     <img style="width: 100px; height: 100px;"
-         src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj-NxuRo4oORl0C-daZ9m4nvncYMQtM9yv5dA-Pciwi-_FoYCfq83ZrjKpO17ixaUFpnfUTkEXJErJW-6TfhRXPfwr1jBgtOtndAGqU0s4bjucYq991TWOZbPZPWwL7C0qcHSEs4AZSJHs/s1600/Sweet-Love-Logo-CRsm.jpg"
+         src="@/assets/nourish_orchard.png"
          alt="logo">
     <div class="tab">
       <router-link to="/home">首页</router-link>
@@ -43,7 +43,7 @@
 import {ref} from "vue";
 import {admin_url_dev} from "@/config/api.js"
 
-const count = ref(5)
+const count = ref(0)
 const search = ref('')
 const username = ref('')  // 后续从localStorage中获取
 
