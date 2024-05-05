@@ -9,6 +9,6 @@
   padding: 0;
 }
 body {
-  background: linear-gradient(to top, #fff5e1, transparent);
+  background: linear-gradient(to bottom, #fff5e1, transparent);
 }
 </style>

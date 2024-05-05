@@ -15,12 +15,45 @@
     <div class="refresh" @click="refresh">收起</div>
   </div>
 
-  <el-dialog :title="fruitDetail" v-model="dialogVisible" width="30%" :before-close="handleClose">
+  <el-dialog :title="detailObj.name" v-model="dialogVisible" width="800px" :before-close="handleClose">
     <div class="detail-content">
-      hahah
+      <div class="detail-img" :style="{ backgroundImage: `url(${detailObj.imgs[currentImgIndex]})` }">
+        <div class="left" @click="leftImg">
+          <el-icon>
+            <Back/>
+          </el-icon>
+        </div>
+        <div class="right" @click="rightImg">
+          <el-icon>
+            <Right/>
+          </el-icon>
+        </div>
+        <div class="bottom">
+          <div v-for="item in detailObj.imgs.length" :key="item"
+               :style="item === currentImgIndex + 1? { backgroundColor: '#ffb168' } : {backgroundColor: '#fff' }"></div>
+        </div>
+      </div>
+      <div class="detail-form">
+        <h1 class="detail-name">{{ detailObj.name }}</h1>
+        <div class="detail-price">
+          <span>价格：</span>
+          <span>￥{{ detailObj.price }}</span>
+        </div>
+        <div class="detail-quantity">
+          <span>数量：</span>
+          <el-input v-model.number="quantity" type="number" :min="0" :max="10"/>
+          <span>单位：吨</span>
+
+        </div>
+        <div class="detail-desc">
+          <span>描述：</span>
+          <span>{{ detailObj.desc }}</span>
+        </div>
+        <div class="total-price">总价格：<span>￥{{ detailObj.price * quantity }}</span></div>
+        <div class="add-cart" @click="addCart">加入购物车</div>
+      </div>
     </div>
   </el-dialog>
-
 
 </template>
 
@@ -30,6 +63,8 @@ import {onMounted, ref, watch} from "vue";
 import request from "@/axios/request.js";
 import {FruitList} from "@/api/fruit-api.js";
 import {ElMessage} from "element-plus";
+import {useFruitBase} from "@/hooks/useFruitBase.js"
+import {useDetailDialog} from "@/hooks/useDetailDialog.js"
 
 const cnt = ref(parseInt(sessionStorage.getItem('south-fruit-cnt') || 7));
 const step = 7;
@@ -38,14 +73,7 @@ watch(cnt, (newVal) => {
   sessionStorage.setItem('south-fruit-cnt', newVal.toString());
 })
 
-// 到时候这个从后端获取的数据
-const fruitList = ref([{
-  id: 0,
-  name: '番石榴',
-  price: 12.5,
-  imgs: '',
-  desc: '香甜可口，营养丰富，营养价值高。'
-}])
+const {fruitList} = useFruitBase()
 
 onMounted(async () => {
   try {
@@ -54,12 +82,10 @@ onMounted(async () => {
       // fruitList.value = res.data.filter(item => item.region === '南方水果')
       fruitList.value = res.data.fruits
     }
-
   } catch (error) {
     console.log(error)
     ElMessage.error('获取南方水果数据失败')
   }
-
 })
 
 
@@ -72,138 +98,11 @@ const refresh = () => {
   sessionStorage.removeItem('south-fruit-cnt')
 }
 
-const dialogVisible = ref(false)
-const fruitDetail = ref('')
-
-const showDetail = (fruit) => {
-  console.log(fruit)
-  dialogVisible.value = true
-  fruitDetail.value = fruit.name
-}
-
-const handleClose = () => {
-  dialogVisible.value = false
-}
-
+const {dialogVisible, detailObj, currentImgIndex, quantity, addCart, handleClose, leftImg, rightImg, showDetail} = useDetailDialog()
 
 </script>
 
 <style scoped lang="scss">
-
-.bgimg {
-  width: 100%;
-  height: 300px;
-  background-image: url("https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/番石榴.jpg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-radius: 15px;
-  margin-bottom: 10px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
-  transition: transform 0.5s ease-in-out;
-}
-
-.bgimg:hover {
-  transform: scale(1.01);
-}
-
-.current-path {
-  font-size: 14px;
-  color: #999;
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
-.content {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-
-  .fruit {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .fruit-img {
-      width: 150px;
-      height: 200px;
-      background-color: #ccc;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
-      border-radius: 5px;
-      overflow: hidden;
-      position: relative;
-
-      .detail {
-        position: absolute;
-        top: 50%;
-        left: 100%;
-        transform: translate(0, -50%);
-        width: 150px;
-        height: 30px;
-        line-height: 30px;
-        text-align: center;
-        font-size: 12px;
-        background-color: #fff;
-        opacity: 0.8;
-        cursor: pointer;
-        transition: all 0.5s ease-in-out;
-      }
-    }
-
-    .fruit-img:hover {
-      transform: translateY(-5px) scale(1.1);
-
-      .detail {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
-
-    .fruit-name {
-      font-size: 16px;
-      margin-top: 10px;
-    }
-
-    .fruit-price {
-      font-size: 14px;
-      font-weight: bold;
-      color: #ff463f;
-    }
-  }
-
-}
-
-.btn-group {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  font-size: 0.8em;
-}
-
-.show-more,
-.refresh {
-  width: 100px;
-  height: 20px;
-  background-color: #f5a623;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  border-radius: 20px;
-  text-align: center;
-  line-height: 20px;
-  margin-left: 5px;
-  margin-right: 5px;
-}
-
-.show-more:hover,
-.refresh:hover {
-  transition: transform 0.3s ease-in-out;
-  transform: scale(1.1);
-}
+@import "@/sass/fruit-base";
 
 </style>
