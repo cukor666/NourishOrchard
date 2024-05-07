@@ -11,7 +11,6 @@ import (
 func List(context *gin.Context) {
 	// 不需要做权限校验，因为每个人都可以查看列表
 	// 直接返回所有水果数据即可
-	var res FruitCmdyResponse
 	var fruits []FruitCmdyResponse
 	// 标识南北与全部水果 0:全部 1:南方 2:北方
 	value := context.Query("flag")
@@ -29,6 +28,7 @@ func List(context *gin.Context) {
 	}
 
 	for _, v := range result {
+		var res FruitCmdyResponse
 		if err := res.set(v); err != nil {
 			levellog.Controller("数据转换失败")
 			response.Failed(context, "数据转换失败")

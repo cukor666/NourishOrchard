@@ -3,7 +3,6 @@ package fruitcmdysvc
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"server/common/levellog"
 	"server/dao/fruitcmdydao"
 	"server/dto/fruitdto"
@@ -68,19 +67,13 @@ func filterSouthFruits(fruits []fruitdto.FruitCommodity) ([]models.FruitCommodit
 		for _, city := range cities {
 			if strings.Contains(origin, city) {
 				var f models.FruitCommodity
-				bytes, err := json.Marshal(fruit)
-				if err != nil {
-					levellog.Service("序列化失败")
-					return nil, 0
-				}
-				err = json.Unmarshal(bytes, &f)
-				if err != nil {
-					levellog.Service("反序列化失败")
-					return nil, 0
-				}
+				f.ID = fruit.ID
+				f.Name = fruit.Name
+				f.Price = fruit.Price
+				f.Imgs = fruit.Imgs
+				f.Desc = fruit.Desc
 				result = append(result, f)
 				total++
-				log.Println(f.ID)
 			}
 		}
 	}
@@ -106,66 +99,16 @@ func filterNorthFruits(fruits []fruitdto.FruitCommodity) ([]models.FruitCommodit
 		for _, city := range cities {
 			if strings.Contains(origin, city) {
 				var f models.FruitCommodity
-				bytes, err := json.Marshal(fruit)
-				if err != nil {
-					levellog.Service("序列化失败")
-					return nil, 0
-				}
-				err = json.Unmarshal(bytes, &f)
-				if err != nil {
-					levellog.Service("反序列化失败")
-					return nil, 0
-				}
+				f.ID = fruit.ID
+				f.Name = fruit.Name
+				f.Price = fruit.Price
+				f.Imgs = fruit.Imgs
+				f.Desc = fruit.Desc
 				result = append(result, f)
 				total++
-				log.Println(f.ID)
 			}
 		}
 	}
 
 	return result, total
 }
-
-/*
-
-// 北方水果
-9
-12
-15
-17
-22
-28
-33
-35
-
-
-// 南方水果
-1
-2
-3
-4
-5
-6
-8
-10
-11
-18
-19
-20
-23
-24
-25
-26
-27
-29
-30
-31
-32
-34
-36
-38
-40
-41
-42
-43
-*/

@@ -76,7 +76,11 @@ const {fruitList} = useFruitBase()
 
 onMounted(async () => {
   try {
-    let res = await request.get(FruitList)
+    let res = await request.get(FruitList, {
+      params: {
+        flag: 0
+      }
+    })
     if (res.code === 200) {
       // fruitList.value = res.data.filter(item => item.region === '全部')
       fruitList.value = res.data.fruits
@@ -105,5 +109,9 @@ const {dialogVisible, detailObj, currentImgIndex, quantity, addCart, handleClose
 
 <style scoped lang="scss">
 @import "@/sass/fruit-base";
+
+.bgimg {
+  background-image: url('https://pic4.zhimg.com/v2-7ebb2a5b63c994fba1f85ae8b13beaff_b.jpg');
+}
 
 </style>

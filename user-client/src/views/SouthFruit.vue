@@ -77,7 +77,11 @@ const {fruitList} = useFruitBase()
 
 onMounted(async () => {
   try {
-    let res = await request.get(FruitList)
+    let res = await request.get(FruitList, {
+      params: {
+        flag: 1
+      }
+    })
     if (res.code === 200) {
       // fruitList.value = res.data.filter(item => item.region === '南方水果')
       fruitList.value = res.data.fruits
