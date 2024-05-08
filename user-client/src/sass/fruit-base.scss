@@ -190,6 +190,12 @@
     margin-bottom: 10px;
   }
 
+  .detail-id {
+    font-size: 13px;
+    color: #ccc;
+    transform: translate(4px, -11px);
+  }
+
   .detail-price {
     & > span:last-child {
       color: #ff3434;
@@ -210,9 +216,11 @@
     }
   }
 
-
-  .detail-desc::after {
-    content: "。";
+  .detail-desc {
+    width: 100%;
+    min-height: 100px;
+    margin-top: 10px;
+    margin-bottom: 50px;
   }
 
   .total-price {

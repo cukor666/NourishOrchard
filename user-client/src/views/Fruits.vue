@@ -35,6 +35,7 @@
       </div>
       <div class="detail-form">
         <h1 class="detail-name">{{ detailObj.name }}</h1>
+        <div class="detail-id">ID: {{ detailObj.id }}</div>
         <div class="detail-price">
           <span>价格：</span>
           <span>￥{{ detailObj.price }}</span>
@@ -45,10 +46,10 @@
           <span>单位：吨</span>
 
         </div>
-        <div class="detail-desc">
-          <span>描述：</span>
-          <span>{{ detailObj.desc }}</span>
-        </div>
+
+        <span>描述：</span>
+        <el-input class="detail-desc" type="textarea" :rows="5" :disabled="true" v-model="detailObj.desc" />
+
         <div class="total-price">总价格：<span>￥{{ detailObj.price * quantity }}</span></div>
         <div class="add-cart" @click="addCart">加入购物车</div>
       </div>
@@ -82,7 +83,6 @@ onMounted(async () => {
       }
     })
     if (res.code === 200) {
-      // fruitList.value = res.data.filter(item => item.region === '全部')
       fruitList.value = res.data.fruits
     }
   } catch (error) {
