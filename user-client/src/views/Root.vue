@@ -7,7 +7,7 @@
       <span>|</span>
       <router-link to="/order">我的订单</router-link>
       <span>|</span>
-      <router-link to="/cart">购物车 ({{ count }})</router-link>
+      <router-link to="/cart">购物车 ({{ total }})</router-link>
     </div>
   </div>
   <div class="bar">
@@ -44,9 +44,11 @@ import {onMounted, ref} from "vue";
 import {admin_url_dev} from "@/config/api.js"
 import {useLoginUserStore} from "@/stores/loginUser.js";
 import {storeToRefs} from "pinia";
+import {useCartStore} from "@/stores/cart.js";
 
 const { username } = storeToRefs(useLoginUserStore())
-const count = ref(0)
+const {total} = storeToRefs(useCartStore())
+
 const search = ref('')
 
 onMounted(() => {

@@ -1,5 +1,9 @@
 import {ref} from "vue";
 
+import {useCartStore} from "@/stores/cart.js"
+
+const {addToCart} = useCartStore()
+
 export const useDetailDialog = () => {
     const dialogVisible = ref(false)
     const baseObj = {
@@ -33,8 +37,10 @@ export const useDetailDialog = () => {
         currentImgIndex.value = (currentImgIndex.value + 1) % detailObj.value.imgs.length
     }
 
-    const addCart = () => {
-        console.log('add to cart')
+    const addCart = (item, quantity) => {
+        console.log('add to cart, item:', item)
+        console.log('add to cart, quantity:', quantity)
+        addToCart(item, quantity)
     }
 
 
