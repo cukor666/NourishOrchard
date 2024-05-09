@@ -40,12 +40,20 @@
 
 <script setup>
 
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {admin_url_dev} from "@/config/api.js"
+import {useLoginUserStore} from "@/stores/loginUser.js";
+import {storeToRefs} from "pinia";
 
+const { username } = storeToRefs(useLoginUserStore())
 const count = ref(0)
 const search = ref('')
-const username = ref('')  // 后续从localStorage中获取
+
+onMounted(() => {
+  if (username.value === '') {
+    username.value = localStorage.getItem('nourish-orchard-user-name')
+  }
+})
 
 </script>
 

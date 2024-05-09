@@ -1,0 +1,61 @@
+.heart {
+  --w: 50px;
+  width: var(--w);
+  height: var(--w);
+  background-color: #fa2f2f;
+  box-shadow: 0 0 50px rgb(252, 28, 28);
+  position: relative;
+  z-index: 3;
+  animation: heartAnimation 2s ease-in-out infinite, heartAnimationFirst 2s ease-in-out 1;
+}
+
+.heart::before {
+  --w: 50px;
+  width: var(--w);
+  height: var(--w);
+  background-color: #fa2f2f;
+  box-shadow: 0 0 10px rgb(252, 28, 28);
+  position: absolute;
+  content: "";
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.heart::after {
+  --w: 50px;
+  width: var(--w);
+  height: var(--w);
+  background-color: #fa2f2f;
+  box-shadow: 0 0 10px rgb(252, 28, 28);
+  position: absolute;
+  content: "";
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+@keyframes heartAnimationFirst {
+  0% {
+    transform: translate(500px, 160px) rotate(24deg) scale(1);
+  }
+  100% {
+    transform: translate(-500px, -160px) rotate(24deg) scale(1);
+  }
+}
+
+@keyframes heartAnimation {
+  0% {
+    transform: translate(-500px, -160px) rotate(24deg) scale(1);
+  }
+  30% {
+    transform: translate(-500px, -160px) rotate(24deg) scale(1.2);
+  }
+  50% {
+    transform: translate(-500px, -160px) rotate(24deg) scale(1.2);
+  }
+  70% {
+    transform: translate(-500px, -160px) rotate(24deg) scale(1.2);
+  }
+  100% {
+    transform: translate(-500px, -160px) rotate(24deg) scale(1);
+  }
+}

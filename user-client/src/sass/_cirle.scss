@@ -1,0 +1,38 @@
+.circle {
+  --r: 100px;
+  width: var(--r);
+  height: var(--r);
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 1;
+  box-shadow: 10px 10px 50px rgba(134, 36, 243, 0.7);
+  animation: circleAnimate 2s ease-in-out infinite, circleAnimateFirst 2s ease-in-out 1;
+}
+
+@keyframes circleAnimateFirst {
+  0% {
+    transform: translate(240px, -100px) scale(0);
+  }
+  50% {
+    transform: translate(240px, -100px) scale(1.5);
+  }
+  100% {
+    transform: translate(240px, -100px) scale(1);
+  }
+}
+
+@keyframes circleAnimate {
+  0% {
+    transform: translate(240px, -100px) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(240px, -100px) scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(240px, -100px) scale(1);
+    opacity: 1;
+  }
+}

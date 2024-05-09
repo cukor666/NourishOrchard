@@ -28,14 +28,19 @@
 
 import {ref} from "vue";
 import router from "@/router/index.js";
+import request from "@/axios/request.js";
+import {ElMessage} from "element-plus";
+import { useLoginUserStore } from "@/stores/loginUser.js"
+
 
 const user = ref({
   username: "",
   password: ""
 })
 
-const userRef = ref(null)
+const { setUsername, setPromise } = useLoginUserStore()
 
+const userRef = ref(null)
 
 // 校验用户名格式
 const validateUsername = (rule, value, callback) => {
@@ -72,228 +77,56 @@ const rules = ref({
   password: [{validator: validatePassword, trigger: "blur"}]
 })
 
-const login = () => {
+const login = async () => {
   console.log('登录')
   // 整体再校验一遍
   userRef.value.validate((valid) => {
-    if (!valid) {
-      console.log('表单校验失败')
-      return false;
-    }
+        if (!valid) {
+          console.log('表单校验失败')
+          return false;
+        }
 
-    console.log('表单校验成功')
-    // 登录逻辑
-
-    // 进入主页
-    router.push({name: "Root"})
-  })
+        console.log('表单校验成功')
+        // 登录逻辑
+        request.post('/login', {
+          username: user.value.username,
+          password: user.value.password,
+          promise: "user"
+        }).then(res => {
+          if (res.code === 200) {
+            console.log(res.data)
+            ElMessage.success({
+              message: '登录成功',
+              type: 'success'
+            })
+            // 保存用户信息
+            localStorage.setItem('nourish-orchard-user-token', res.data)
+            localStorage.setItem('nourish-orchard-user-name', user.value.username)
+            // 保存用户信息到 store
+            setUsername(user.value.username)
+            setPromise("user")
+            // 进入主页
+            router.push('/')
+          } else {
+            ElMessage.error({
+              message: '登录失败，请检查用户名或密码',
+              type: 'error'
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+          ElMessage.error({
+            message: '登录失败，请检查网络',
+            type: 'error'
+          })
+        })
+      }
+  )
 }
 
 </script>
 
 <style lang="scss" scoped>
-.container {
-  width: 100vw;
-  min-height: 100vh;
-  background: linear-gradient(to bottom right, #a0b6f6, #41a0e7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.box {
-  width: 500px;
-  height: 400px;
-  background: transparent;
-  border-radius: 15px;
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-  position: relative; /* 添加这一行，使z-index生效 */
-  z-index: 2; /* 添加这一行，使box在circle1之上 */
-  transition: box-shadow 1s ease-in-out, transform 1s ease-in-out;
-
-  h1 {
-    text-align: center;
-    font-size: 50px;
-    background: -webkit-linear-gradient(#eee, #dc8145 70%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-}
-
-.box:hover {
-  box-shadow: 0 20px 20px rgba(0, 0, 0, 0.3);
-  transform: scale(1.01);
-}
-
-.circle {
-  --r: 100px;
-  width: var(--r);
-  height: var(--r);
-  background-color: #fff;
-  border-radius: 50%;
-  position: absolute;
-  z-index: 1;
-  box-shadow: 10px 10px 50px rgba(134, 36, 243, 0.7);
-  animation: circleAnimate 2s ease-in-out infinite, circleAnimateFirst 2s ease-in-out 1;
-}
-
-@keyframes circleAnimateFirst {
-  0% {
-    transform: translate(240px, -100px) scale(0);
-  }
-  50% {
-    transform: translate(240px, -100px) scale(1.5);
-  }
-  100% {
-    transform: translate(240px, -100px) scale(1);
-  }
-}
-
-@keyframes circleAnimate {
-  0% {
-    transform: translate(240px, -100px) scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: translate(240px, -100px) scale(1.2);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translate(240px, -100px) scale(1);
-    opacity: 1;
-  }
-}
-
-.heart {
-  --w: 50px;
-  width: var(--w);
-  height: var(--w);
-  background-color: #fa2f2f;
-  box-shadow: 0 0 50px rgb(252, 28, 28);
-  position: relative;
-  z-index: 3;
-  animation: heartAnimation 2s ease-in-out infinite, heartAnimationFirst 2s ease-in-out 1;
-}
-
-.heart::before {
-  --w: 50px;
-  width: var(--w);
-  height: var(--w);
-  background-color: #fa2f2f;
-  box-shadow: 0 0 10px rgb(252, 28, 28);
-  position: absolute;
-  content: "";
-  border-radius: 50%;
-  transform: translateX(-50%);
-}
-
-.heart::after {
-  --w: 50px;
-  width: var(--w);
-  height: var(--w);
-  background-color: #fa2f2f;
-  box-shadow: 0 0 10px rgb(252, 28, 28);
-  position: absolute;
-  content: "";
-  border-radius: 50%;
-  transform: translateY(-50%);
-}
-
-@keyframes heartAnimationFirst {
-  0% {
-    transform: translate(500px, 160px) rotate(24deg) scale(1);
-  }
-  100% {
-    transform: translate(-500px, -160px) rotate(24deg) scale(1);
-  }
-}
-
-@keyframes heartAnimation {
-  0% {
-    transform: translate(-500px, -160px) rotate(24deg) scale(1);
-  }
-  30% {
-    transform: translate(-500px, -160px) rotate(24deg) scale(1.2);
-  }
-  50% {
-    transform: translate(-500px, -160px) rotate(24deg) scale(1.2);
-  }
-  70% {
-    transform: translate(-500px, -160px) rotate(24deg) scale(1.2);
-  }
-  100% {
-    transform: translate(-500px, -160px) rotate(24deg) scale(1);
-  }
-}
-
-.rectangle {
-  width: 100px;
-  height: 100px;
-  background-color: #fff;
-  position: absolute;
-  transform: translate(90px, 180px) rotate(45deg) skew(10deg, 20deg);
-  box-shadow: 0 0 50px rgba(255, 211, 108, 0.7);
-  animation: rectangleAnimation 2s ease-in-out infinite, rectangleAnimationFirst 2s ease-in-out 1;
-}
-
-@keyframes rectangleAnimationFirst {
-  0% {
-    transform: translate(90px, 400px) rotate(24deg) scale(1);
-  }
-  100% {
-    transform: translate(90px, 180px) rotate(24deg) scale(1);
-  }
-}
-
-@keyframes rectangleAnimation {
-  0% {
-    transform: translate(90px, 180px) rotate(45deg) skew(10deg, 20deg) rotate(0);
-  }
-  100% {
-    transform: translate(90px, 180px) rotate(45deg) skew(10deg, 20deg) rotate(360deg);
-  }
-}
-
-.el-form {
-  width: 40%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 60px;
-}
-
-.login-btn {
-  background-color: #41a0e7;
-  border: none;
-  border-radius: 15px;
-  transition: box-shadow 1s ease-in-out;
-}
-
-.login-btn:hover {
-  background-color: #018eff;
-  border: none;
-  box-shadow: 0 0 10px rgba(3, 158, 255, 0.8), 0 0 20px rgba(3, 158, 255, 0.89), 0 0 30px rgb(3, 158, 255);
-}
-
-.register-btn {
-  width: 60px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
-  border-radius: 15px;
-  background-color: #4dffa0;
-  border: none;
-  color: #fff;
-  transition: box-shadow 1s ease-in-out;
-}
-
-.register-btn:hover {
-  background-color: #4dffa0;
-  border: none;
-  color: #f1ed30;
-  box-shadow: 0 0 10px rgba(62, 255, 156, 0.8), 0 0 20px rgba(76, 255, 165, 0.89), 0 0 30px rgb(3, 255, 142);
-}
+@import "@/sass/login";
 
 </style>
