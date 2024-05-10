@@ -11,11 +11,11 @@ request.interceptors.request.use(
     (config) => {
         config.headers["Content-Type"] = "application/json";
         config.headers["Accept"] = "application/json";
-        const token = localStorage.getItem("nourish-token");
+        const token = localStorage.getItem("nourish-orchard-user-token");
         if (token) {
             config.headers["Authorization"] = `Bearer ${token}`;
         }
-        config.headers["username"] = localStorage.getItem("nourish-account");
+        config.headers["username"] = localStorage.getItem("nourish-orchard-user-name");
         return config;
     },
     (error) => {
