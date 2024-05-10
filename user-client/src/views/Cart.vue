@@ -20,15 +20,14 @@
         <div class="fruit-count">{{ item.quantity }}</div>
         <div class="fruit-price">{{ item.fruit.price }}</div>
         <div class="fruit-operation">
-          <button class="remove-btn" @click="removeCart()">移出购物车</button>
+          <button class="remove-btn" @click="removeCart(index)">移出购物车</button>
         </div>
       </div>
     </div>
 
-
     <div class="bottom">
-      <div class="total"><span>总计:</span><span>{{ orderTotal }}</span></div>
-      <button class="submit-btn" @click="submitOrder">提交订单</button>
+      <div class="total"><span>总计:</span><span style="color: red">￥{{ orderTotal }}</span></div>
+      <button class="submit-btn" :disabled="submitBtnDisabled" @click="submitOrder">提交订单</button>
     </div>
   </div>
 </template>
@@ -37,197 +36,76 @@
 
 import {useCartStore} from "@/stores/cart.js";
 import {storeToRefs} from "pinia";
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
+import {useOrderStore} from "@/stores/order.js";
+import router from "@/router/index.js";
 
-const {cartList, total} = storeToRefs(useCartStore())
+const {cartList} = storeToRefs(useCartStore())
+const {money} = storeToRefs(useOrderStore())
+
 const selectAll = ref(false)
-const selectList = ref([false, false, false])
+const selectList = ref([])
+
+watch(selectAll, (val) => {
+  if (val) {
+    for (let i = 0; i < selectList.value.length; i++) {
+      selectList.value[i] = true
+    }
+  }
+})
+
+watch(selectList.value, (val) => {
+  let count = 0
+  for (let i = 0; i < val.length; i++) {
+    if (selectList.value[i]) {
+      count++
+    }
+  }
+  selectAll.value = count === selectList.value.length
+})
+
+const submitBtnDisabled = computed(() => {
+  let arr = selectList.value.filter(v => v === true)
+  console.log(arr.length === 0)
+  return arr.length === 0
+})
 
 onMounted(() => {
-  console.log(cartList.value)
+  for (let i = 0; i < cartList.value.length; i++) {
+    selectList.value.push(false)
+  }
 })
 
 const orderTotal = computed(() => {
   let sum = 0
-  for (let item of cartList.value) {
-    sum += item.fruit.price * item.quantity
+  for (let i = 0; i < selectList.value.length; i++) {
+    if (selectList.value[i]) {
+      sum += cartList.value[i].fruit.price * cartList.value[i].quantity
+    }
   }
   return sum
 })
 
-const removeCart = () => {
-  console.log('removeCart')
+
+const removeCart = (index) => {
+  // 删除cartList.value中下标为index的元素
+  cartList.value.splice(index, 1)
+  // 更新localStorage中的cartList
+  localStorage.setItem('cart', JSON.stringify(cartList.value))
+  // 更新selectList
+  selectList.value.splice(index, 1)
+  // 更新selectAll
+  selectAll.value = selectList.value.length === cartList.value.length
 }
 
 const submitOrder = () => {
-  console.log('submitOrder')
+  money.value = orderTotal.value
+  router.push({name: 'Order'})
 }
 
 </script>
 
 <style scoped lang="scss">
+@import "@/sass/cart";
 
-.container {
-  width: 95%;
-  min-height: 100vh;
-  background-color: #fff;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  padding: 20px;
-}
-
-.title {
-  font-size: 24px;
-  color: #f8a546;
-
-  .text {
-    margin-top: 10px;
-    border-bottom: 6px solid #f8a546;
-  }
-}
-
-.table {
-
-  .table-title {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    font-weight: bold;
-    background-color: #F1F1F1;
-    padding: 10px;
-    position: relative;
-
-
-    .checkbox {
-      display: flex;
-      align-items: center;
-      margin-left: 10px;
-
-      div {
-        margin-left: 5px;
-      }
-    }
-
-    .fruit-name {
-      position: absolute;
-      left: 120px;
-
-    }
-
-    .fruit-count {
-      position: absolute;
-      left: 400px;
-    }
-
-    .fruit-price {
-      position: absolute;
-      left: 500px;
-    }
-
-    .fruit-operation {
-      position: absolute;
-      left: 800px;
-    }
-
-    & > span:last-child {
-      margin-right: 50px;
-    }
-  }
-}
-
-.cart-item {
-  width: 100%;
-  min-height: 100px;
-  background-color: #FFF4E8;
-  margin: 20px 0;
-  box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  position: relative;
-
-  input[type="checkbox"] {
-    position: absolute;
-    left: 20px;
-  }
-
-  .img {
-    position: absolute;
-    left: 40px;
-    width: 50px;
-    height: 50px;
-    background-color: #ccc;
-    background-image: url("https://mediabluk.cnr.cn/record/img/cnr/CNRCDP/2023/0602/803fbea5de9d4b168df04d9f7cb7d28610.jpg");
-    background-size: cover;
-    background-position: center;
-  }
-
-  .fruit-name {
-    position: absolute;
-    left: 120px;
-  }
-
-  .fruit-count {
-    position: absolute;
-    left: 400px;
-  }
-
-  .fruit-price {
-    position: absolute;
-    left: 500px;
-  }
-
-  .fruit-operation {
-    position: absolute;
-    left: 800px;
-
-    .remove-btn {
-      background-color: #fd5e58;
-      border: 1px solid #faa8a5;
-      border-radius: 5px;
-      color: #fff;
-      padding: 5px 10px;
-      cursor: pointer;
-
-      &:hover {
-        transform: scale(1.1);
-      }
-    }
-  }
-}
-
-
-.bottom {
-  width: 100%;
-  min-height: 50px;
-  background-color: #F1F1F1;
-  display: flex;
-  align-items: center;
-
-  .total {
-    margin-left: 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #000;
-  }
-
-  .submit-btn {
-    margin-left: auto;
-    margin-right: 240px;
-    padding: 10px;
-    background-color: #f8a546;
-    border: none;
-    border-radius: 10px;
-    color: #fff;
-    font-size: 14px;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-
-    &:hover {
-      transform: scale(1.1);
-    }
-  }
-}
 </style>

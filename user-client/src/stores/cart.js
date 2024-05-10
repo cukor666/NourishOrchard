@@ -19,8 +19,6 @@ export const useCartStore = defineStore('cart', () => {
         // 存入本地存储
         localStorage.setItem('cart', JSON.stringify(cartList.value))
     }
-    const removeFromCart = (product) => {
-        cartList.value = cartList.value.filter(item => item.id !== product.id)
-    }
-    return {cartList, total, addToCart, removeFromCart}
+
+    return {cartList, total, addToCart}
 })
