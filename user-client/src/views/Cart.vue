@@ -100,7 +100,8 @@ const removeCart = (index) => {
 
 const submitOrder = () => {
   money.value = orderTotal.value
-  router.push({name: 'Order'})
+  // 跳转到支付页面
+  router.push('/pay')
 }
 
 </script>
