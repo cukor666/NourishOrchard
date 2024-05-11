@@ -18,7 +18,7 @@ func (fcr *FruitCmdyResponse) set(fc models.FruitCommodity) error {
 	fcr.ID = fc.ID
 	fcr.Name = fc.Name
 	fcr.Price = fc.Price
-	err := json.Unmarshal([]byte(*fc.Imgs), &fcr.Imgs)
+	err := json.Unmarshal([]byte(fc.Imgs), &fcr.Imgs)
 	if err != nil {
 		levellog.Controller("JSON Unmarshal error")
 		return err

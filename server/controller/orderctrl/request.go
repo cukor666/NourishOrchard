@@ -3,14 +3,14 @@ package orderctrl
 import "server/models"
 
 type insertReq struct {
-	Title         string  `json:"title" binding:"required"`
-	Status        int     `json:"status" binding:"omitempty,oneof=1"`
-	CommodityID   int64   `json:"commodityId" binding:"required"`
-	Quantity      float64 `json:"quantity" binding:"required,gt=0"`
-	ReceiverName  string  `json:"receiverName" binding:"required"`
-	ReceiverPhone string  `json:"receiverPhone" binding:"required"`
-	Address       string  `json:"address" binding:"required"`
-	Remark        string  `json:"remark" binding:"omitempty"`
+	Title         string  `json:"title" binding:"required"`           // 订单标题
+	Status        int     `json:"status" binding:"omitempty,oneof=1"` // 订单状态，1-待付款，2-待发货，3-待收货，4-已完成
+	CommodityID   int64   `json:"commodityId" binding:"required"`     // 商品ID
+	Quantity      float64 `json:"quantity" binding:"required,gt=0"`   // 商品数量
+	ReceiverName  string  `json:"receiverName" binding:"required"`    // 收货人姓名
+	ReceiverPhone string  `json:"receiverPhone" binding:"required"`   // 收货人手机号
+	Address       string  `json:"address" binding:"required"`         // 收货地址
+	Remark        string  `json:"remark" binding:"omitempty"`         // 备注
 }
 
 func (r insertReq) toOrder() models.Order {

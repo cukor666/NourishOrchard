@@ -1,13 +1,21 @@
 import {ref} from "vue";
 
+import {useCartStore} from "@/stores/cart.js"
+import {ElMessage} from "element-plus";
+
+const {addToCart} = useCartStore()
+
 export const useDetailDialog = () => {
     const dialogVisible = ref(false)
-    const detailObj = ref({
+    const baseObj = {
         id: 0,
         name: '番石榴',
         price: 12.5,
         imgs: ['https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/番石榴.jpg'],
         desc: '香甜可口，营养丰富，营养价值高。'
+    }
+    const detailObj = ref({
+        baseObj
     })
     const currentImgIndex = ref(0)
     const quantity = ref(0.5)
@@ -20,6 +28,7 @@ export const useDetailDialog = () => {
 
     const handleClose = () => {
         dialogVisible.value = false
+        detailObj.value = baseObj
     }
 
     const leftImg = () => {
@@ -29,8 +38,11 @@ export const useDetailDialog = () => {
         currentImgIndex.value = (currentImgIndex.value + 1) % detailObj.value.imgs.length
     }
 
-    const addCart = () => {
-        console.log('add to cart')
+    const addCart = (item, quantity) => {
+        console.log('add to cart, item:', item)
+        console.log('add to cart, quantity:', quantity)
+        addToCart(item, quantity)
+        ElMessage.success('添加成功')
     }
 
 

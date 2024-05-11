@@ -1,0 +1,27 @@
+.rectangle {
+  width: 100px;
+  height: 100px;
+  background-color: #fff;
+  position: absolute;
+  transform: translate(90px, 180px) rotate(45deg) skew(10deg, 20deg);
+  box-shadow: 0 0 50px rgba(255, 211, 108, 0.7);
+  animation: rectangleAnimation 2s ease-in-out infinite, rectangleAnimationFirst 2s ease-in-out 1;
+}
+
+@keyframes rectangleAnimationFirst {
+  0% {
+    transform: translate(90px, 400px) rotate(24deg) scale(1);
+  }
+  100% {
+    transform: translate(90px, 180px) rotate(24deg) scale(1);
+  }
+}
+
+@keyframes rectangleAnimation {
+  0% {
+    transform: translate(90px, 180px) rotate(45deg) skew(10deg, 20deg) rotate(0);
+  }
+  100% {
+    transform: translate(90px, 180px) rotate(45deg) skew(10deg, 20deg) rotate(360deg);
+  }
+}

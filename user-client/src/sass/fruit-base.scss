@@ -2,7 +2,7 @@
 .bgimg {
   width: 100%;
   height: 300px;
-  background-image: url("https://cukor-resource-1318313222.cos.ap-guangzhou.myqcloud.com/img/番石榴.jpg");
+  background-image: url("https://mediabluk.cnr.cn/record/img/cnr/CNRCDP/2023/0602/803fbea5de9d4b168df04d9f7cb7d28610.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -190,6 +190,12 @@
     margin-bottom: 10px;
   }
 
+  .detail-id {
+    font-size: 13px;
+    color: #ccc;
+    transform: translate(4px, -11px);
+  }
+
   .detail-price {
     & > span:last-child {
       color: #ff3434;
@@ -210,9 +216,11 @@
     }
   }
 
-
-  .detail-desc::after {
-    content: "。";
+  .detail-desc {
+    width: 100%;
+    min-height: 100px;
+    margin-top: 10px;
+    margin-bottom: 50px;
   }
 
   .total-price {

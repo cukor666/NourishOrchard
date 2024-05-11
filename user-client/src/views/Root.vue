@@ -2,12 +2,13 @@
   <div class="top">
     <div class="welcome">我的水果 你的爱~</div>
     <div class="link">
-      <router-link to="/login">{{username === '' ? '请登录' : username}}</router-link>
+      <router-link to="/login" v-if=" !username ||username === ''">请登录</router-link>
+      <span v-else>{{ username }}</span>
       <a :href="admin_url_dev+'/register'">注册</a>
       <span>|</span>
       <router-link to="/order">我的订单</router-link>
       <span>|</span>
-      <router-link to="/cart">购物车 ({{ count }})</router-link>
+      <router-link to="/cart">购物车 ({{ total }})</router-link>
     </div>
   </div>
   <div class="bar">
@@ -40,12 +41,22 @@
 
 <script setup>
 
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {admin_url_dev} from "@/config/api.js"
+import {useLoginUserStore} from "@/stores/loginUser.js";
+import {storeToRefs} from "pinia";
+import {useCartStore} from "@/stores/cart.js";
 
-const count = ref(0)
+const {username} = storeToRefs(useLoginUserStore())
+const {total} = storeToRefs(useCartStore())
+
 const search = ref('')
-const username = ref('')  // 后续从localStorage中获取
+
+onMounted(() => {
+  if (username.value === '') {
+    username.value = localStorage.getItem('nourish-orchard-user-name')
+  }
+})
 
 </script>
 

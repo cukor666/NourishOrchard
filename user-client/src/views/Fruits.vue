@@ -35,6 +35,7 @@
       </div>
       <div class="detail-form">
         <h1 class="detail-name">{{ detailObj.name }}</h1>
+        <div class="detail-id">ID: {{ detailObj.id }}</div>
         <div class="detail-price">
           <span>价格：</span>
           <span>￥{{ detailObj.price }}</span>
@@ -45,12 +46,12 @@
           <span>单位：吨</span>
 
         </div>
-        <div class="detail-desc">
-          <span>描述：</span>
-          <span>{{ detailObj.desc }}</span>
-        </div>
+
+        <span>描述：</span>
+        <el-input class="detail-desc" type="textarea" :rows="5" :disabled="true" v-model="detailObj.desc" />
+
         <div class="total-price">总价格：<span>￥{{ detailObj.price * quantity }}</span></div>
-        <div class="add-cart" @click="addCart">加入购物车</div>
+        <div class="add-cart" @click="addCart(detailObj, quantity)">加入购物车</div>
       </div>
     </div>
   </el-dialog>
@@ -76,9 +77,12 @@ const {fruitList} = useFruitBase()
 
 onMounted(async () => {
   try {
-    let res = await request.get(FruitList)
+    let res = await request.get(FruitList, {
+      params: {
+        flag: 0
+      }
+    })
     if (res.code === 200) {
-      // fruitList.value = res.data.filter(item => item.region === '全部')
       fruitList.value = res.data.fruits
     }
   } catch (error) {
@@ -105,5 +109,9 @@ const {dialogVisible, detailObj, currentImgIndex, quantity, addCart, handleClose
 
 <style scoped lang="scss">
 @import "@/sass/fruit-base";
+
+.bgimg {
+  background-image: url('https://pic4.zhimg.com/v2-7ebb2a5b63c994fba1f85ae8b13beaff_b.jpg');
+}
 
 </style>

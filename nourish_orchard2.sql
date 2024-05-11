@@ -11,7 +11,7 @@
  Target Server Version : 80031 (8.0.31)
  File Encoding         : 65001
 
- Date: 22/04/2024 16:35:56
+ Date: 07/05/2024 21:38:45
 */
 
 SET NAMES utf8mb4;
@@ -229,9 +229,61 @@ INSERT INTO `fruits` VALUES (35, '柿子', 81, 18, 30, '山西省太原市小店
 INSERT INTO `fruits` VALUES (36, '椰子', 47, 6, 50, '海南省三亚市天涯区', 14);
 INSERT INTO `fruits` VALUES (38, '杨梅', 85, 8, 3, '浙江省杭州市上城区', 16);
 INSERT INTO `fruits` VALUES (40, '桂圆', 79, 15, 365, '广东省东莞市莞城区', 18);
-INSERT INTO `fruits` VALUES (41, '蔬菜', 95, 2, 7, '江苏省苏州市姑苏区', 19);
 INSERT INTO `fruits` VALUES (42, '莲雾', 83, 7, 7, '福建省厦门市思明区', 20);
 INSERT INTO `fruits` VALUES (43, '水蜜桃', 75, 20, 7, '四川省攀枝花市', 19);
+
+-- ----------------------------
+-- Table structure for fruits_commodity
+-- ----------------------------
+DROP TABLE IF EXISTS `fruits_commodity`;
+CREATE TABLE `fruits_commodity`  (
+  `id` bigint NOT NULL COMMENT '水果ID，商品ID',
+  `price` decimal(10, 2) NOT NULL COMMENT '水果价格',
+  `imgs` json NOT NULL COMMENT '水果图集',
+  `desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '水果描述',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of fruits_commodity
+-- ----------------------------
+INSERT INTO `fruits_commodity` VALUES (1, 3.50, '[\"https://momo-wp.s3.ap-northeast-1.amazonaws.com/wp-content/uploads/2018/11/%E5%9C%967.jpg\", \"https://p2.itc.cn/images01/20210114/5646cfc03530484f9360fcc736e07f68.jpeg\", \"https://img95.699pic.com/photo/50072/1365.jpg_wh300.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (2, 3.50, '[\"https://lh4.googleusercontent.com/proxy/G4gESZ6u1LTsQIt_FhUwiGzH6J5xVLe3VuIwGG7nqUv4sxz1c-Wd3KrAu2kfb5L1VLXiUHrTpQ3SEUq4zq-DLuw9nZkxmaKu6XttH7aR9l9sxbXVEtXp5FFX_jXZjA6xHRjLi2fyhYIr\", \"https://img95.699pic.com/photo/50080/9753.jpg_wh300.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (3, 3.50, '[\"https://www.bowtie.com.hk/blog/wp-content/uploads/2023/11/07015921/%E9%A6%99%E8%95%89.jpg\", \"https://c.files.bbci.co.uk/477F/production/_116230381_gettyimages-492757968.jpg\", \"https://images.agriharvest.tw/wp-content/uploads/2023/05/7305-8-0-1024x766.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (4, 3.50, '[\"https://exp-picture.cdn.bcebos.com/dd58d02c5b1b1ede65cd568e981fceecd2d90fa9.jpg?x-bce-process=image%2Fcrop%2Cx_0%2Cy_0%2Cw_820%2Ch_516%2Fformat%2Cf_auto%2Fquality%2Cq_80\", \"https://k.sinaimg.cn/n/front/277/w640h437/20181212/U3dE-hqackaa5877093.jpg/w700d1q75cms.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (5, 3.50, '[\"https://image.healthjd.com/da/jfs/t1/175013/33/14234/1201959/60c3664eEdda4aa17/703b12235f04461b.jpg\", \"https://celeplate.co.uk/cdn/shop/files/lemon1.png?v=1705321312&width=1946\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (6, 3.50, '[\"https://cdn.pixabay.com/photo/2022/05/27/10/35/strawberry-7224875_640.jpg\", \"https://global-blog.cpcdn.com/tw/2021/12/AdobeStock_343373754--1-.jpeg\", \"https://theoita.com/wp-content/uploads/2020/07/%EF%BE%8D%EF%BE%9E%EF%BE%98%EF%BD%B0%EF%BE%82-1.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (7, 3.50, '[\"https://images.agriharvest.tw/wp-content/uploads/2022/06/0-18-1024x768.jpg\", \"https://vegemap.merit-times.com/_i/assets/upload/nutrition/d0bf9672ffe71de8c6b371f806674023.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (8, 3.50, '[\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3IngD293w4FPcX-Jd4d_WnH8CLLKJww8yZLngrAPuA&s\", \"https://p8.itc.cn/q_70/images01/20220402/97467c7372ee4022ad75e9a0862d23fe.jpeg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (9, 3.50, '[\"https://img95.699pic.com/photo/60019/9969.jpg_wh300.jpg\", \"https://images.sbs.com.au/dims4/default/92fda7a/2147483647/strip/true/crop/1920x1080+0+107/resize/1280x720!/quality/90/?url=http%3A%2F%2Fsbs-au-brightspot.s3.amazonaws.com%2Fdrupal%2Fyourlanguage%2Fpublic%2Fcherry-2554364_1920.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (10, 3.50, '[\"https://www.ecoportal.net/wp-content/uploads/2012/10/kiwi-rdn-801x534.webp\", \"https://k.sinaimg.cn/n/sinacn20190815ac/277/w640h437/20190815/9399-ichcymv3193252.jpg/w700d1q75cms.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (11, 3.50, '[\"https://k.sinaimg.cn/n/front/277/w640h437/20190417/kYcN-hvvuiym7277966.jpg/w700d1q75cms.jpg\", \"https://global-blog.cpcdn.com/tw/2020/06/76d3f7d1c30e2e48889aa9cffdb9c28c.jpeg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (12, 3.50, '[\"https://img95.699pic.com/photo/60029/2558.jpg_wh300.jpg\", \"https://img95.699pic.com/photo/60115/7307.jpg_wh300.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (15, 3.50, '[\"https://goods.watchinese.com/img/cms/Blog/202306-watermelon/0.jpeg\", \"https://pica.zhimg.com/v2-efb229deccd9b6cfc6187bbfd8514dfe_720w.jpg?source=172ae18b\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (16, 3.50, '[\"https://www.ttvc.com.tw/data/images/202304/dreamstime_s_14781029.jpg\", \"https://p4.itc.cn/images01/20230102/da9fb1102537468fb1d26ca37318ae0d.jpeg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (17, 3.50, '[\"https://img.ltn.com.tw/Upload/health/page/800/2022/10/08/php0Src0k.jpg\", \"https://cdn.esence.travel/%E5%AE%98%E7%B6%B2%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2-6-1628x1000.png\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (18, 3.50, '[\"https://as.chdev.tw/web/article/d/9/4/d3b7ff83-99d1-4903-8463-79806b53f7191677059699.jpg\", \"https://www.leezen.com.tw/uploads/article/1058_l.jpg?r=615663115\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (19, 3.50, '[\"https://img95.699pic.com/photo/60014/4791.jpg_wh300.jpg\", \"https://p9.itc.cn/images01/20220622/2582bd168df947158f7a36467a713913.jpeg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (20, 3.50, '[\"https://mediabluk.cnr.cn/record/img/cnr/CNRCDP/2023/0602/803fbea5de9d4b168df04d9f7cb7d28610.jpg\", \"https://img95.699pic.com/photo/50046/2335.jpg_wh300.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (22, 3.50, '[\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqA9lgtsgQ7nyE-PtDw1vNBWBQ9yeFKgcFybDXj4atvw&s\", \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsPyjzoPK3d2tkqn_Yn6vRvtQy4fr4buT2kIG2jNQ7Nw&s\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (23, 3.50, '[\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEZ0amGbq-MDOp_FiM6c1SrBPLXTeE2QvRNDgZYeh21Q&s\", \"https://cdn.chinafruitportal.com/2020/04/%E5%A6%83%E5%AD%90%E7%AC%91%E8%8D%94%E6%9E%9D/%E5%A6%83%E5%AD%90%E7%AC%91%E8%8D%94%E6%9E%9D-1.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (24, 3.50, '[\"https://lh5.googleusercontent.com/proxy/m_iwmbZ3n8C3uDco10eHYwhMPY0S3IXB-aaupjFWieJAEpVQic8Pk6XyJ4fWBIL0I4DDLF9SEvMX_34RC2Px_5uViQ\", \"https://www.gz.gov.cn/img/0/210/210935/8178185.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (25, 3.50, '[\"https://www.uho.com.tw/userfiles/sm/sm1200675_images_A1/2022082368008497.jpg\", \"https://s3.mababy.com/mababy-production/knowledge/8937a5bb-6191-489a-861e-6126185694a2\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (26, 3.50, '[\"https://img95.699pic.com/photo/50127/1939.jpg_wh300.jpg\", \"https://hips.hearstapps.com/hmg-prod/images/gettyimages-1910897591-1-65eae89db2d9c.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (27, 3.50, '[\"https://img95.699pic.com/photo/60052/2421.jpg_wh860.jpg\", \"https://pic4.zhimg.com/v2-7ebb2a5b63c994fba1f85ae8b13beaff_b.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (28, 3.50, '[\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTD0oLaJLexyW2ZJvoGXVkhOGoGLzsAiwI-PR0KlwIing&s\", \"https://cdn-news.org/WebView/GetMedia.ashx?PK=0000000021befc7732a7acce17de434297cde4764099c16f&VideoSize=1\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (29, 3.50, '[\"https://www.gz.gov.cn/img/0/210/210959/8178181.png\", \"https://professorlindotcom.files.wordpress.com/2017/05/farm-seeds-100-hybrid-papaya-2-packet-seeds-original-imaefec4n9rwk7mh.jpeg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (30, 3.50, '[\"https://cdn-assets-eu.frontify.com/s3/frontify-enterprise-files-eu/eyJvYXV0aCI6eyJjbGllbnRfaWQiOiJmcm9udGlmeS1maW5kZXIifSwicGF0aCI6ImloaC1oZWFsdGhjYXJlLWJlcmhhZFwvYWNjb3VudHNcL2MzXC80MDAwNjI0XC9wcm9qZWN0c1wvMjA5XC9hc3NldHNcLzgyXC8zNzk2OFwvNGFiZmRmNGZlMDA1N2JjNTU2MThjYTU0ZTA2OTIwOWQtMTY1ODMwMDAwOS5qcGcifQ:ihh-healthcare-berhad:q8WUI77npjt2OB4jweFlIdzZGLziKLUEiZ265-19-18?format=webp\", \"https://static01.nyt.com/images/2013/12/08/travel/08-pursuits-span/08-pursuits-span-master1050.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (31, 3.50, '[\"https://pgw.udn.com.tw/gw/photo.php?u=https://uc.udn.com.tw/photo/2020/06/03/99/7977261.jpg&x=0&y=0&sw=1209&sh=806&s=Y&exp=3600\", \"https://product.hstatic.net/200000325223/product/thanh_long-01_c635795659f64d07a67a5900d47e2f7b_large_d464adf0306e40a6958bfea66ba9e46a_large.png\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (32, 3.50, '[\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6jNS6_ewajSNOia_wfKgRXHQt_MxJsYExf07dAJbIQQ&s\", \"https://product.hstatic.net/200000325223/product/44f920810a271a3bdd789bf275c2cad_cc8529666234418993f4d483c9f9939f_large_27566d30a81e41a39de3b1718e3db29e_master.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (33, 3.50, '[\"https://p6.itc.cn/images01/20201027/cda311de69f8471bbcce50015f533c03.jpeg\", \"https://p2.itc.cn/q_70/images01/20220617/852f7cb558e74c1485e2971b134811fa.png\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (34, 3.50, '[\"https://pic3.zhimg.com/80/v2-9b90ec39f6abc95206e7b13e3ff7fe42_1440w.webp\", \"https://p4.itc.cn/images01/20220316/e5cd4ada228c4d80a764b1b72131e621.jpeg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (35, 3.50, '[\"https://img.ltn.com.tw/Upload/health/page/800/2022/10/08/php0Src0k.jpg\", \"https://cdn.esence.travel/%E5%AE%98%E7%B6%B2%E6%96%87%E7%AB%A0%E5%B0%81%E9%9D%A2-6-1628x1000.png\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (36, 3.50, '[\"https://as.chdev.tw/web/article/d/9/4/d3b7ff83-99d1-4903-8463-79806b53f7191677059699.jpg\", \"https://www.leezen.com.tw/uploads/article/1058_l.jpg?r=615663115\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (38, 3.50, '[\"https://mediabluk.cnr.cn/record/img/cnr/CNRCDP/2023/0602/803fbea5de9d4b168df04d9f7cb7d28610.jpg\", \"https://img95.699pic.com/photo/50046/2335.jpg_wh300.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (40, 3.50, '[\"https://k.sinaimg.cn/n/front/277/w640h437/20190222/F0l5-htknpmh5372771.jpg/w700d1q75cms.jpg\", \"https://pic1.zhimg.com/v2-0e8307dea7d5ea521531c6236dbb369c_720w.jpg?source=172ae18b\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (42, 3.50, '[\"https://p7.itc.cn/q_70/images01/20230605/f436134d342f4bf5a272ae9c89c41e1b.jpeg\", \"https://k.sinaimg.cn/n/sinacn20200121ac/205/w612h393/20200121/c5dd-innckce4819732.jpg/w700d1q75cms.jpg\"]', '香甜可口，美味十足，值得拥有');
+INSERT INTO `fruits_commodity` VALUES (43, 3.50, '[\"https://img95.699pic.com/photo/50135/6620.jpg_wh300.jpg\", \"https://superbuy-hifamily.cdn.hinet.net/superbuy_admin/images/product/525/PR1606160003_main.jpg\"]', '香甜可口，美味十足，值得拥有');
 
 -- ----------------------------
 -- Table structure for inventory
@@ -322,7 +374,7 @@ CREATE TABLE `orders`  (
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `deleted_at` datetime NULL DEFAULT NULL COMMENT '删除时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of orders
@@ -339,6 +391,8 @@ INSERT INTO `orders` VALUES (10, '甘甜橙子多汁可口', 3, 22, 0.8, 7, 0, 0
 INSERT INTO `orders` VALUES (11, '热带芒果香甜可口', 1, 34, 1.5, 7, 0, 0, '张伟', '17612344321', '福建省厦门市思明区鼓浪屿路2号', '急用，请加急处理', '2024-04-22 16:32:36', '2024-04-22 16:32:36', NULL);
 INSERT INTO `orders` VALUES (12, '鲜嫩草莓甜美可口', 4, 6, 1, 7, 0, 0, '赵敏', '13109876543', '四川省重庆市渝中区解放碑23号', '周末到货', '2024-04-22 16:33:08', '2024-04-22 16:35:16', NULL);
 INSERT INTO `orders` VALUES (13, '多汁西瓜清甜可口', 2, 15, 2, 7, 0, 0, '孙悟空', '14785236974', '湖北省武汉市武昌区黄鹤楼5号', '注意不要压坏', '2024-04-22 16:33:33', '2024-04-22 16:35:23', NULL);
+INSERT INTO `orders` VALUES (14, '多汁西瓜清甜可口', 1, 15, 2, 7, 0, 0, '孙悟空', '14785236974', '湖北省武汉市武昌区黄鹤楼5号', '注意不要压坏', '2024-04-23 16:10:56', '2024-04-23 16:10:56', NULL);
+INSERT INTO `orders` VALUES (15, '香甜水蜜桃清甜可口', 1, 15, 2, 7, 0, 0, '孙悟空', '14785236974', '湖北省武汉市武昌区黄鹤楼5号', '注意不要压坏', '2024-04-23 16:11:30', '2024-04-23 16:11:30', NULL);
 
 -- ----------------------------
 -- Table structure for suppliers
