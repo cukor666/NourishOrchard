@@ -2,7 +2,8 @@
   <div class="top">
     <div class="welcome">我的水果 你的爱~</div>
     <div class="link">
-      <router-link to="/login">{{username === '' ? '请登录' : username}}</router-link>
+      <router-link to="/login" v-if=" !username ||username === ''">请登录</router-link>
+      <span v-else>{{ username }}</span>
       <a :href="admin_url_dev+'/register'">注册</a>
       <span>|</span>
       <router-link to="/order">我的订单</router-link>
@@ -46,7 +47,7 @@ import {useLoginUserStore} from "@/stores/loginUser.js";
 import {storeToRefs} from "pinia";
 import {useCartStore} from "@/stores/cart.js";
 
-const { username } = storeToRefs(useLoginUserStore())
+const {username} = storeToRefs(useLoginUserStore())
 const {total} = storeToRefs(useCartStore())
 
 const search = ref('')

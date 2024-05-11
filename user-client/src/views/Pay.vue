@@ -25,7 +25,6 @@
   </el-dialog>
 </template>
 
-
 <script setup>
 
 import {ElMessage} from "element-plus";
@@ -33,13 +32,19 @@ import {reactive, ref} from "vue";
 import request from "@/axios/request.js";
 import {AddOrder} from "@/api/order-api.js";
 import router from "@/router/index.js";
+import {useOrderStore} from "@/stores/order.js";
+import {useCartStore} from "@/stores/cart.js";
+import {storeToRefs} from "pinia";
+
+const {orderList, selectedIndexes} = storeToRefs(useOrderStore())
+const {cartList} = storeToRefs(useCartStore())
 
 const disabled = ref(false)
 
 const receiver = reactive({
-  name: '张三',
-  phone: '18577659826',
-  address: '北京市海淀区西二旗北路10号'
+  name: '吴宣仪',
+  phone: '13787829043',
+  address: '海南省海口市美兰区'
 })
 
 const receiverRef = ref(null)
@@ -69,18 +74,18 @@ const validPhone = (rule, value, callback) => {
 }
 
 const rules = ref({
-  name: [{ required: true, message: '请输入姓名', trigger: 'blur' },
+  name: [{required: true, message: '请输入姓名', trigger: 'blur'},
     {validator: validName, trigger: 'blur'}],
-  phone: [{ required: true, message: '请输入手机号', trigger: 'blur' },
+  phone: [{required: true, message: '请输入手机号', trigger: 'blur'},
     {validator: validPhone, trigger: 'blur'}],
-  address: [{ required: true, message: '请输入地址', trigger: 'blur' }]
+  address: [{required: true, message: '请输入地址', trigger: 'blur'}]
 })
 
 const showDialog = ref(false)
 const pay = () => {
   disabled.value = true
   showDialog.value = true
-  setTimeout(() =>  {
+  setTimeout(() => {
     disabled.value = false
   }, 2000)
 }
@@ -90,35 +95,41 @@ const confirmReceiver = () => {
     if (valid) {
       // 模拟支付成功
       // 向后端发送添加订单的请求
-      request.post(AddOrder, {
-        title: '支付测试订单标题',
-        commodityId: 6,
-        quantity: 1,
-        receiverName: receiver.name,
-        receiverPhone: receiver.phone,
-        address: receiver.address
-      }).then(res => {
-        console.log(res)
-        if (res.code === 200) {
-          ElMessage.success('支付成功')
-          showDialog.value = false
-          router.push('/order')
-        } else  {
-          throw new Error('支付失败')
-        }
-      }).catch(err => {
-        console.log(err)
-        ElMessage.error('支付失败')
-      })
+      for (const order of orderList.value) {
+        let o = order.order
+        request.post(AddOrder, {
+          title: o.title,
+          commodityId: o.commodityId,
+          quantity: o.quantity,
+          receiverName: receiver.name,
+          receiverPhone: receiver.phone,
+          address: receiver.address
+        }).then(res => {
+          console.log(res)
+          if (res.code === 200) {
+            ElMessage.success('支付成功')
+            for (let i = 0; i < selectedIndexes.value.length; i++) {
+              cartList.value.splice(selectedIndexes.value[i] - i, 1)
+              // 同步更多localstorage数据
+              localStorage.setItem('cart', JSON.stringify(cartList.value))
+            }
+            showDialog.value = false
+            router.push('/order')
+          } else {
+            throw new Error('支付失败')
+          }
+        }).catch(err => {
+          console.log(err)
+          ElMessage.error('支付失败')
+        })
+      }
     } else {
-      ElMessage.error('请检查输入信息')
+      ElMessage.error('请正确填写收货人信息')
     }
   })
 }
 
 </script>
-
-
 
 <style scoped lang="scss">
 .container {
@@ -129,6 +140,7 @@ const confirmReceiver = () => {
   align-items: center;
   flex-direction: column;
 }
+
 .el-card {
   border-radius: 15px;
   margin-top: 50px;
@@ -136,10 +148,12 @@ const confirmReceiver = () => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
   .el-button {
     transform: translate(154px, 10px);
   }
 }
+
 .qrcode {
   width: 400px;
   height: 300px;

@@ -41,7 +41,7 @@ import {useOrderStore} from "@/stores/order.js";
 import router from "@/router/index.js";
 
 const {cartList} = storeToRefs(useCartStore())
-const {money} = storeToRefs(useOrderStore())
+const {orderList, money, selectedIndexes} = storeToRefs(useOrderStore())
 
 const selectAll = ref(false)
 const selectList = ref([])
@@ -99,7 +99,34 @@ const removeCart = (index) => {
 }
 
 const submitOrder = () => {
+  // 获取登录用户信息，如果用户没有登录，则提醒用户登录后再提交订单
+  // 从localStorage中获取用户信息
+  let username = localStorage.getItem('nourish-orchard-user-name')
+  let token = localStorage.getItem('nourish-orchard-user-token')
+  if (!username || !token) {
+    alert('请先登录')
+    return
+  }
+
   money.value = orderTotal.value
+  // 存储订单信息到sessionStorage
+  for (let i = 0; i < selectList.value.length; i++) {
+    if (selectList.value[i]) {
+      let item = cartList.value[i]
+      let order = {
+        title: item.fruit.name + '-' + item.fruit.desc.slice(0, 10) + '...',
+        commodityId: item.fruit.id,
+        quantity: item.quantity,
+        receiverName: '',
+        receiverPhone: '',
+        address: '',
+        remark: ''
+      }
+      orderList.value.push({order})
+      selectedIndexes.value.push(i)
+    }
+  }
+
   // 跳转到支付页面
   router.push('/pay')
 }

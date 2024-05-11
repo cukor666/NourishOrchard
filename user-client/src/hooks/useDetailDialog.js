@@ -1,6 +1,7 @@
 import {ref} from "vue";
 
 import {useCartStore} from "@/stores/cart.js"
+import {ElMessage} from "element-plus";
 
 const {addToCart} = useCartStore()
 
@@ -41,6 +42,7 @@ export const useDetailDialog = () => {
         console.log('add to cart, item:', item)
         console.log('add to cart, quantity:', quantity)
         addToCart(item, quantity)
+        ElMessage.success('添加成功')
     }
 
 
