@@ -20,4 +20,8 @@ func OrdersRoutes(rg *gin.RouterGroup, wg *sync.WaitGroup) {
 		group.DELETE("/del", orderctrl.Delete) // 删除订单
 		group.PUT("/update", orderctrl.Update) // 更新订单
 	}
+	userGroup := rg.Group("/user-orders") // 用户端订单接口
+	{
+		userGroup.GET("/list", orderctrl.List) // 获取用户订单列表
+	}
 }
