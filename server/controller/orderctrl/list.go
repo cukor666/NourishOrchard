@@ -20,7 +20,7 @@ func List(context *gin.Context) {
 	switch promise {
 	case mc.USER:
 		listHandleUser(context, claims)
-	case mc.Employed, mc.ADMIN:
+	case mc.EMPLOYEE, mc.ADMIN:
 		listHandle(context)
 	default:
 		levellog.Controller("权限不足")

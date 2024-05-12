@@ -111,7 +111,7 @@ const update = () => {
         ElMessage({message: '更新成功', type: 'success'})
         emit('updateFruit')
       } else {
-        ElMessage({message: '更新失败', type: 'error'})
+        ElMessage({message: '更新失败'+res.msg, type: 'error'})
       }
     }).catch(err => {
       console.log(err)

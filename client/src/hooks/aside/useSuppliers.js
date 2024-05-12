@@ -6,9 +6,11 @@ import {ElMessage} from "element-plus";
 const asideStore = useAsideStore()
 const tagsStore = useTagsStore()
 const {addTag} = tagsStore
+
 export function useSuppliers() {
     const gotoSuppliersList = () => {
         let name = 'SuppliersList'
+        console.log('执行跳转到供应商列表， name: ', name)
         router.push({name}).then(r => {
             asideStore.defaultActive = name
             addTag({
@@ -16,7 +18,7 @@ export function useSuppliers() {
                 routerName: name
             })
         }).catch(err => {
-            console.log('跳转到供应商列表失败')
+            console.log('跳转到供应商列表失败, ', err)
             ElMessage({message: '无法跳转', type: 'error'})
         })
     }
