@@ -15,7 +15,7 @@
     <div v-if="errWord.phone" class="error-word left-space">{{ errWord.phone }}</div>
 
     <el-form-item label="职位：">
-      <el-input v-model="employee.position" @blur="validPosition(employee.position)"/>
+      <el-input v-model="employee.position" disabled @blur="validPosition(employee.position)"/>
     </el-form-item>
     <div v-if="errWord.position" class="error-word left-space">{{ errWord.position }}</div>
 

@@ -20,7 +20,7 @@
       </el-form-item>
 
       <el-form-item label="商品ID：">
-        <el-input v-model.number="props.order.commodityId" disabled/>
+        <el-input v-model.number="props.order.commodityId" />
       </el-form-item>
 
       <el-form-item label="数量：">
@@ -40,19 +40,19 @@
       </el-form-item>
 
       <el-form-item label="收件人：">
-        <el-input v-model="props.order.receiverName" disabled/>
+        <el-input v-model="props.order.receiverName" />
       </el-form-item>
 
       <el-form-item label="收件电话：">
-        <el-input v-model="props.order.receiverPhone" disabled/>
+        <el-input v-model="props.order.receiverPhone" />
       </el-form-item>
 
       <el-form-item label="地址：">
-        <el-input v-model="props.order.address" disabled/>
+        <el-input v-model="props.order.address" />
       </el-form-item>
 
       <el-form-item label="备注：">
-        <el-input v-model="props.order.remark" disabled/>
+        <el-input v-model="props.order.remark" />
       </el-form-item>
 
       <el-form-item label="创建时间：">

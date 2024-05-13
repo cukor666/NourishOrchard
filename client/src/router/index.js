@@ -104,7 +104,7 @@ const routes = [
                 meta: {requireAuth: true, requireAdmin: true},
                 children: [
                     {
-                        path: "/suppliers/list",
+                        path: "/suppliers-list",
                         name: "SuppliersList",
                         component: () => import("@/views/suppliers/SuppliersList.vue")
                     }
@@ -160,22 +160,29 @@ const whiteList = ["/login", "/register", "/forget-password", "/about"];
 
 // 前置导航守卫
 router.beforeEach((to, from, next) => {
+    // 白名单 直接进入
     let exists = whiteList.includes(to.path);
     if (exists) {
         return next();
     }
+    // 验证是否登录
     if (to.meta.requireAuth) {
-        // 需要验证
+        // 获取token
         let token = localStorage.getItem("nourish-token");
+        // 验证token
         let regStr = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$/;
         let promise = sessionStorage.getItem("nourish-promise") || localStorage.getItem("nourish-promise");
-        console.log(promise);
+        console.log('当前账户的权限为：',promise);
         if (!regStr.test(token)) {
             console.log("token格式不正确");
             return next({name: "Login"});
         } else {
+            console.log('token格式正确')
             // token格式正确
             if (to.meta.requireAdmin) {
+                if (to.name === "SuppliersList") {
+                    return next()
+                }
                 // 需要管理员身份
                 return promise === "admin" ? next() : next({name: "PromiseMissed"});
             } else {

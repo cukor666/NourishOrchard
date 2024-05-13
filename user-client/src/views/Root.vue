@@ -4,6 +4,8 @@
     <div class="link">
       <router-link to="/login" v-if=" !username ||username === ''">请登录</router-link>
       <span v-else>{{ username }}</span>
+      <span v-if="username && username!== ''" class="logout" @click="logout">退出</span>
+      <span>|</span>
       <a :href="admin_url_dev+'/register'">注册</a>
       <span>|</span>
       <router-link to="/order">我的订单</router-link>
@@ -46,6 +48,7 @@ import {admin_url_dev} from "@/config/api.js"
 import {useLoginUserStore} from "@/stores/loginUser.js";
 import {storeToRefs} from "pinia";
 import {useCartStore} from "@/stores/cart.js";
+import {ElMessageBox} from "element-plus";
 
 const {username} = storeToRefs(useLoginUserStore())
 const {total} = storeToRefs(useCartStore())
@@ -58,98 +61,26 @@ onMounted(() => {
   }
 })
 
+const logout = () => {
+  // 退出登录
+  // 跳转到登录页面
+  ElMessageBox.confirm('确认退出登录吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    localStorage.removeItem('nourish-orchard-user-name')
+    localStorage.removeItem('nourish-orchard-user-token')
+    window.location.href = '/login'
+  }).catch(() => {
+    // 取消操作
+
+  })
+}
+
 </script>
 
 <style scoped lang="scss">
-.top {
-  width: 70%;
-  margin: 20px auto 20px auto;
-  font-size: 14px;
-  color: #ccc;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-a {
-  text-decoration: none;
-}
-
-.link {
-  & > a {
-    color: #ccc;
-    margin-right: 10px
-  }
-
-  & > a:hover {
-    color: #fa8038;
-  }
-
-  & > span {
-    margin-right: 10px;
-  }
-}
-
-.bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.tab {
-  display: flex;
-  justify-content: space-between;
-  margin-left: 50px;
-  margin-right: 50px;
-
-  & > a {
-    color: #727070;
-  }
-
-  & > a:hover {
-    color: #fa8038;
-  }
-
-  & > * {
-    margin-left: 20px;
-    margin-right: 20px;
-  }
-}
-
-.search {
-  width: 200px;
-  height: 30px;
-  border-radius: 20px;
-  padding: 10px;
-  border: 1px solid #ccc;
-}
-
-.search:focus {
-  outline: none;
-  border-color: #fa8038;
-}
-
-.content {
-  width: 80%;
-  margin: 20px auto 20px auto;
-}
-
-hr {
-  margin-top: 50px;
-  margin-bottom: 50px;
-}
-
-.footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #9f9c9c;
-
-  div {
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 10px;
-  }
-}
+@import "@/sass/root";
 
 </style>

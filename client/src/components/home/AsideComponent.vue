@@ -68,14 +68,14 @@
           </template>
         </el-menu-item>
       </el-sub-menu>
-      <el-sub-menu index="Inventory">
+      <el-sub-menu index="Inventory" v-if="promise === 'admin' || promise === 'employee'">
         <template #title>
           <el-icon>
             <OfficeBuilding/>
           </el-icon>
           <span v-if="showItemContent">仓库管理</span>
         </template>
-        <el-menu-item index="WarehouseList" @click="gotoWarehouseList">
+        <el-menu-item index="WarehouseList" v-if="promise === 'admin'" @click="gotoWarehouseList">
           <template #title>
             <span>仓库列表</span>
           </template>
@@ -86,7 +86,7 @@
           </template>
         </el-menu-item>
       </el-sub-menu>
-      <el-sub-menu index="Suppliers">
+      <el-sub-menu index="Suppliers" v-if="promise === 'admin' || promise === 'employee'">
         <template #title>
           <el-icon>
             <Ship/>
@@ -132,6 +132,7 @@ import {useWarehouse} from "@/hooks/aside/useWarehouse.js";
 import {useSuppliers} from "@/hooks/aside/useSuppliers.js";
 import {useOrders} from "@/hooks/aside/useOrders.js";
 import {useAbout} from "@/hooks/aside/useAbout.js";
+import router from "@/router/index.js";
 
 const {goHome} = useHome()
 const {gotoUserList} = useUser()
