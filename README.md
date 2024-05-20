@@ -7,7 +7,10 @@
 项目中文名：滋养果园。
 这个是一个基于Gin+vue3的水果售卖后台管理系统，主要是偏向后台管理系统。
 
-项目站点：[http://cukor.cn:8090](http://cukor.cn:8090)
+项目站点：
+
++ 用户端：[http://cukor.cn](http://cukor.cn)
++ 管理员端：[http://cukor.cn:5173](http://cukor.cn:5173)
 
 使用的技术栈如下：
 
@@ -22,8 +25,8 @@
     + UI框架：ElementPlus
     + 前后端通信：Axois
     + 状态管理：Pinia
-    + CSS预处理器：Scss
-  + 构建工具：Vite+Yarn
+    + CSS预处理器：Sass
+  + 构建工具：vite+yarn
   + 开发工具：WebStorm+VSCode
   
 + 后端：
@@ -95,22 +98,7 @@ yarn build
 
 ### 数据库
 
-本地使用的mysql8版本，由于线上服务器内存原因只能使用mysql5.7，所以使用navicat将数据导出成sql文件后需要做以下操作：
-
-内容可参考：[https://www.yisu.com/zixun/690181.html](https://www.yisu.com/zixun/690181.html)
-
-打开导出的sql文件。
-
-> ```undefined
-> utf8mb4替换为utf8
-> utf8mb4_0900_ai_ci替换为utf8_general_ci
-> utf8_croatian_ci替换为utf8_general_ci
-> utf8mb4_general_ci替换为utf8_general_ci
-> ```
-
-将修改之后的sql文件在服务器的数据库上执行即可将本地的数据同步到线上。
-
-后续改用Ubuntu Linux当做线上服务器，完成项目部署，使用的是docker容器部署的MySQL8和Redis7，所以以上的做法已经不再使用，本地Navicat生成的SQL文件直接在线上的MySQL进行运行即可将数据同步到线上服务器。
+本地使用的MySQL8版本，线上版本使用Docker容器化的MySQL8版本。Redis在本地使用Redis5版本，线上使用Docker容器化部署的Redis7版本。
 
 ### 后端
 
@@ -119,27 +107,27 @@ yarn build
 ```yaml
 systemConfig:
   host: localhost
-  port: 000	# 端口
-  secret: ...	# 修改
-  issuer: ...	# 修改
+  port: 
+  secret: 
+  issuer: 
 
 mysql:
   host: localhost
-  port: 3306
-  user: ...	# 修改为线上服务器数据库的用户名，不一定是root
-  password: ...	# 修改服务器数据库的密码
+  port: 
+  user: 
+  password: 
   dbname: nourish_orchard2
-  # param: charset=utf8mb4&parseTime=True&loc=Local	# mysql8
-  param: charset=utf8&parseTime=True&loc=Local	# mysql5.7
+  param: charset=utf8mb4&parseTime=True&loc=Local	# mysql8
+
 redis:
   host: localhost
-  port: 0
-  password:00
+  port: 
+  password: 
   db: 0
 
 jwt:
-  secretKey: ...
-  issuer: ...
+  secretKey: 
+  issuer: 
 ```
 
 2. 解决跨域问题

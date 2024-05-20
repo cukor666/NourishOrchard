@@ -11,7 +11,7 @@
         </el-form-item>
         <el-form-item>
           <el-button class="login-btn" type="primary" @click="login">登录</el-button>
-          <a class="register-btn" style="margin-left: auto" href="http://localhost:5173/register">注册</a>
+          <a class="register-btn" style="margin-left: auto" :href="register_url">注册</a>
         </el-form-item>
       </el-form>
     </div>
@@ -31,7 +31,9 @@ import router from "@/router/index.js";
 import request from "@/axios/request.js";
 import {ElMessage} from "element-plus";
 import { useLoginUserStore } from "@/stores/loginUser.js"
+import {admin_url_pro} from "@/config/api.js";
 
+const register_url = admin_url_pro + "/register"
 
 const user = ref({
   username: "",
