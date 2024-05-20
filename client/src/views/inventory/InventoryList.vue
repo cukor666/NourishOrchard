@@ -19,8 +19,8 @@
         <el-table-column prop="quantity" label="数量" width="100"/>
         <el-table-column prop="employeeId" label="员工id" width="100"/>
         <el-table-column prop="warehouseId" label="仓库id" width="100"/>
-        <el-table-column prop="createdAt" label="创建时间" width="200"/>
-        <el-table-column prop="updatedAt" label="更新时间" width="200"/>
+        <el-table-column prop="createdAt" label="创建时间" width="250"/>
+        <el-table-column prop="updatedAt" label="更新时间" width="250"/>
 
         <el-table-column fixed="right" label="操作" width="120">
           <template v-slot="scope">

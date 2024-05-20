@@ -20,9 +20,6 @@ import (
 
 func Login(account models.Account) (token string, err error) {
 	// 首先校验账号是否存在
-	//if actdao.GetCountByUsername(account.Username, account.Promise) == 0 {
-	//	return "", errors.New("账号不存在")
-	//}
 	// 如果该用户存在，则继续校验密码是否正确
 	// 从数据库中获取该账号
 	dbAccount, err := actdao.Get(account.Username, account.Promise)
@@ -73,6 +70,5 @@ func Login(account models.Account) (token string, err error) {
 	}
 	// 将token保存到redis中
 	redisDB.Set(ctx, "token:"+account.Username, jwtToken, 7*24*time.Hour)
-
 	return jwtToken, nil
 }

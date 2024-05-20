@@ -123,13 +123,17 @@
     border-radius: 50px 0 0 0;
     box-shadow: 0 0 30px red;
   }
-  25%, 75% {
+  25% {
     border-radius: 0 50px 0 0;
     box-shadow: 0 0 25px #b59e3d;
   }
   50% {
     border-radius: 0 0 50px 0;
     box-shadow: 0 0 30px #b2cb7d;
+  }
+  75% {
+    border-radius: 0 0 0 50px;
+    box-shadow: 0 0 25px #b59e3d;
   }
 }
 

@@ -24,7 +24,7 @@ func (i *insertReq) toWarehouse() models.Warehouse {
 type updateReq struct {
 	ID        int64   `json:"id" gorm:"primarykey" form:"id" binding:"required,gt=0"`
 	Address   string  `json:"address" form:"address" binding:"omitempty,min=3,max=100"`
-	Capacity  float64 `json:"capacity" form:"capacity" binding:"omitempty,gt=700,lt=10000"`
+	Capacity  float64 `json:"capacity" form:"capacity" binding:"omitempty,gt=0,lt=10000"`
 	Remaining float64 `json:"remaining" form:"remaining" binding:"omitempty,gt=0,lt=10000"`
 }
 

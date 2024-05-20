@@ -29,7 +29,7 @@ func (r insertReq) toOrder() models.Order {
 type updateReq struct {
 	ID           int64   `json:"id" binding:"required"`
 	Title        string  `json:"title" binding:"omitempty"`
-	Status       int     `json:"status" binding:"omitempty,oneof=1 2 3 4"`
+	Status       int     `json:"status" binding:"omitempty,oneof=0 1 2 3 4 5"`
 	CommodityID  int64   `json:"commodityId" binding:"required,gt=0"`
 	WarehouseID  int64   `json:"warehouseId" binding:"required,gt=0"`
 	Quantity     float64 `json:"quantity" binding:"omitempty,gt=0"`
