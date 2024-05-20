@@ -11,11 +11,11 @@
 
       <el-form-item label="状态：">
         <el-select v-model="props.order.status" >
-          <el-option label="待付款" value="1"></el-option>
-          <el-option label="待发货" value="2"></el-option>
-          <el-option label="待收货" value="3"></el-option>
-          <el-option label="已完成" value="4"></el-option>
-          <el-option label="已取消" value="5"></el-option>
+          <el-option label="待付款" :value="1"></el-option>
+          <el-option label="待发货" :value="2"></el-option>
+          <el-option label="待收货" :value="3"></el-option>
+          <el-option label="已完成" :value="4"></el-option>
+          <el-option label="已取消" :value="5"></el-option>
         </el-select>
       </el-form-item>
 

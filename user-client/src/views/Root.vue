@@ -6,7 +6,7 @@
       <span v-else>{{ username }}</span>
       <span v-if="username && username!== ''" class="logout" @click="logout">退出</span>
       <span>|</span>
-      <a :href="admin_url_dev+'/register'">注册</a>
+      <a :href="admin_url_pro+'/register'">注册</a>
       <span>|</span>
       <router-link to="/order">我的订单</router-link>
       <span>|</span>
@@ -44,7 +44,7 @@
 <script setup>
 
 import {onMounted, ref} from "vue";
-import {admin_url_dev} from "@/config/api.js"
+import {admin_url_dev, admin_url_pro} from "@/config/api.js"
 import {useLoginUserStore} from "@/stores/loginUser.js";
 import {storeToRefs} from "pinia";
 import {useCartStore} from "@/stores/cart.js";

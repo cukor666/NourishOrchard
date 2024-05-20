@@ -6,19 +6,19 @@
       </el-form-item>
 
       <el-form-item label="商品ID：">
-        <el-input v-model.number="props.inventory.commodityId" disabled/>
+        <el-input v-model.number="props.inventory.commodityId" />
       </el-form-item>
 
       <el-form-item label="数量：">
-        <el-input v-model.number="props.inventory.quantity" disabled/>
+        <el-input v-model.number="props.inventory.quantity" />
       </el-form-item>
 
       <el-form-item label="员工ID：">
-        <el-input v-model.number="props.inventory.employeeId" disabled/>
+        <el-input v-model.number="props.inventory.employeeId" />
       </el-form-item>
 
       <el-form-item label="仓库ID：">
-        <el-input v-model.number="props.inventory.warehouseId" disabled/>
+        <el-input v-model.number="props.inventory.warehouseId" />
       </el-form-item>
 
       <el-form-item label="创建时间：">
