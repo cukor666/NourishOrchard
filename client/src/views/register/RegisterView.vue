@@ -169,7 +169,7 @@ const register = () => {
 @import "@/scss/register/RegisterView.scss";
 
 .errword {
-  color: #f79aac;
+  color: red;
   margin-left: 85px;
   margin-top: -10px;
 }

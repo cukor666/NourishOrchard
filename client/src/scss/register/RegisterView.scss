@@ -1,7 +1,9 @@
 .container {
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to bottom, #5cea5c, #dffbdf 40%);
+  background-color: #ccc;
+  //background: linear-gradient(to bottom, #5cea5c, #dffbdf 40%);
+  animation: changeBackground 10s infinite;
   transition: hover 2s;
   display: flex;
   justify-content: center;
@@ -85,9 +87,18 @@
   }
 }
 
-.container:hover {
-  background: linear-gradient(to bottom, #5cea5c, #dffbdf 60%);
+@keyframes changeBackground {
+  0%, 100% {
+    background: url("https://pic3.zhimg.com/80/v2-9b90ec39f6abc95206e7b13e3ff7fe42_1440w.webp");
+  }
+  25% {
+    background: url("https://pica.zhimg.com/v2-efb229deccd9b6cfc6187bbfd8514dfe_720w.jpg?source=172ae18b");
+  }
+  75% {
+    background: url("https://img95.699pic.com/photo/50046/2335.jpg_wh300.jpg");
+  }
 }
+
 
 @keyframes changeBoxShadow {
   0%, 100% {

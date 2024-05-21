@@ -26,7 +26,9 @@ func has(inventory models.Inventory) bool {
 	for ok := range okChan {
 		if !ok {
 			w := fmt.Sprintf("数据不一致，请检查，%s表、%s表和%s表中是否存在req=%v对应id数据",
-				(&models.Fruit{}).TableName(), (&models.Employee{}).TableName(), (&models.Warehouse{}).TableName(), inventory)
+				(&models.Fruit{}).TableName(),
+				(&models.Employee{}).TableName(),
+				(&models.Warehouse{}).TableName(), inventory)
 			levellog.Service(w)
 			return false
 		}
