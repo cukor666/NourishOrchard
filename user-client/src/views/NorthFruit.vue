@@ -50,7 +50,7 @@
         <el-input class="detail-desc" type="textarea" :rows="5" :disabled="true" v-model="detailObj.desc" />
 
         <div class="total-price">总价格：<span>￥{{ detailObj.price * quantity }}</span></div>
-        <div class="add-cart" @click="addCart">加入购物车</div>
+        <div class="add-cart" @click="addCart(detailObj, quantity)">加入购物车</div>
       </div>
     </div>
   </el-dialog>

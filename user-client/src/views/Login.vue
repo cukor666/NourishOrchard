@@ -36,8 +36,8 @@ import {admin_url_pro} from "@/config/api.js";
 const register_url = admin_url_pro + "/register"
 
 const user = ref({
-  username: "",
-  password: ""
+  username: "CZKJ901704561805",
+  password: "123456"
 })
 
 const { setUsername, setPromise } = useLoginUserStore()
