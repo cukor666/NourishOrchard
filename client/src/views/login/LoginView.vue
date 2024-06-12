@@ -52,8 +52,8 @@ const isClickLoginButton = ref(false)
 const isShow = ref(false)
 
 const user = reactive({
-  account: '',
-  password: '',
+  account: 'CZKJ641706344878',
+  password: '987654',
   promise: 'user'
 })
 
